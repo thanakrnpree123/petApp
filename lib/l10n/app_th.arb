@@ -1,0 +1,264 @@
+{
+  "@@locale": "th",
+  "appTitle": "PawHealth",
+  "myPets": "สัตว์เลี้ยงของฉัน",
+  "healthArticles": "บทความสุขภาพ",
+  "settings": "การตั้งค่า",
+  "articlesTab": "บทความ",
+  "noPetsYet": "ยังไม่มีสัตว์เลี้ยง แตะ + เพื่อเพิ่ม",
+  "editProfile": "แก้ไขโปรไฟล์",
+  "checkSymptoms": "ตรวจอาการ",
+  "upgradeToPlusTooltip": "อัปเกรดเป็น Plus",
+  "pawHealthPlus": "PawHealth Plus",
+  "upgradeToPlus": "อัปเกรดเป็น Plus",
+  "monthlyPrice": "{price}/เดือน",
+  "@monthlyPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String",
+        "example": "$2.99"
+      }
+    }
+  },
+  "unlimitedSymptomChecks": "ตรวจอาการได้ไม่จำกัด",
+  "unlimitedPdfReports": "รายงาน PDF สำหรับสัตวแพทย์ไม่จำกัด",
+  "adFreeExperience": "ไม่มีโฆษณา",
+  "freeTierIncludes": "แพ็กเกจฟรีประกอบด้วย",
+  "freeChecksPerMonth": "ตรวจอาการ 5 ครั้ง/เดือน",
+  "containsAds": "มีโฆษณา",
+  "subscribe": "สมัครสมาชิก",
+  "restorePurchases": "กู้คืนการซื้อ",
+  "upgrade": "อัปเกรด",
+  "notNow": "ไว้ทีหลัง",
+  "close": "ปิด",
+  "account": "บัญชี",
+  "email": "อีเมล",
+  "subscription": "แพ็กเกจสมาชิก",
+  "freeTier": "ฟรี",
+  "logOut": "ออกจากระบบ",
+  "pdfPlusFeatureMessage": "รายงาน PDF สำหรับสัตวแพทย์เป็นฟีเจอร์ของ PawHealth Plus อัปเกรดเพื่อส่งออกและแชร์รายงานได้ไม่จำกัด",
+  "symptomLimitMessage": "คุณใช้สิทธิ์ตรวจอาการฟรี 5 ครั้งของเดือนนี้ครบแล้ว อัปเกรดเพื่อตรวจอาการได้ไม่จำกัด",
+  "fetchingArticles": "กำลังโหลดบทความ…",
+  "noArticlesAvailable": "ยังไม่มีบทความในขณะนี้",
+  "logIn": "เข้าสู่ระบบ",
+  "register": "ลงทะเบียน",
+  "password": "รหัสผ่าน",
+  "confirmPassword": "ยืนยันรหัสผ่าน",
+  "createAccount": "สร้างบัญชี",
+  "noAccountRegister": "ยังไม่มีบัญชี? ลงทะเบียนเลย",
+  "loggingIn": "กำลังเข้าสู่ระบบ…",
+  "creatingAccount": "กำลังสร้างบัญชี…",
+  "emailRequired": "กรุณากรอกอีเมล",
+  "emailInvalid": "กรุณากรอกอีเมลให้ถูกต้อง",
+  "passwordRequired": "กรุณากรอกรหัสผ่าน",
+  "passwordTooShort": "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+  "passwordsDoNotMatch": "รหัสผ่านไม่ตรงกัน",
+  "errInvalidEmail": "รูปแบบอีเมลไม่ถูกต้อง",
+  "errIncorrectCredentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+  "errEmailInUse": "อีเมลนี้มีบัญชีอยู่แล้ว",
+  "errWeakPassword": "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+  "errPermissionDenied": "ไม่สามารถบันทึกโปรไฟล์ได้ (ไม่มีสิทธิ์เข้าถึง) กรุณาตรวจสอบ Firestore security rules",
+  "errGeneric": "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง",
+  "addPet": "เพิ่มสัตว์เลี้ยง",
+  "editPet": "แก้ไขข้อมูลสัตว์เลี้ยง",
+  "petName": "ชื่อ",
+  "nameRequired": "กรุณากรอกชื่อ",
+  "breed": "สายพันธุ์",
+  "speciesDog": "สุนัข",
+  "speciesCat": "แมว",
+  "selectBirthdate": "เลือกวันเกิด",
+  "weightKg": "น้ำหนัก (กก.)",
+  "enterValidWeight": "กรุณากรอกน้ำหนักให้ถูกต้อง",
+  "selectBreedError": "กรุณาเลือกสายพันธุ์",
+  "selectBirthdateError": "กรุณาเลือกวันเกิด",
+  "saveChanges": "บันทึกการแก้ไข",
+  "savingPet": "กำลังบันทึก…",
+  "uploadingPhoto": "กำลังอัปโหลดรูปภาพ…",
+  "errSaveTimeout": "เครือข่ายช้ามากในขณะนี้ รูปภาพอาจกำลังอัปโหลดอยู่ ลองบันทึกอีกครั้งในอีกสักครู่",
+  "errRulesPermission": "ไม่มีสิทธิ์เข้าถึง กรุณาตรวจสอบว่าได้ deploy security rules ของ Firestore/Storage แล้ว",
+  "errCouldNotSavePet": "ไม่สามารถบันทึกข้อมูลสัตว์เลี้ยงได้ กรุณาลองอีกครั้ง",
+  "errSubscriptionLoad": "ไม่สามารถโหลดสถานะสมาชิกได้",
+  "errPurchaseFailed": "การซื้อไม่สำเร็จ กรุณาลองอีกครั้ง",
+  "errRestoreFailed": "การกู้คืนไม่สำเร็จ กรุณาลองอีกครั้ง",
+  "processingPurchase": "กำลังดำเนินการซื้อ…",
+  "restoringPurchases": "กำลังกู้คืนการซื้อ…",
+  "symptomCheckerTitle": "ตรวจอาการ · {petName}",
+  "@symptomCheckerTitle": {
+    "placeholders": {
+      "petName": {
+        "type": "String",
+        "example": "Bella"
+      }
+    }
+  },
+  "noChecksForSpecies": "ยังไม่มีแบบตรวจอาการสำหรับสัตว์ชนิดนี้",
+  "back": "ย้อนกลับ",
+  "saveShareWithVet": "บันทึกและแชร์ให้สัตวแพทย์",
+  "savedShareAgain": "บันทึกแล้ว — แชร์อีกครั้ง",
+  "savingCheck": "กำลังบันทึกผลตรวจ…",
+  "triageMonitor": "เฝ้าดูอาการที่บ้าน",
+  "triageVet": "ควรพาไปพบสัตวแพทย์เร็ว ๆ นี้",
+  "triageEmergency": "ฉุกเฉิน — รีบดำเนินการทันที",
+  "medicalDisclaimer": "เครื่องมือนี้ให้คำแนะนำเบื้องต้นเท่านั้น ไม่สามารถใช้แทนการวินิจฉัยของสัตวแพทย์ได้ หากไม่แน่ใจกรุณาปรึกษาสัตวแพทย์",
+  "symptomVomiting": "อาเจียน",
+  "shareSummaryTitle": "ผลตรวจอาการ PawHealth — {petName}",
+  "@shareSummaryTitle": {
+    "placeholders": {
+      "petName": {
+        "type": "String",
+        "example": "Bella"
+      }
+    }
+  },
+  "shareSymptom": "อาการ: {symptom}",
+  "@shareSymptom": {
+    "placeholders": {
+      "symptom": {
+        "type": "String"
+      }
+    }
+  },
+  "shareTriageLevel": "ระดับความเร่งด่วน: {level}",
+  "@shareTriageLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "shareAdvice": "คำแนะนำ: {advice}",
+  "@shareAdvice": {
+    "placeholders": {
+      "advice": {
+        "type": "String"
+      }
+    }
+  },
+  "shareAnswersHeader": "คำตอบ:",
+  "qVomitFrequency": "ใน 24 ชั่วโมงที่ผ่านมา สุนัขของคุณอาเจียนกี่ครั้ง?",
+  "qBloodInVomit": "มีเลือดปนในอาเจียนหรือไม่ (เป็นเส้นเลือดสีแดงหรือลักษณะคล้ายกากกาแฟ)?",
+  "qLethargyMild": "สุนัขของคุณมีอาการซึม อ่อนแรง หรือไม่ร่าเริงเหมือนปกติหรือไม่?",
+  "qToxinIngestion": "สุนัขของคุณอาจกินสารพิษ สิ่งแปลกปลอม ยาของคน หรืออาหารบูดเสียหรือไม่?",
+  "qBloatedAbdomen": "สุนัขของคุณมีท้องบวมป่อง หรือพยายามอาเจียนแต่ไม่มีอะไรออกมาหรือไม่?",
+  "qAgeVulnerable": "สุนัขของคุณเป็นลูกสุนัข (อายุต่ำกว่า 6 เดือน) สุนัขสูงวัย (มากกว่า 8 ปี) หรือมีโรคประจำตัวหรือไม่?",
+  "qLethargyModerate": "สุนัขของคุณมีอาการซึม อ่อนแรง หรือไม่ยอมกินน้ำหรือไม่?",
+  "opt1Time": "1 ครั้ง",
+  "opt2to3Times": "2-3 ครั้ง",
+  "opt4Plus": "4 ครั้งขึ้นไป",
+  "optYes": "ใช่",
+  "optNo": "ไม่ใช่",
+  "advEmergencyFrequent": "การอาเจียน 4 ครั้งขึ้นไปใน 24 ชั่วโมงเสี่ยงต่อภาวะขาดน้ำรุนแรง กรุณาติดต่อโรงพยาบาลสัตว์ฉุกเฉินทันที",
+  "advEmergencyBlood": "เลือดปนในอาเจียนอาจบ่งบอกถึงภาวะเลือดออกภายในหรือปัญหาทางเดินอาหารร้ายแรง กรุณาพาไปพบสัตวแพทย์ฉุกเฉินทันที",
+  "advEmergencyToxin": "การกินสารพิษหรือสิ่งแปลกปลอมเป็นภาวะฉุกเฉิน กรุณาติดต่อโรงพยาบาลสัตว์ฉุกเฉินทันที",
+  "advEmergencyBloat": "ท้องบวมป่องร่วมกับการพยายามอาเจียนอาจเป็นสัญญาณของภาวะกระเพาะบิด (GDV) ซึ่งอันตรายถึงชีวิต กรุณาพาไปโรงพยาบาลสัตว์ฉุกเฉินทันที",
+  "advVetLethargy": "อาการซึมร่วมกับอาเจียนควรพาไปพบสัตวแพทย์ภายในวันนี้ งดอาหารและให้จิบน้ำทีละน้อย",
+  "advVetVulnerable": "ลูกสุนัข สุนัขสูงวัย และสุนัขที่มีโรคประจำตัวจะเกิดภาวะขาดน้ำได้เร็ว ควรพาไปพบสัตวแพทย์ภายใน 24 ชั่วโมง",
+  "advVetModerate": "การอาเจียนซ้ำ ๆ แม้ไม่มีสัญญาณอันตรายอื่นก็ควรพบสัตวแพทย์ภายใน 24 ชั่วโมง งดอาหาร 12 ชั่วโมงและให้น้ำทีละน้อย",
+  "advMonitorMild": "การอาเจียนเพียงครั้งเดียวโดยไม่มีอาการอื่นมักเฝ้าดูอาการที่บ้านได้ งดอาหารสักสองสามชั่วโมง เตรียมน้ำสะอาดไว้ให้ และสังเกตว่ามีอาเจียนซ้ำหรือไม่",
+  "gender": "เพศ",
+  "genderMale": "ตัวผู้",
+  "genderFemale": "ตัวเมีย",
+  "spayedNeutered": "ทำหมันแล้ว",
+  "careParasiteControl": "การป้องกันปรสิต",
+  "careHeatCycle": "วงรอบการเป็นสัด",
+  "careMedicalSurgery": "การรักษาและการผ่าตัด",
+  "careGrooming": "การอาบน้ำตัดขน",
+  "addEntry": "เพิ่มบันทึก",
+  "careNote": "บันทึก",
+  "noteRequired": "กรุณากรอกบันทึก",
+  "noEntriesYet": "ยังไม่มีบันทึก",
+  "cancel": "ยกเลิก",
+  "save": "บันทึก",
+  "language": "ภาษา",
+  "chooseLanguage": "เลือกภาษา",
+  "careTitle": "หัวข้อ",
+  "careDetails": "รายละเอียด",
+  "titleRequired": "กรุณากรอกหัวข้อ",
+  "categoryLabel": "หมวดหมู่",
+  "healthDashboardTitle": "{petName} · สุขภาพ",
+  "@healthDashboardTitle": {
+    "placeholders": {
+      "petName": {
+        "type": "String",
+        "example": "Bella"
+      }
+    }
+  },
+  "generateReport": "สร้างรายงาน",
+  "addHealthRecord": "เพิ่มบันทึกสุขภาพ",
+  "filterAll": "ทั้งหมด",
+  "filterVaccination": "วัคซีน",
+  "filterMedical": "การรักษา",
+  "filterGrooming": "อาบน้ำตัดขน",
+  "filterOther": "อื่น ๆ",
+  "timelineEmpty": "ยังไม่มีบันทึกสุขภาพ",
+  "weight": "น้ำหนัก",
+  "logWeight": "บันทึกน้ำหนัก",
+  "weightChartNeedTwo": "บันทึกน้ำหนักอย่างน้อย 2 ครั้งเพื่อดูแนวโน้ม",
+  "addVaccine": "เพิ่มวัคซีน",
+  "vaccineName": "ชื่อวัคซีน",
+  "administeredOn": "ฉีดเมื่อ: {date}",
+  "@administeredOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "nextDueOn": "ครั้งถัดไป: {date}",
+  "@nextDueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "selectNextDueDate": "เลือกวันครบกำหนดครั้งถัดไป",
+  "selectNextDueDateError": "กรุณาเลือกวันครบกำหนดครั้งถัดไป",
+  "vaccinationDates": "ฉีดเมื่อ {given} · ครั้งถัดไป {next}",
+  "@vaccinationDates": {
+    "placeholders": {
+      "given": {
+        "type": "String"
+      },
+      "next": {
+        "type": "String"
+      }
+    }
+  },
+  "editHealthRecord": "แก้ไขบันทึกสุขภาพ",
+  "delete": "ลบ",
+  "deleteRecordTitle": "ลบบันทึก",
+  "deleteConfirmMessage": "คุณแน่ใจหรือไม่ว่าต้องการลบบันทึกนี้? การลบไม่สามารถย้อนกลับได้",
+  "healthRecordButton": "บันทึกสุขภาพ",
+  "editVaccination": "แก้ไขวัคซีน",
+  "speciesRabbit": "กระต่าย",
+  "speciesBird": "นก",
+  "speciesExotic": "สัตว์เอ็กโซติก / อื่น ๆ",
+  "speciesLabel": "ชนิดสัตว์เลี้ยง",
+  "breedOther": "อื่น ๆ (โปรดระบุ)",
+  "enterBreed": "กรุณากรอกสายพันธุ์",
+  "microchipId": "หมายเลขไมโครชิป",
+  "allergies": "อาการแพ้ที่ทราบ (อาหาร/ยา)",
+  "ageYearsMonths": "{years} ปี {months} เดือน",
+  "@ageYearsMonths": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      },
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "ageMonths": "{months} เดือน",
+  "@ageMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "optNoSymptoms": "ไม่มีอาการ / ตรวจสุขภาพทั่วไป",
+  "advHealthy": "สัตว์เลี้ยงของคุณดูแข็งแรงดี! ดูแลแบบนี้ต่อไป และพาไปตรวจสุขภาพกับสัตวแพทย์เป็นประจำ"
+}

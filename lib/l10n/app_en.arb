@@ -1,0 +1,264 @@
+{
+  "@@locale": "en",
+  "appTitle": "PawHealth",
+  "myPets": "My Pets",
+  "healthArticles": "Health Articles",
+  "settings": "Settings",
+  "articlesTab": "Articles",
+  "noPetsYet": "No pets yet. Tap + to add one.",
+  "editProfile": "Edit Profile",
+  "checkSymptoms": "Check Symptoms",
+  "upgradeToPlusTooltip": "Upgrade to Plus",
+  "pawHealthPlus": "PawHealth Plus",
+  "upgradeToPlus": "Upgrade to Plus",
+  "monthlyPrice": "{price}/month",
+  "@monthlyPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String",
+        "example": "$2.99"
+      }
+    }
+  },
+  "unlimitedSymptomChecks": "Unlimited symptom checks",
+  "unlimitedPdfReports": "Unlimited PDF vet reports",
+  "adFreeExperience": "Ad-free experience",
+  "freeTierIncludes": "Free tier includes",
+  "freeChecksPerMonth": "5 symptom checks / month",
+  "containsAds": "Contains ads",
+  "subscribe": "Subscribe",
+  "restorePurchases": "Restore Purchases",
+  "upgrade": "Upgrade",
+  "notNow": "Not now",
+  "close": "Close",
+  "account": "ACCOUNT",
+  "email": "Email",
+  "subscription": "Subscription",
+  "freeTier": "Free",
+  "logOut": "Log Out",
+  "pdfPlusFeatureMessage": "PDF vet reports are a PawHealth Plus feature. Upgrade to export and share unlimited reports.",
+  "symptomLimitMessage": "You've used your 5 free symptom checks this month. Upgrade for unlimited checks.",
+  "fetchingArticles": "Fetching articles…",
+  "noArticlesAvailable": "No articles available right now.",
+  "logIn": "Log In",
+  "register": "Register",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "createAccount": "Create Account",
+  "noAccountRegister": "Don't have an account? Register",
+  "loggingIn": "Logging in…",
+  "creatingAccount": "Creating your account…",
+  "emailRequired": "Email is required",
+  "emailInvalid": "Enter a valid email address",
+  "passwordRequired": "Password is required",
+  "passwordTooShort": "Password must be at least 6 characters",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "errInvalidEmail": "That email address looks invalid.",
+  "errIncorrectCredentials": "Incorrect email or password.",
+  "errEmailInUse": "An account already exists for that email.",
+  "errWeakPassword": "Password must be at least 6 characters.",
+  "errPermissionDenied": "Could not save your profile (permission denied). Check Firestore security rules.",
+  "errGeneric": "Something went wrong. Please try again.",
+  "addPet": "Add Pet",
+  "editPet": "Edit Pet",
+  "petName": "Name",
+  "nameRequired": "Name is required",
+  "breed": "Breed",
+  "speciesDog": "Dog",
+  "speciesCat": "Cat",
+  "selectBirthdate": "Select birthdate",
+  "weightKg": "Weight (kg)",
+  "enterValidWeight": "Enter a valid weight",
+  "selectBreedError": "Please select a breed",
+  "selectBirthdateError": "Please select a birthdate",
+  "saveChanges": "Save Changes",
+  "savingPet": "Saving…",
+  "uploadingPhoto": "Uploading photo…",
+  "errSaveTimeout": "The network is too slow right now. Your photo may still finish uploading — try saving again in a moment.",
+  "errRulesPermission": "Permission denied. Check that Firestore/Storage security rules are deployed.",
+  "errCouldNotSavePet": "Could not save pet. Please try again.",
+  "errSubscriptionLoad": "Could not load subscription status.",
+  "errPurchaseFailed": "Purchase failed. Please try again.",
+  "errRestoreFailed": "Restore failed. Please try again.",
+  "processingPurchase": "Processing purchase…",
+  "restoringPurchases": "Restoring purchases…",
+  "symptomCheckerTitle": "Symptom Checker · {petName}",
+  "@symptomCheckerTitle": {
+    "placeholders": {
+      "petName": {
+        "type": "String",
+        "example": "Bella"
+      }
+    }
+  },
+  "noChecksForSpecies": "No symptom checks are available for this species yet.",
+  "back": "Back",
+  "saveShareWithVet": "Save & Share with Vet",
+  "savedShareAgain": "Saved — Share Again",
+  "savingCheck": "Saving check…",
+  "triageMonitor": "Monitor at Home",
+  "triageVet": "See a Vet Soon",
+  "triageEmergency": "Emergency — Act Now",
+  "medicalDisclaimer": "This tool provides general guidance only and is not a substitute for professional veterinary diagnosis. When in doubt, contact your vet.",
+  "symptomVomiting": "Vomiting",
+  "shareSummaryTitle": "PawHealth Symptom Check — {petName}",
+  "@shareSummaryTitle": {
+    "placeholders": {
+      "petName": {
+        "type": "String",
+        "example": "Bella"
+      }
+    }
+  },
+  "shareSymptom": "Symptom: {symptom}",
+  "@shareSymptom": {
+    "placeholders": {
+      "symptom": {
+        "type": "String"
+      }
+    }
+  },
+  "shareTriageLevel": "Triage level: {level}",
+  "@shareTriageLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "shareAdvice": "Advice: {advice}",
+  "@shareAdvice": {
+    "placeholders": {
+      "advice": {
+        "type": "String"
+      }
+    }
+  },
+  "shareAnswersHeader": "Answers:",
+  "qVomitFrequency": "How many times has your dog vomited in the last 24 hours?",
+  "qBloodInVomit": "Is there any blood in the vomit (red streaks or coffee-ground appearance)?",
+  "qLethargyMild": "Is your dog acting lethargic, weak, or unlike themselves?",
+  "qToxinIngestion": "Could your dog have eaten something toxic, a foreign object, human medication, or spoiled food?",
+  "qBloatedAbdomen": "Does your dog have a swollen or bloated abdomen, or are they retching without producing vomit?",
+  "qAgeVulnerable": "Is your dog a puppy (under 6 months), a senior (over 8 years), or do they have a chronic health condition?",
+  "qLethargyModerate": "Is your dog acting lethargic, weak, or refusing water?",
+  "opt1Time": "1 time",
+  "opt2to3Times": "2-3 times",
+  "opt4Plus": "4 or more times",
+  "optYes": "Yes",
+  "optNo": "No",
+  "advEmergencyFrequent": "Vomiting 4+ times in 24 hours risks serious dehydration. Contact an emergency vet immediately.",
+  "advEmergencyBlood": "Blood in vomit can indicate internal bleeding or a serious GI issue. Seek emergency veterinary care now.",
+  "advEmergencyToxin": "Possible toxin or foreign object ingestion is an emergency. Contact an emergency vet or pet poison hotline immediately.",
+  "advEmergencyBloat": "A bloated abdomen with retching can signal GDV (bloat), a life-threatening emergency. Go to an emergency vet immediately.",
+  "advVetLethargy": "Lethargy alongside vomiting warrants a same-day vet visit. Withhold food, offer small sips of water.",
+  "advVetVulnerable": "Puppies, seniors, and dogs with chronic conditions dehydrate quickly. Book a vet visit within 24 hours.",
+  "advVetModerate": "Repeated vomiting without other red flags still warrants a vet check within 24 hours. Withhold food for 12 hours, offer small amounts of water.",
+  "advMonitorMild": "A single vomiting episode with no other symptoms can often be monitored at home. Withhold food for a few hours, ensure fresh water, and watch for recurrence.",
+  "gender": "Gender",
+  "genderMale": "Male",
+  "genderFemale": "Female",
+  "spayedNeutered": "Spayed / Neutered",
+  "careParasiteControl": "Parasite Control",
+  "careHeatCycle": "Heat Cycle",
+  "careMedicalSurgery": "Medical & Surgery",
+  "careGrooming": "Grooming & Bathing",
+  "addEntry": "Add Entry",
+  "careNote": "Note",
+  "noteRequired": "Please enter a note",
+  "noEntriesYet": "No entries yet.",
+  "cancel": "Cancel",
+  "save": "Save",
+  "language": "Language",
+  "chooseLanguage": "Choose Language",
+  "careTitle": "Title",
+  "careDetails": "Details",
+  "titleRequired": "Please enter a title",
+  "categoryLabel": "Category",
+  "healthDashboardTitle": "{petName} · Health",
+  "@healthDashboardTitle": {
+    "placeholders": {
+      "petName": {
+        "type": "String",
+        "example": "Bella"
+      }
+    }
+  },
+  "generateReport": "Generate Report",
+  "addHealthRecord": "Add New Health Record",
+  "filterAll": "All",
+  "filterVaccination": "Vaccination",
+  "filterMedical": "Medical",
+  "filterGrooming": "Grooming",
+  "filterOther": "Other",
+  "timelineEmpty": "No health records yet.",
+  "weight": "Weight",
+  "logWeight": "Log Weight",
+  "weightChartNeedTwo": "Log at least two weigh-ins to see a trend.",
+  "addVaccine": "Add Vaccine",
+  "vaccineName": "Vaccine name",
+  "administeredOn": "Administered: {date}",
+  "@administeredOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "nextDueOn": "Next due: {date}",
+  "@nextDueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "selectNextDueDate": "Select next due date",
+  "selectNextDueDateError": "Select a next due date",
+  "vaccinationDates": "Given {given} · Next due {next}",
+  "@vaccinationDates": {
+    "placeholders": {
+      "given": {
+        "type": "String"
+      },
+      "next": {
+        "type": "String"
+      }
+    }
+  },
+  "editHealthRecord": "Edit Health Record",
+  "delete": "Delete",
+  "deleteRecordTitle": "Delete Record",
+  "deleteConfirmMessage": "Are you sure you want to delete this record? This cannot be undone.",
+  "healthRecordButton": "Health Record",
+  "editVaccination": "Edit Vaccination",
+  "speciesRabbit": "Rabbit",
+  "speciesBird": "Bird",
+  "speciesExotic": "Exotic / Other",
+  "speciesLabel": "Species",
+  "breedOther": "Other (Please specify)",
+  "enterBreed": "Please enter the breed",
+  "microchipId": "Microchip ID",
+  "allergies": "Known Allergies (Food/Medication)",
+  "ageYearsMonths": "{years} yr {months} mo",
+  "@ageYearsMonths": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      },
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "ageMonths": "{months} mo",
+  "@ageMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "optNoSymptoms": "No symptoms / General checkup",
+  "advHealthy": "Your pet seems healthy! Keep up the good work — continue regular checkups and preventive care."
+}

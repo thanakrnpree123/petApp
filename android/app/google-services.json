@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "208759947479",
+    "project_id": "pawhealth-app-2026",
+    "storage_bucket": "pawhealth-app-2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:208759947479:android:0c30d6eee66c3f3723b092",
+        "android_client_info": {
+          "package_name": "com.pawhealth.pawhealth"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL6K1Zbjg8qNYFOZPOLoEmPJS3uoI4NIA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

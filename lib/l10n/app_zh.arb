@@ -1,0 +1,264 @@
+{
+  "@@locale": "zh",
+  "appTitle": "PawHealth",
+  "myPets": "我的宠物",
+  "healthArticles": "健康文章",
+  "settings": "设置",
+  "articlesTab": "文章",
+  "noPetsYet": "还没有宠物，点按 + 添加",
+  "editProfile": "编辑资料",
+  "checkSymptoms": "症状检查",
+  "upgradeToPlusTooltip": "升级至 Plus",
+  "pawHealthPlus": "PawHealth Plus",
+  "upgradeToPlus": "升级至 Plus",
+  "monthlyPrice": "{price}/月",
+  "@monthlyPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String",
+        "example": "$2.99"
+      }
+    }
+  },
+  "unlimitedSymptomChecks": "无限次症状检查",
+  "unlimitedPdfReports": "无限份兽医 PDF 报告",
+  "adFreeExperience": "无广告体验",
+  "freeTierIncludes": "免费版包含",
+  "freeChecksPerMonth": "每月 5 次症状检查",
+  "containsAds": "含广告",
+  "subscribe": "订阅",
+  "restorePurchases": "恢复购买",
+  "upgrade": "升级",
+  "notNow": "暂不",
+  "close": "关闭",
+  "account": "账户",
+  "email": "邮箱",
+  "subscription": "订阅状态",
+  "freeTier": "免费版",
+  "logOut": "退出登录",
+  "pdfPlusFeatureMessage": "兽医 PDF 报告是 PawHealth Plus 专属功能。升级即可无限导出和分享报告。",
+  "symptomLimitMessage": "本月的 5 次免费症状检查已用完。升级即可不限次数检查。",
+  "fetchingArticles": "正在加载文章…",
+  "noArticlesAvailable": "暂时没有可用的文章",
+  "logIn": "登录",
+  "register": "注册",
+  "password": "密码",
+  "confirmPassword": "确认密码",
+  "createAccount": "创建账户",
+  "noAccountRegister": "还没有账户？立即注册",
+  "loggingIn": "正在登录…",
+  "creatingAccount": "正在创建账户…",
+  "emailRequired": "请输入邮箱",
+  "emailInvalid": "请输入有效的邮箱地址",
+  "passwordRequired": "请输入密码",
+  "passwordTooShort": "密码至少需要 6 个字符",
+  "passwordsDoNotMatch": "两次输入的密码不一致",
+  "errInvalidEmail": "邮箱格式不正确",
+  "errIncorrectCredentials": "邮箱或密码错误",
+  "errEmailInUse": "该邮箱已注册",
+  "errWeakPassword": "密码至少需要 6 个字符",
+  "errPermissionDenied": "无法保存个人资料（权限不足），请检查 Firestore 安全规则",
+  "errGeneric": "出错了，请重试",
+  "addPet": "添加宠物",
+  "editPet": "编辑宠物资料",
+  "petName": "名字",
+  "nameRequired": "请输入名字",
+  "breed": "品种",
+  "speciesDog": "狗",
+  "speciesCat": "猫",
+  "selectBirthdate": "选择出生日期",
+  "weightKg": "体重（公斤）",
+  "enterValidWeight": "请输入有效的体重",
+  "selectBreedError": "请选择品种",
+  "selectBirthdateError": "请选择出生日期",
+  "saveChanges": "保存修改",
+  "savingPet": "正在保存…",
+  "uploadingPhoto": "正在上传照片…",
+  "errSaveTimeout": "当前网络较慢，照片可能仍在上传中，请稍后再试一次",
+  "errRulesPermission": "权限不足，请确认已部署 Firestore/Storage 安全规则",
+  "errCouldNotSavePet": "无法保存宠物信息，请重试",
+  "errSubscriptionLoad": "无法加载订阅状态",
+  "errPurchaseFailed": "购买失败，请重试",
+  "errRestoreFailed": "恢复失败，请重试",
+  "processingPurchase": "正在处理购买…",
+  "restoringPurchases": "正在恢复购买…",
+  "symptomCheckerTitle": "症状检查 · {petName}",
+  "@symptomCheckerTitle": {
+    "placeholders": {
+      "petName": {
+        "type": "String",
+        "example": "Bella"
+      }
+    }
+  },
+  "noChecksForSpecies": "该物种暂无可用的症状检查",
+  "back": "返回",
+  "saveShareWithVet": "保存并分享给兽医",
+  "savedShareAgain": "已保存 — 再次分享",
+  "savingCheck": "正在保存检查结果…",
+  "triageMonitor": "在家观察",
+  "triageVet": "尽快就医",
+  "triageEmergency": "紧急 — 立即处理",
+  "medicalDisclaimer": "本工具仅提供一般性指导，不能替代专业兽医诊断。如有疑问，请咨询兽医。",
+  "symptomVomiting": "呕吐",
+  "shareSummaryTitle": "PawHealth 症状检查 — {petName}",
+  "@shareSummaryTitle": {
+    "placeholders": {
+      "petName": {
+        "type": "String",
+        "example": "Bella"
+      }
+    }
+  },
+  "shareSymptom": "症状：{symptom}",
+  "@shareSymptom": {
+    "placeholders": {
+      "symptom": {
+        "type": "String"
+      }
+    }
+  },
+  "shareTriageLevel": "分诊级别：{level}",
+  "@shareTriageLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "shareAdvice": "建议：{advice}",
+  "@shareAdvice": {
+    "placeholders": {
+      "advice": {
+        "type": "String"
+      }
+    }
+  },
+  "shareAnswersHeader": "问答记录：",
+  "qVomitFrequency": "过去 24 小时内，您的狗呕吐了几次？",
+  "qBloodInVomit": "呕吐物中是否带血（红色血丝或咖啡渣样）？",
+  "qLethargyMild": "您的狗是否精神萎靡、乏力或状态反常？",
+  "qToxinIngestion": "您的狗是否可能误食了有毒物质、异物、人用药物或变质食物？",
+  "qBloatedAbdomen": "您的狗是否腹部肿胀鼓起，或干呕却吐不出东西？",
+  "qAgeVulnerable": "您的狗是幼犬（6 个月以下）、老年犬（8 岁以上），或患有慢性疾病吗？",
+  "qLethargyModerate": "您的狗是否精神萎靡、乏力或拒绝饮水？",
+  "opt1Time": "1 次",
+  "opt2to3Times": "2-3 次",
+  "opt4Plus": "4 次及以上",
+  "optYes": "是",
+  "optNo": "否",
+  "advEmergencyFrequent": "24 小时内呕吐 4 次及以上有严重脱水风险，请立即联系急诊兽医。",
+  "advEmergencyBlood": "呕吐物带血可能提示内出血或严重的胃肠道疾病，请立即寻求急诊兽医救治。",
+  "advEmergencyToxin": "疑似误食毒物或异物属于紧急情况，请立即联系急诊兽医或宠物中毒热线。",
+  "advEmergencyBloat": "腹部肿胀伴干呕可能是胃扭转（GDV）的征兆，危及生命，请立即前往急诊动物医院。",
+  "advVetLethargy": "呕吐伴精神萎靡应当天就医。暂停喂食，可少量多次喂水。",
+  "advVetVulnerable": "幼犬、老年犬及患慢性病的狗脱水很快，请在 24 小时内就医。",
+  "advVetModerate": "即使没有其他危险信号，反复呕吐也应在 24 小时内就医。禁食 12 小时，少量多次喂水。",
+  "advMonitorMild": "单次呕吐且无其他症状通常可在家观察。禁食几小时，备好清水，并留意是否再次呕吐。",
+  "gender": "性别",
+  "genderMale": "公",
+  "genderFemale": "母",
+  "spayedNeutered": "已绝育",
+  "careParasiteControl": "驱虫防护",
+  "careHeatCycle": "发情周期",
+  "careMedicalSurgery": "医疗与手术",
+  "careGrooming": "美容与洗澡",
+  "addEntry": "添加记录",
+  "careNote": "备注",
+  "noteRequired": "请输入备注",
+  "noEntriesYet": "暂无记录",
+  "cancel": "取消",
+  "save": "保存",
+  "language": "语言",
+  "chooseLanguage": "选择语言",
+  "careTitle": "标题",
+  "careDetails": "详情",
+  "titleRequired": "请输入标题",
+  "categoryLabel": "类别",
+  "healthDashboardTitle": "{petName} · 健康",
+  "@healthDashboardTitle": {
+    "placeholders": {
+      "petName": {
+        "type": "String",
+        "example": "Bella"
+      }
+    }
+  },
+  "generateReport": "生成报告",
+  "addHealthRecord": "添加健康记录",
+  "filterAll": "全部",
+  "filterVaccination": "疫苗",
+  "filterMedical": "医疗",
+  "filterGrooming": "美容",
+  "filterOther": "其他",
+  "timelineEmpty": "暂无健康记录",
+  "weight": "体重",
+  "logWeight": "记录体重",
+  "weightChartNeedTwo": "至少记录两次体重后可查看趋势",
+  "addVaccine": "添加疫苗",
+  "vaccineName": "疫苗名称",
+  "administeredOn": "接种于：{date}",
+  "@administeredOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "nextDueOn": "下次应接种：{date}",
+  "@nextDueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "selectNextDueDate": "选择下次接种日期",
+  "selectNextDueDateError": "请选择下次接种日期",
+  "vaccinationDates": "接种于 {given} · 下次 {next}",
+  "@vaccinationDates": {
+    "placeholders": {
+      "given": {
+        "type": "String"
+      },
+      "next": {
+        "type": "String"
+      }
+    }
+  },
+  "editHealthRecord": "编辑健康记录",
+  "delete": "删除",
+  "deleteRecordTitle": "删除记录",
+  "deleteConfirmMessage": "确定要删除这条记录吗？删除后无法恢复。",
+  "healthRecordButton": "健康记录",
+  "editVaccination": "编辑疫苗",
+  "speciesRabbit": "兔子",
+  "speciesBird": "鸟",
+  "speciesExotic": "异宠／其他",
+  "speciesLabel": "物种",
+  "breedOther": "其他（请注明）",
+  "enterBreed": "请输入品种",
+  "microchipId": "芯片编号",
+  "allergies": "已知过敏（食物／药物）",
+  "ageYearsMonths": "{years} 岁 {months} 个月",
+  "@ageYearsMonths": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      },
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "ageMonths": "{months} 个月",
+  "@ageMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "optNoSymptoms": "无症状／常规体检",
+  "advHealthy": "您的宠物看起来很健康！继续保持，定期体检并做好预防护理。"
+}

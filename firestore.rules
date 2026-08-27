@@ -1,0 +1,19 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // A user owns their own document tree: profile, pets, and all
+    // pet subcollections (health_logs, vaccinations, symptom_checks).
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Articles are global content: readable by any signed-in user,
+    // writable only via the Admin SDK (which bypasses rules).
+    match /articles/{articleId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+  }
+}

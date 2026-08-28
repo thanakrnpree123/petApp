@@ -334,6 +334,12 @@ abstract class AppLocalizations {
   /// **'Logging in…'**
   String get loggingIn;
 
+  /// No description provided for @loginBrandTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Every vaccine, weigh-in, and vet visit — in one timeline.'**
+  String get loginBrandTagline;
+
   /// No description provided for @creatingAccount.
   ///
   /// In en, this message translates to:

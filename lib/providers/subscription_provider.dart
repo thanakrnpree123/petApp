@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
@@ -5,18 +8,52 @@ import '../services/revenuecat_service.dart';
 
 class SubscriptionProvider extends ChangeNotifier {
   final RevenueCatService _service;
+  final FirebaseFirestore _firestore;
 
   bool isPlusMember = false;
   bool isLoading = false;
   String? errorCode;
   Offerings? offerings;
 
-  SubscriptionProvider({RevenueCatService? service})
-    : _service = service ?? RevenueCatService() {
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? _premiumSub;
+
+  SubscriptionProvider({RevenueCatService? service, FirebaseFirestore? firestore})
+    : _service = service ?? RevenueCatService(),
+      _firestore = firestore ?? FirebaseFirestore.instance {
     _service.addCustomerInfoListener(_onCustomerInfoUpdate);
   }
 
   Future<void> init(String userId) async {
+    // App Store / Play Store in-app purchase doesn't exist on the web, so
+    // Plus access there is granted by flipping `isPremium` on the user's
+    // own Firestore document instead (see users/{uid}.isPremium — set via
+    // the Firebase Console or an Admin SDK script, never by the client).
+    // A live stream (not a one-shot get()) means a grant takes effect
+    // immediately, without the user needing to log out and back in.
+    if (kIsWeb) {
+      isLoading = true;
+      notifyListeners();
+
+      await _premiumSub?.cancel();
+      _premiumSub = _firestore
+          .collection('users')
+          .doc(userId)
+          .snapshots()
+          .listen(
+            (doc) {
+              isPlusMember = doc.data()?['isPremium'] == true;
+              isLoading = false;
+              notifyListeners();
+            },
+            onError: (Object _) {
+              errorCode = 'load-failed';
+              isLoading = false;
+              notifyListeners();
+            },
+          );
+      return;
+    }
+
     if (RevenueCatService.hasPlaceholderKeys) {
       debugPrint(
         'RevenueCat: skipping init — placeholder API keys in '
@@ -41,6 +78,8 @@ class SubscriptionProvider extends ChangeNotifier {
   }
 
   void _onCustomerInfoUpdate(CustomerInfo info) {
+    // Web never configures RevenueCat, so this listener simply never fires
+    // there — isPlusMember stays driven by the Firestore stream above.
     isPlusMember = info.entitlements.active.containsKey(
       RevenueCatService.entitlementId,
     );
@@ -86,6 +125,7 @@ class SubscriptionProvider extends ChangeNotifier {
   @override
   void dispose() {
     _service.removeCustomerInfoListener(_onCustomerInfoUpdate);
+    _premiumSub?.cancel();
     super.dispose();
   }
 }

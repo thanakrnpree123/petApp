@@ -129,6 +129,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loggingIn => '正在登录…';
 
   @override
+  String get loginBrandTagline => '疫苗、体重和每一次兽医就诊，尽在一条时间线上。';
+
+  @override
   String get creatingAccount => '正在创建账户…';
 
   @override

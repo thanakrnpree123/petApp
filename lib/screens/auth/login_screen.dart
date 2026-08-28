@@ -7,6 +7,7 @@ import '../../utils/l10n_helpers.dart';
 import '../../utils/validators.dart';
 import '../../widgets/auth/auth_text_field.dart';
 import '../../widgets/common/paw_loader.dart';
+import '../../widgets/responsive/breakpoints.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -47,90 +48,167 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final auth = context.watch<AuthProvider>();
+    final isDesktop = screenSizeOf(context).isDesktop;
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.logIn)),
-      // Standard responsive form pattern: content is centered and
-      // non-scrollable while it fits; when the keyboard shrinks the
-      // viewport, the ConstrainedBox/IntrinsicHeight pair lets it scroll
-      // exactly as far as needed to avoid overflow — no further.
-      body: LayoutBuilder(
-        builder: (context, constraints) => SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: IntrinsicHeight(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Center(
-                        child: Image.asset(
-                          'assets/images/splash_logo.png',
-                          height: 96,
-                          width: 96,
-                          fit: BoxFit.contain,
-                        ),
+    // Standard responsive form pattern: content is centered and
+    // non-scrollable while it fits; when the keyboard shrinks the
+    // viewport, the ConstrainedBox/IntrinsicHeight pair lets it scroll
+    // exactly as far as needed to avoid overflow — no further.
+    final form = LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: IntrinsicHeight(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/images/splash_logo.png',
+                        height: 96,
+                        width: 96,
+                        fit: BoxFit.contain,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        l10n.appTitle,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineMedium
-                            ?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                      ),
-                      const SizedBox(height: 40),
-                      AuthTextField(
-                        controller: _emailController,
-                        label: l10n.email,
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) => Validators.email(value, l10n),
-                      ),
-                      const SizedBox(height: 16),
-                      AuthTextField(
-                        controller: _passwordController,
-                        label: l10n.password,
-                        obscureText: true,
-                        validator: (value) => Validators.password(value, l10n),
-                      ),
-                      const SizedBox(height: 24),
-                      if (auth.errorCode != null)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: Text(
-                            L10nHelpers.authError(l10n, auth.errorCode!),
-                            style: const TextStyle(color: Colors.red),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      l10n.appTitle,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
                           ),
+                    ),
+                    const SizedBox(height: 40),
+                    AuthTextField(
+                      controller: _emailController,
+                      label: l10n.email,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) => Validators.email(value, l10n),
+                    ),
+                    const SizedBox(height: 16),
+                    AuthTextField(
+                      controller: _passwordController,
+                      label: l10n.password,
+                      obscureText: true,
+                      validator: (value) => Validators.password(value, l10n),
+                    ),
+                    const SizedBox(height: 24),
+                    if (auth.errorCode != null)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: Text(
+                          L10nHelpers.authError(l10n, auth.errorCode!),
+                          style: const TextStyle(color: Colors.red),
                         ),
-                      FilledButton(
-                        onPressed: auth.isLoading ? null : _submit,
-                        child: Text(l10n.logIn),
                       ),
-                      const SizedBox(height: 12),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const RegisterScreen(),
-                            ),
-                          );
-                        },
-                        child: Text(l10n.noAccountRegister),
-                      ),
-                      const SizedBox(height: 24),
-                    ],
-                  ),
+                    FilledButton(
+                      onPressed: auth.isLoading ? null : _submit,
+                      child: Text(l10n.logIn),
+                    ),
+                    const SizedBox(height: 12),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const RegisterScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(l10n.noAccountRegister),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
                 ),
               ),
             ),
           ),
         ),
+      ),
+    );
+
+    // Below desktop width the form fills the screen exactly as before.
+    // At desktop width it's capped to a fixed column and, when there's a
+    // brand panel beside it, centered within the remaining space instead
+    // of stretching edge to edge.
+    final formColumn = ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 400),
+      child: form,
+    );
+
+    return Scaffold(
+      appBar: isDesktop ? null : AppBar(title: Text(l10n.logIn)),
+      body: isDesktop
+          ? Row(
+              children: [
+                const Expanded(flex: 5, child: _LoginBrandPanel()),
+                Expanded(flex: 4, child: Center(child: formColumn)),
+              ],
+            )
+          : form,
+    );
+  }
+}
+
+/// Marketing panel shown beside the login form on wide screens. Purely
+/// decorative — no state, no navigation — so it costs nothing on mobile
+/// where it's never built.
+class _LoginBrandPanel extends StatelessWidget {
+  const _LoginBrandPanel();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [colorScheme.primary, colorScheme.primaryContainer],
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 40),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Image.asset(
+                'assets/images/splash_logo.png',
+                height: 36,
+                width: 36,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                l10n.appTitle,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: colorScheme.onPrimary,
+                ),
+              ),
+            ],
+          ),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 380),
+            child: Text(
+              l10n.loginBrandTagline,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: colorScheme.onPrimary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          const SizedBox.shrink(),
+        ],
       ),
     );
   }

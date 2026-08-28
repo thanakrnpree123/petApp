@@ -62,6 +62,23 @@
   "errGeneric": "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง",
   "addPet": "เพิ่มสัตว์เลี้ยง",
   "editPet": "แก้ไขข้อมูลสัตว์เลี้ยง",
+  "deletePet": "ลบสัตว์เลี้ยง",
+  "deletePetTitle": "ลบ {petName} ใช่ไหม?",
+  "@deletePetTitle": {
+    "placeholders": { "petName": { "type": "String" } }
+  },
+  "deletePetConfirmMessage": "การดำเนินการนี้จะลบข้อมูลโปรไฟล์ของ {petName} รวมถึงประวัติสุขภาพ วัคซีน และบันทึกการดูแลทั้งหมดอย่างถาวร ไม่สามารถย้อนกลับได้",
+  "@deletePetConfirmMessage": {
+    "placeholders": { "petName": { "type": "String" } }
+  },
+  "petDeleted": "ลบ {petName} แล้ว",
+  "@petDeleted": {
+    "placeholders": { "petName": { "type": "String" } }
+  },
+  "deletePetFailed": "ไม่สามารถลบ {petName} ได้ กรุณาลองใหม่อีกครั้ง",
+  "@deletePetFailed": {
+    "placeholders": { "petName": { "type": "String" } }
+  },
   "petName": "ชื่อ",
   "nameRequired": "กรุณากรอกชื่อ",
   "breed": "สายพันธุ์",

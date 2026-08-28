@@ -62,6 +62,23 @@
   "errGeneric": "Something went wrong. Please try again.",
   "addPet": "Add Pet",
   "editPet": "Edit Pet",
+  "deletePet": "Delete Pet",
+  "deletePetTitle": "Delete {petName}?",
+  "@deletePetTitle": {
+    "placeholders": { "petName": { "type": "String" } }
+  },
+  "deletePetConfirmMessage": "This permanently deletes {petName}'s profile and all of their health records, vaccinations, and care logs. This cannot be undone.",
+  "@deletePetConfirmMessage": {
+    "placeholders": { "petName": { "type": "String" } }
+  },
+  "petDeleted": "{petName} was deleted.",
+  "@petDeleted": {
+    "placeholders": { "petName": { "type": "String" } }
+  },
+  "deletePetFailed": "Couldn't delete {petName}. Please try again.",
+  "@deletePetFailed": {
+    "placeholders": { "petName": { "type": "String" } }
+  },
   "petName": "Name",
   "nameRequired": "Name is required",
   "breed": "Breed",

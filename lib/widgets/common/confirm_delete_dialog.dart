@@ -3,13 +3,22 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 
 /// Shared "Are you sure?" confirmation used before any destructive delete.
+/// Defaults to the generic record-delete copy; pass [title]/[message] to
+/// tailor the wording for a specific kind of item (e.g. a pet profile).
 class ConfirmDeleteDialog extends StatelessWidget {
-  const ConfirmDeleteDialog({super.key});
+  final String? title;
+  final String? message;
 
-  static Future<bool> show(BuildContext context) async {
+  const ConfirmDeleteDialog({super.key, this.title, this.message});
+
+  static Future<bool> show(
+    BuildContext context, {
+    String? title,
+    String? message,
+  }) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (_) => const ConfirmDeleteDialog(),
+      builder: (_) => ConfirmDeleteDialog(title: title, message: message),
     );
     return confirmed ?? false;
   }
@@ -19,8 +28,8 @@ class ConfirmDeleteDialog extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return AlertDialog(
-      title: Text(l10n.deleteRecordTitle),
-      content: Text(l10n.deleteConfirmMessage),
+      title: Text(title ?? l10n.deleteRecordTitle),
+      content: Text(message ?? l10n.deleteConfirmMessage),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),

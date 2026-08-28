@@ -174,6 +174,29 @@ class AppLocalizationsZh extends AppLocalizations {
   String get editPet => '编辑宠物资料';
 
   @override
+  String get deletePet => '删除宠物';
+
+  @override
+  String deletePetTitle(String petName) {
+    return '删除$petName？';
+  }
+
+  @override
+  String deletePetConfirmMessage(String petName) {
+    return '此操作会永久删除$petName的资料，以及其所有健康记录、疫苗记录和护理记录，且无法撤销。';
+  }
+
+  @override
+  String petDeleted(String petName) {
+    return '已删除$petName。';
+  }
+
+  @override
+  String deletePetFailed(String petName) {
+    return '无法删除$petName，请重试。';
+  }
+
+  @override
   String get petName => '名字';
 
   @override

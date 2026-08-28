@@ -177,6 +177,29 @@ class AppLocalizationsTh extends AppLocalizations {
   String get editPet => 'แก้ไขข้อมูลสัตว์เลี้ยง';
 
   @override
+  String get deletePet => 'ลบสัตว์เลี้ยง';
+
+  @override
+  String deletePetTitle(String petName) {
+    return 'ลบ $petName ใช่ไหม?';
+  }
+
+  @override
+  String deletePetConfirmMessage(String petName) {
+    return 'การดำเนินการนี้จะลบข้อมูลโปรไฟล์ของ $petName รวมถึงประวัติสุขภาพ วัคซีน และบันทึกการดูแลทั้งหมดอย่างถาวร ไม่สามารถย้อนกลับได้';
+  }
+
+  @override
+  String petDeleted(String petName) {
+    return 'ลบ $petName แล้ว';
+  }
+
+  @override
+  String deletePetFailed(String petName) {
+    return 'ไม่สามารถลบ $petName ได้ กรุณาลองใหม่อีกครั้ง';
+  }
+
+  @override
   String get petName => 'ชื่อ';
 
   @override

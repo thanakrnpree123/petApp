@@ -90,8 +90,29 @@ class PetProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> deletePet(String userId, String petId) {
-    return _petService.deletePet(userId, petId);
+  Future<bool> deletePet(String userId, String petId) async {
+    isLoading = true;
+    errorCode = null;
+    notifyListeners();
+
+    try {
+      await _petService.deletePet(userId, petId);
+      return true;
+    } on TimeoutException {
+      errorCode = 'timeout';
+      return false;
+    } on FirebaseException catch (e) {
+      errorCode = e.code == 'permission-denied' || e.code == 'unauthorized'
+          ? 'permission-denied'
+          : 'unknown';
+      return false;
+    } catch (_) {
+      errorCode = 'unknown';
+      return false;
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   @override

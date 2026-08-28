@@ -177,6 +177,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editPet => 'Edit Pet';
 
   @override
+  String get deletePet => 'Delete Pet';
+
+  @override
+  String deletePetTitle(String petName) {
+    return 'Delete $petName?';
+  }
+
+  @override
+  String deletePetConfirmMessage(String petName) {
+    return 'This permanently deletes $petName\'s profile and all of their health records, vaccinations, and care logs. This cannot be undone.';
+  }
+
+  @override
+  String petDeleted(String petName) {
+    return '$petName was deleted.';
+  }
+
+  @override
+  String deletePetFailed(String petName) {
+    return 'Couldn\'t delete $petName. Please try again.';
+  }
+
+  @override
   String get petName => 'Name';
 
   @override

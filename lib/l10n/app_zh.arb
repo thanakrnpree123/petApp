@@ -47,6 +47,7 @@
   "createAccount": "创建账户",
   "noAccountRegister": "还没有账户？立即注册",
   "loggingIn": "正在登录…",
+  "loginBrandTagline": "疫苗、体重和每一次兽医就诊，尽在一条时间线上。",
   "creatingAccount": "正在创建账户…",
   "emailRequired": "请输入邮箱",
   "emailInvalid": "请输入有效的邮箱地址",

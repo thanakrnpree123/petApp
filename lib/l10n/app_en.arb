@@ -47,6 +47,7 @@
   "createAccount": "Create Account",
   "noAccountRegister": "Don't have an account? Register",
   "loggingIn": "Logging in…",
+  "loginBrandTagline": "Every vaccine, weigh-in, and vet visit — in one timeline.",
   "creatingAccount": "Creating your account…",
   "emailRequired": "Email is required",
   "emailInvalid": "Enter a valid email address",

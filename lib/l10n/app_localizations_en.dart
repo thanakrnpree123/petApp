@@ -130,6 +130,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loggingIn => 'Logging in…';
 
   @override
+  String get loginBrandTagline =>
+      'Every vaccine, weigh-in, and vet visit — in one timeline.';
+
+  @override
   String get creatingAccount => 'Creating your account…';
 
   @override

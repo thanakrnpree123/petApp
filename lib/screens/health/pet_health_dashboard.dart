@@ -18,6 +18,7 @@ import '../../widgets/health/add_health_record_dialog.dart';
 import '../../widgets/health/add_vaccine_dialog.dart';
 import '../../widgets/health/add_weight_dialog.dart';
 import '../../widgets/health/weight_chart.dart';
+import '../../widgets/responsive/breakpoints.dart';
 import '../../widgets/subscription/upgrade_prompt_dialog.dart';
 import 'pdf_preview_screen.dart';
 
@@ -143,6 +144,7 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isPlusMember = context.watch<SubscriptionProvider>().isPlusMember;
+    final isDesktop = screenSizeOf(context).isDesktop;
 
     return ChangeNotifierProvider(
       create: (_) => HealthTimelineProvider(),
@@ -199,50 +201,95 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
             ),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
+        body: Center(
+          child: ConstrainedBox(
+            // Unbounded on mobile/tablet so the phone layout is untouched;
+            // capped on desktop so the two-column body doesn't stretch
+            // across a full-width browser window.
+            constraints: BoxConstraints(
+              maxWidth: isDesktop ? 1120 : double.infinity,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
-                    child: FilledButton.icon(
-                      onPressed: _addRecord,
-                      icon: const Icon(Icons.add),
-                      label: Text(l10n.healthRecordButton),
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: FilledButton.icon(
+                          onPressed: _addRecord,
+                          icon: const Icon(Icons.add),
+                          label: Text(l10n.healthRecordButton),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      OutlinedButton.icon(
+                        onPressed: _addVaccine,
+                        icon: const Icon(Icons.vaccines_outlined),
+                        label: Text(l10n.addVaccine),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  OutlinedButton.icon(
-                    onPressed: _addVaccine,
-                    icon: const Icon(Icons.vaccines_outlined),
-                    label: Text(l10n.addVaccine),
+                  const SizedBox(height: 12),
+                  _FilterChipsRow(showHeatCycle: widget.pet.tracksHeatCycle),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: isDesktop
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: _UnifiedTimeline(
+                                  service: _service,
+                                  userId: _userId,
+                                  pet: widget.pet,
+                                  onEditRecord: _editRecord,
+                                  onEditVaccination: _editVaccination,
+                                ),
+                              ),
+                              const SizedBox(width: 24),
+                              SizedBox(
+                                width: 320,
+                                child: SingleChildScrollView(
+                                  child: _WeightSection(
+                                    service: _service,
+                                    userId: _userId,
+                                    pet: widget.pet,
+                                    onAddWeight: _addWeight,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        // Below desktop width: today's stacked layout,
+                        // unchanged — timeline scrolls independently while
+                        // the weight section stays pinned at the bottom.
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                child: _UnifiedTimeline(
+                                  service: _service,
+                                  userId: _userId,
+                                  pet: widget.pet,
+                                  onEditRecord: _editRecord,
+                                  onEditVaccination: _editVaccination,
+                                ),
+                              ),
+                              const Divider(height: 24),
+                              _WeightSection(
+                                service: _service,
+                                userId: _userId,
+                                pet: widget.pet,
+                                onAddWeight: _addWeight,
+                              ),
+                            ],
+                          ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              _FilterChipsRow(showHeatCycle: widget.pet.tracksHeatCycle),
-              const SizedBox(height: 8),
-              // Independently scrollable; the Weight section below stays
-              // visible regardless of how long the timeline grows.
-              Expanded(
-                child: _UnifiedTimeline(
-                  service: _service,
-                  userId: _userId,
-                  pet: widget.pet,
-                  onEditRecord: _editRecord,
-                  onEditVaccination: _editVaccination,
-                ),
-              ),
-              const Divider(height: 24),
-              _WeightSection(
-                service: _service,
-                userId: _userId,
-                pet: widget.pet,
-                onAddWeight: _addWeight,
-              ),
-            ],
+            ),
           ),
         ),
       ),

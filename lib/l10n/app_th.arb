@@ -47,6 +47,7 @@
   "createAccount": "สร้างบัญชี",
   "noAccountRegister": "ยังไม่มีบัญชี? ลงทะเบียนเลย",
   "loggingIn": "กำลังเข้าสู่ระบบ…",
+  "loginBrandTagline": "วัคซีน น้ำหนัก และการพบสัตวแพทย์ทุกครั้ง อยู่ในไทม์ไลน์เดียว",
   "creatingAccount": "กำลังสร้างบัญชี…",
   "emailRequired": "กรุณากรอกอีเมล",
   "emailInvalid": "กรุณากรอกอีเมลให้ถูกต้อง",

@@ -130,6 +130,10 @@ class AppLocalizationsTh extends AppLocalizations {
   String get loggingIn => 'กำลังเข้าสู่ระบบ…';
 
   @override
+  String get loginBrandTagline =>
+      'วัคซีน น้ำหนัก และการพบสัตวแพทย์ทุกครั้ง อยู่ในไทม์ไลน์เดียว';
+
+  @override
   String get creatingAccount => 'กำลังสร้างบัญชี…';
 
   @override

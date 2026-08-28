@@ -8,6 +8,7 @@ import '../../providers/pet_provider.dart';
 import '../../providers/subscription_provider.dart';
 import '../../services/symptom_check_service.dart';
 import '../../utils/l10n_helpers.dart';
+import '../../widgets/responsive/breakpoints.dart';
 import '../../widgets/subscription/upgrade_prompt_dialog.dart';
 import '../health/pet_health_dashboard.dart';
 import '../symptom_checker/symptom_checker_screen.dart';
@@ -59,18 +60,47 @@ class _PetListScreenState extends State<PetListScreen> {
   @override
   Widget build(BuildContext context) {
     final pets = context.watch<PetProvider>().pets;
+    final isDesktop = screenSizeOf(context).isDesktop;
+
+    Widget body;
+    if (pets.isEmpty) {
+      body = Center(child: Text(AppLocalizations.of(context)!.noPetsYet));
+    } else if (isDesktop) {
+      // A single narrow list column reads as empty on a wide window, so
+      // desktop wraps the same _PetCard into a grid instead — same data,
+      // same tap targets, just laid out to use the width.
+      body = Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1120),
+          child: GridView.builder(
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 360,
+              mainAxisExtent: 108,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+            ),
+            itemCount: pets.length,
+            itemBuilder: (context, index) => _PetCard(
+              pet: pets[index],
+              onCheckSymptoms: _openSymptomChecker,
+            ),
+          ),
+        ),
+      );
+    } else {
+      body = ListView.builder(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 88),
+        itemCount: pets.length,
+        itemBuilder: (context, index) => _PetCard(
+          pet: pets[index],
+          onCheckSymptoms: _openSymptomChecker,
+        ),
+      );
+    }
 
     return Scaffold(
-      body: pets.isEmpty
-          ? Center(child: Text(AppLocalizations.of(context)!.noPetsYet))
-          : ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 88),
-              itemCount: pets.length,
-              itemBuilder: (context, index) => _PetCard(
-                pet: pets[index],
-                onCheckSymptoms: _openSymptomChecker,
-              ),
-            ),
+      body: body,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(

@@ -33,7 +33,28 @@ class PetService {
     return _petsRef(userId).doc(pet.id).update(pet.toFirestore());
   }
 
-  Future<void> deletePet(String userId, String petId) {
-    return _petsRef(userId).doc(petId).delete();
+  /// Firestore doesn't cascade-delete subcollections, so deleting just the
+  /// pet doc would silently orphan its health_logs, vaccinations, care_logs
+  /// and symptom_checks. Clear each subcollection first, then the pet doc.
+  Future<void> deletePet(String userId, String petId) async {
+    final petDoc = _petsRef(userId).doc(petId);
+    const subcollections = [
+      'health_logs',
+      'vaccinations',
+      'care_logs',
+      'symptom_checks',
+    ];
+
+    for (final name in subcollections) {
+      final snapshot = await petDoc.collection(name).get();
+      if (snapshot.docs.isEmpty) continue;
+      final batch = _firestore.batch();
+      for (final doc in snapshot.docs) {
+        batch.delete(doc.reference);
+      }
+      await batch.commit();
+    }
+
+    await petDoc.delete();
   }
 }

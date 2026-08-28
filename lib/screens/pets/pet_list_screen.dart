@@ -8,6 +8,7 @@ import '../../providers/pet_provider.dart';
 import '../../providers/subscription_provider.dart';
 import '../../services/symptom_check_service.dart';
 import '../../utils/l10n_helpers.dart';
+import '../../widgets/common/confirm_delete_dialog.dart';
 import '../../widgets/responsive/breakpoints.dart';
 import '../../widgets/subscription/upgrade_prompt_dialog.dart';
 import '../health/pet_health_dashboard.dart';
@@ -57,6 +58,34 @@ class _PetListScreenState extends State<PetListScreen> {
     ).push(MaterialPageRoute(builder: (_) => SymptomCheckerScreen(pet: pet)));
   }
 
+  Future<void> _deletePet(Pet pet) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await ConfirmDeleteDialog.show(
+      context,
+      title: l10n.deletePetTitle(pet.name),
+      message: l10n.deletePetConfirmMessage(pet.name),
+    );
+    if (!confirmed || !mounted) return;
+
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final success = await context.read<PetProvider>().deletePet(
+      userId,
+      pet.id!,
+    );
+    if (!mounted) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(
+          success
+              ? l10n.petDeleted(pet.name)
+              : l10n.deletePetFailed(pet.name),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final pets = context.watch<PetProvider>().pets;
@@ -84,6 +113,7 @@ class _PetListScreenState extends State<PetListScreen> {
             itemBuilder: (context, index) => _PetCard(
               pet: pets[index],
               onCheckSymptoms: _openSymptomChecker,
+              onDelete: _deletePet,
             ),
           ),
         ),
@@ -95,6 +125,7 @@ class _PetListScreenState extends State<PetListScreen> {
         itemBuilder: (context, index) => _PetCard(
           pet: pets[index],
           onCheckSymptoms: _openSymptomChecker,
+          onDelete: _deletePet,
         ),
       );
     }
@@ -116,8 +147,13 @@ class _PetListScreenState extends State<PetListScreen> {
 class _PetCard extends StatelessWidget {
   final Pet pet;
   final Future<void> Function(Pet) onCheckSymptoms;
+  final Future<void> Function(Pet) onDelete;
 
-  const _PetCard({required this.pet, required this.onCheckSymptoms});
+  const _PetCard({
+    required this.pet,
+    required this.onCheckSymptoms,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -177,21 +213,52 @@ class _PetCard extends StatelessWidget {
                   ],
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.edit_outlined),
-                tooltip: AppLocalizations.of(context)!.editProfile,
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => PetFormScreen(existingPet: pet),
-                    ),
-                  );
-                },
-              ),
               IconButton.filledTonal(
                 icon: const Icon(Icons.health_and_safety_outlined),
                 tooltip: AppLocalizations.of(context)!.checkSymptoms,
                 onPressed: () => onCheckSymptoms(pet),
+              ),
+              PopupMenuButton<_PetCardAction>(
+                icon: const Icon(Icons.more_vert),
+                tooltip: MaterialLocalizations.of(context).showMenuTooltip,
+                onSelected: (action) {
+                  switch (action) {
+                    case _PetCardAction.edit:
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => PetFormScreen(existingPet: pet),
+                        ),
+                      );
+                    case _PetCardAction.delete:
+                      onDelete(pet);
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: _PetCardAction.edit,
+                    child: ListTile(
+                      leading: const Icon(Icons.edit_outlined),
+                      title: Text(AppLocalizations.of(context)!.editProfile),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: _PetCardAction.delete,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.delete_outline,
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                      title: Text(
+                        AppLocalizations.of(context)!.deletePet,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -200,3 +267,5 @@ class _PetCard extends StatelessWidget {
     );
   }
 }
+
+enum _PetCardAction { edit, delete }

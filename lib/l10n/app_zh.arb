@@ -62,6 +62,23 @@
   "errGeneric": "出错了，请重试",
   "addPet": "添加宠物",
   "editPet": "编辑宠物资料",
+  "deletePet": "删除宠物",
+  "deletePetTitle": "删除{petName}？",
+  "@deletePetTitle": {
+    "placeholders": { "petName": { "type": "String" } }
+  },
+  "deletePetConfirmMessage": "此操作会永久删除{petName}的资料，以及其所有健康记录、疫苗记录和护理记录，且无法撤销。",
+  "@deletePetConfirmMessage": {
+    "placeholders": { "petName": { "type": "String" } }
+  },
+  "petDeleted": "已删除{petName}。",
+  "@petDeleted": {
+    "placeholders": { "petName": { "type": "String" } }
+  },
+  "deletePetFailed": "无法删除{petName}，请重试。",
+  "@deletePetFailed": {
+    "placeholders": { "petName": { "type": "String" } }
+  },
   "petName": "名字",
   "nameRequired": "请输入名字",
   "breed": "品种",

@@ -424,6 +424,36 @@ abstract class AppLocalizations {
   /// **'Edit Pet'**
   String get editPet;
 
+  /// No description provided for @deletePet.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Pet'**
+  String get deletePet;
+
+  /// No description provided for @deletePetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {petName}?'**
+  String deletePetTitle(String petName);
+
+  /// No description provided for @deletePetConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This permanently deletes {petName}\'s profile and all of their health records, vaccinations, and care logs. This cannot be undone.'**
+  String deletePetConfirmMessage(String petName);
+
+  /// No description provided for @petDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'{petName} was deleted.'**
+  String petDeleted(String petName);
+
+  /// No description provided for @deletePetFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t delete {petName}. Please try again.'**
+  String deletePetFailed(String petName);
+
   /// No description provided for @petName.
   ///
   /// In en, this message translates to:

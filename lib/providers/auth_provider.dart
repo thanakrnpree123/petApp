@@ -41,6 +41,32 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> signOut() => _authService.signOut();
 
+  /// Returns null on success, or an error code for L10nHelpers.authError.
+  ///
+  /// Deliberately doesn't touch [isLoading]/[errorCode]: those drive the
+  /// login form behind the reset dialog, which shouldn't show the reset
+  /// flow's errors.
+  Future<String?> sendPasswordReset({
+    required String email,
+    required String languageCode,
+  }) async {
+    try {
+      await _authService.sendPasswordResetEmail(
+        email: email,
+        languageCode: languageCode,
+      );
+      return null;
+    } on FirebaseAuthException catch (e) {
+      // Treated as sent: telling a stranger which emails have accounts
+      // would let anyone probe for users. The message says "if an account
+      // exists" either way.
+      if (e.code == 'user-not-found') return null;
+      return e.code;
+    } catch (_) {
+      return 'unknown';
+    }
+  }
+
   Future<bool> deleteAccount({required String password}) {
     return _runAuthAction(
       () => _accountDeletion.deleteAccount(password: password),

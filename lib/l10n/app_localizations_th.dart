@@ -930,4 +930,22 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get deleteAccountFailed =>
       'ลบบัญชีไม่สำเร็จ กรุณาตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง บัญชีของคุณยังใช้งานได้ จึงสามารถลบต่อให้เสร็จได้';
+
+  @override
+  String get forgotPassword => 'ลืมรหัสผ่าน?';
+
+  @override
+  String get resetPasswordTitle => 'ตั้งรหัสผ่านใหม่';
+
+  @override
+  String get resetPasswordMessage =>
+      'กรอกอีเมลของบัญชี แล้วเราจะส่งลิงก์สำหรับตั้งรหัสผ่านใหม่ให้คุณ';
+
+  @override
+  String get sendResetLink => 'ส่งลิงก์ตั้งรหัสผ่าน';
+
+  @override
+  String resetLinkSent(String email) {
+    return 'หากมีบัญชีที่ใช้อีเมล $email เราได้ส่งลิงก์ตั้งรหัสผ่านใหม่ไปแล้ว กรุณาตรวจสอบกล่องจดหมายและโฟลเดอร์สแปม';
+  }
 }

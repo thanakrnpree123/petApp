@@ -1695,6 +1695,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t finish deleting your account. Check your connection and try again — your account is still active, so you can finish deleting it.'**
   String get deleteAccountFailed;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPassword;
+
+  /// No description provided for @resetPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset your password'**
+  String get resetPasswordTitle;
+
+  /// No description provided for @resetPasswordMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your account email and we\'ll send you a link to set a new password.'**
+  String get resetPasswordMessage;
+
+  /// No description provided for @sendResetLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Link'**
+  String get sendResetLink;
+
+  /// No description provided for @resetLinkSent.
+  ///
+  /// In en, this message translates to:
+  /// **'If an account exists for {email}, a reset link is on its way. Check your inbox and spam folder.'**
+  String resetLinkSent(String email);
 }
 
 class _AppLocalizationsDelegate

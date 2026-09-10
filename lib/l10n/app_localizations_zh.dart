@@ -864,4 +864,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get deleteAccountFailed => '未能完成账户删除。请检查网络连接后重试——您的账户仍然有效，可以继续完成删除。';
+
+  @override
+  String get forgotPassword => '忘记密码？';
+
+  @override
+  String get resetPasswordTitle => '重置密码';
+
+  @override
+  String get resetPasswordMessage => '请输入您的账户邮箱，我们会发送一个用于设置新密码的链接。';
+
+  @override
+  String get sendResetLink => '发送重置链接';
+
+  @override
+  String resetLinkSent(String email) {
+    return '如果存在使用 $email 的账户，重置链接已发出。请查看收件箱和垃圾邮件文件夹。';
+  }
 }

@@ -38,6 +38,16 @@ class AuthService {
     return credential;
   }
 
+  /// Sends Firebase's password-reset email, written in [languageCode] so
+  /// the user gets it in the language they use the app in.
+  Future<void> sendPasswordResetEmail({
+    required String email,
+    required String languageCode,
+  }) async {
+    await _auth.setLanguageCode(languageCode);
+    await _auth.sendPasswordResetEmail(email: email);
+  }
+
   Future<void> signOut() {
     return _auth.signOut();
   }

@@ -932,4 +932,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get deleteAccountFailed =>
       'Couldn\'t finish deleting your account. Check your connection and try again — your account is still active, so you can finish deleting it.';
+
+  @override
+  String get forgotPassword => 'Forgot password?';
+
+  @override
+  String get resetPasswordTitle => 'Reset your password';
+
+  @override
+  String get resetPasswordMessage =>
+      'Enter your account email and we\'ll send you a link to set a new password.';
+
+  @override
+  String get sendResetLink => 'Send Reset Link';
+
+  @override
+  String resetLinkSent(String email) {
+    return 'If an account exists for $email, a reset link is on its way. Check your inbox and spam folder.';
+  }
 }

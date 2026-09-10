@@ -6,6 +6,7 @@ import '../../providers/auth_provider.dart';
 import '../../utils/l10n_helpers.dart';
 import '../../utils/validators.dart';
 import '../../widgets/auth/auth_text_field.dart';
+import '../../widgets/auth/forgot_password_dialog.dart';
 import '../../widgets/common/paw_loader.dart';
 import '../../widgets/responsive/breakpoints.dart';
 import 'register_screen.dart';
@@ -107,7 +108,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: true,
                       validator: (value) => Validators.password(value, l10n),
                     ),
-                    const SizedBox(height: 24),
+                    Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: TextButton(
+                        onPressed: () => ForgotPasswordDialog.show(
+                          context,
+                          initialEmail: _emailController.text,
+                        ),
+                        child: Text(l10n.forgotPassword),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
                     if (auth.errorCode != null)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16),

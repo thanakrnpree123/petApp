@@ -9,7 +9,7 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 | Order | Item | Why it's in the batch | RICE | Effort | Status | Notes |
 |---|---|---|---|---|---|---|
 | 1 | **Account deletion** | App Store 5.1.1(v) blocker; PDPA/GDPR | blocker | 1–2 d | 🟨 | Code + tests done. Remaining: deploy `firestore.rules`, test on a real account |
-| 2 | **#3** Symptom checker fails offline for free users; double-tap opens two screens | Breaks the 2 AM promise | 720 | 0.5 d | ⬜ | |
+| 2 | **#3** Symptom checker fails offline for free users; double-tap opens two screens | Breaks the 2 AM promise | 720 | 0.5 d | ✅ | Limit lookup fails open (4 s timeout); double-tap guard |
 | 3 | **#10** Deleting a pet keeps its vaccine reminders and photo | Override: grief moment → 1-star review | 120 | 0.5 d | ⬜ | Share cleanup with account deletion |
 | 4 | **#7** No "Forgot password" | Override: locked-out user is lost for good | 360 | 0.5 d | ⬜ | |
 | 5 | **#2** Notification permission asked at first launch | One-shot iOS prompt kills reminders | 840 | 0.5 d | ⬜ | Ask when first vaccine is added |

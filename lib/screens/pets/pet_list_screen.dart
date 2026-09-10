@@ -35,28 +35,34 @@ class _PetListScreenState extends State<PetListScreen> {
     });
   }
 
+  /// Guards against a double tap pushing two checker screens while the
+  /// free-limit lookup is still in flight.
+  bool _openingChecker = false;
+
   Future<void> _openSymptomChecker(Pet pet) async {
-    final isPlusMember = context.read<SubscriptionProvider>().isPlusMember;
-
-    if (!isPlusMember) {
-      final userId = FirebaseAuth.instance.currentUser!.uid;
-      final limitReached = await _symptomCheckService.hasReachedFreeLimit(
-        userId,
-      );
-      if (limitReached) {
-        if (!mounted) return;
-        await UpgradePromptDialog.show(
-          context,
-          message: AppLocalizations.of(context)!.symptomLimitMessage,
-        );
-        return;
+    if (_openingChecker) return;
+    _openingChecker = true;
+    try {
+      final isPlusMember = context.read<SubscriptionProvider>().isPlusMember;
+      if (!isPlusMember) {
+        final userId = FirebaseAuth.instance.currentUser!.uid;
+        if (await _symptomCheckService.shouldBlockFreeCheck(userId)) {
+          if (!mounted) return;
+          await UpgradePromptDialog.show(
+            context,
+            message: AppLocalizations.of(context)!.symptomLimitMessage,
+          );
+          return;
+        }
       }
-    }
 
-    if (!mounted) return;
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => SymptomCheckerScreen(pet: pet)));
+      if (!mounted) return;
+      await Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => SymptomCheckerScreen(pet: pet)));
+    } finally {
+      _openingChecker = false;
+    }
   }
 
   Future<void> _deletePet(Pet pet) async {

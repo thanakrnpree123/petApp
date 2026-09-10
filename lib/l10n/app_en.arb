@@ -379,5 +379,9 @@
   "resetPasswordMessage": "Enter your account email and we'll send you a link to set a new password.",
   "sendResetLink": "Send Reset Link",
   "resetLinkSent": "If an account exists for {email}, a reset link is on its way. Check your inbox and spam folder.",
-  "@resetLinkSent": {"placeholders": {"email": {"type": "String"}}}
+  "@resetLinkSent": {"placeholders": {"email": {"type": "String"}}},
+  "reminderPromptTitle": "Get vaccine reminders?",
+  "reminderPromptMessage": "We'll remind you the day before {petName}'s vaccine is due. You can change this anytime in your phone's settings.",
+  "@reminderPromptMessage": {"placeholders": {"petName": {"type": "String"}}},
+  "turnOnReminders": "Turn On"
 }

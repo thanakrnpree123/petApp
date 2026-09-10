@@ -1725,6 +1725,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'If an account exists for {email}, a reset link is on its way. Check your inbox and spam folder.'**
   String resetLinkSent(String email);
+
+  /// No description provided for @reminderPromptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get vaccine reminders?'**
+  String get reminderPromptTitle;
+
+  /// No description provided for @reminderPromptMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll remind you the day before {petName}\'s vaccine is due. You can change this anytime in your phone\'s settings.'**
+  String reminderPromptMessage(String petName);
+
+  /// No description provided for @turnOnReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn On'**
+  String get turnOnReminders;
 }
 
 class _AppLocalizationsDelegate

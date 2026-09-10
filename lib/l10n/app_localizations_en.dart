@@ -950,4 +950,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String resetLinkSent(String email) {
     return 'If an account exists for $email, a reset link is on its way. Check your inbox and spam folder.';
   }
+
+  @override
+  String get reminderPromptTitle => 'Get vaccine reminders?';
+
+  @override
+  String reminderPromptMessage(String petName) {
+    return 'We\'ll remind you the day before $petName\'s vaccine is due. You can change this anytime in your phone\'s settings.';
+  }
+
+  @override
+  String get turnOnReminders => 'Turn On';
 }

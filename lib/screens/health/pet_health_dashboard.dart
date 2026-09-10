@@ -18,6 +18,7 @@ import '../../theme/app_theme.dart';
 import '../../widgets/health/add_health_record_dialog.dart';
 import '../../widgets/health/add_vaccine_dialog.dart';
 import '../../widgets/health/add_weight_dialog.dart';
+import '../../widgets/health/reminder_permission_prompt.dart';
 import '../../widgets/health/weight_chart.dart';
 import '../../widgets/responsive/breakpoints.dart';
 import '../../widgets/subscription/upgrade_prompt_dialog.dart';
@@ -96,6 +97,14 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
       widget.pet.id!,
       result.vaccination,
     );
+
+    // The moment a reminder becomes useful is the moment to ask for it.
+    if (result.vaccination.nextDueDate.isAfter(DateTime.now()) && mounted) {
+      await ReminderPermissionPrompt.maybeAsk(
+        context,
+        petName: widget.pet.name,
+      );
+    }
 
     await NotificationService().scheduleVaccineReminder(
       id: NotificationService.vaccineReminderId(vaccinationId),

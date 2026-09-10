@@ -881,4 +881,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String resetLinkSent(String email) {
     return '如果存在使用 $email 的账户，重置链接已发出。请查看收件箱和垃圾邮件文件夹。';
   }
+
+  @override
+  String get reminderPromptTitle => '开启疫苗提醒？';
+
+  @override
+  String reminderPromptMessage(String petName) {
+    return '我们会在$petName的疫苗到期前一天提醒您。您可以随时在手机设置中更改。';
+  }
+
+  @override
+  String get turnOnReminders => '开启';
 }

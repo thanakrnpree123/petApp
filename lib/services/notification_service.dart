@@ -32,6 +32,10 @@ class NotificationService {
     return hash;
   }
 
+  /// Sets up the plugin WITHOUT asking for permission. Permission is
+  /// requested in context — when the user first adds a vaccine — by
+  /// [requestPermission]; asking at launch, before the user knows what
+  /// reminders are for, gets denied, and iOS never asks twice.
   Future<void> init() async {
     if (_initialized || !isSupported) return;
 
@@ -40,27 +44,57 @@ class NotificationService {
     const androidSettings = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
     );
-    final darwinSettings = DarwinInitializationSettings();
-    final settings = InitializationSettings(
+    // The Darwin settings default to prompting inside initialize().
+    const darwinSettings = DarwinInitializationSettings(
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+    );
+    const settings = InitializationSettings(
       android: androidSettings,
       iOS: darwinSettings,
     );
 
     await _plugin.initialize(settings: settings);
-
-    await _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.requestNotificationsPermission();
-
-    await _plugin
-        .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin
-        >()
-        ?.requestPermissions(alert: true, badge: true, sound: true);
-
     _initialized = true;
+  }
+
+  AndroidFlutterLocalNotificationsPlugin? get _android => _plugin
+      .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >();
+
+  IOSFlutterLocalNotificationsPlugin? get _ios => _plugin
+      .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin
+      >();
+
+  Future<bool> areNotificationsEnabled() async {
+    if (!isSupported) return false;
+    await init();
+    final android = _android;
+    if (android != null) {
+      return await android.areNotificationsEnabled() ?? false;
+    }
+    final permissions = await _ios?.checkPermissions();
+    return permissions?.isEnabled ?? false;
+  }
+
+  /// Shows the OS permission prompt (a no-op if the user already decided —
+  /// the OS won't ask again). Returns whether notifications are allowed.
+  Future<bool> requestPermission() async {
+    if (!isSupported) return false;
+    await init();
+    final android = _android;
+    if (android != null) {
+      return await android.requestNotificationsPermission() ?? false;
+    }
+    return await _ios?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        ) ??
+        false;
   }
 
   Future<void> scheduleVaccineReminder({

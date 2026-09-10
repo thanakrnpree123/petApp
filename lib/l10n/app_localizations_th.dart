@@ -948,4 +948,15 @@ class AppLocalizationsTh extends AppLocalizations {
   String resetLinkSent(String email) {
     return 'หากมีบัญชีที่ใช้อีเมล $email เราได้ส่งลิงก์ตั้งรหัสผ่านใหม่ไปแล้ว กรุณาตรวจสอบกล่องจดหมายและโฟลเดอร์สแปม';
   }
+
+  @override
+  String get reminderPromptTitle => 'รับการแจ้งเตือนวัคซีนไหม?';
+
+  @override
+  String reminderPromptMessage(String petName) {
+    return 'เราจะแจ้งเตือนคุณล่วงหน้า 1 วันก่อนถึงกำหนดฉีดวัคซีนของ $petName คุณเปลี่ยนการตั้งค่านี้ได้ทุกเมื่อในการตั้งค่าโทรศัพท์';
+  }
+
+  @override
+  String get turnOnReminders => 'เปิดการแจ้งเตือน';
 }

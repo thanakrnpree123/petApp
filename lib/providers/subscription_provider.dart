@@ -122,6 +122,18 @@ class SubscriptionProvider extends ChangeNotifier {
     }
   }
 
+  /// Drops all state tied to the current user (e.g. after their account
+  /// is deleted) so nothing carries over to the next sign-in.
+  Future<void> reset() async {
+    await _premiumSub?.cancel();
+    _premiumSub = null;
+    isPlusMember = false;
+    isLoading = false;
+    errorCode = null;
+    offerings = null;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _service.removeCustomerInfoListener(_onCustomerInfoUpdate);

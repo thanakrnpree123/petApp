@@ -835,4 +835,33 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get advLmMonitor =>
       '轻微跛行通常是轻度拉伤。让宠物休息 24–48 小时，检查脚掌是否有刺或伤口；如未好转，请就医。切勿给宠物服用人用止痛药——很多对宠物有毒。';
+
+  @override
+  String get deleteAccount => '删除账户';
+
+  @override
+  String get deleteAccountTitle => '确定删除账户吗？';
+
+  @override
+  String get deleteAccountMessage =>
+      '此操作将永久删除您的账户及其中的所有内容——包括所有宠物、健康记录、疫苗、症状检查和照片。此操作无法撤销。';
+
+  @override
+  String get deleteAccountSubscriptionNote =>
+      '删除账户不会取消通过 App Store 或 Google Play 购买的订阅。请在商店设置中取消订阅以停止扣费。';
+
+  @override
+  String get confirmPasswordToDelete => '请输入密码以确认';
+
+  @override
+  String get deleteAccountConfirm => '永久删除';
+
+  @override
+  String get accountDeleted => '您的账户已删除。';
+
+  @override
+  String get errIncorrectPassword => '密码错误。';
+
+  @override
+  String get deleteAccountFailed => '未能完成账户删除。请检查网络连接后重试——您的账户仍然有效，可以继续完成删除。';
 }

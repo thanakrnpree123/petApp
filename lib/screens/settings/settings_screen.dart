@@ -5,13 +5,30 @@ import 'package:provider/provider.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/locale_provider.dart';
+import '../../providers/pet_provider.dart';
 import '../../providers/subscription_provider.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/settings/delete_account_dialog.dart';
 import '../../widgets/settings/language_dialog.dart';
 import '../subscription/paywall_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
+
+  Future<void> _deleteAccount(BuildContext context) async {
+    // Captured up front: once the account is gone, AuthWrapper swaps this
+    // screen out for the login screen and this context is unmounted.
+    final messenger = ScaffoldMessenger.of(context);
+    final petProvider = context.read<PetProvider>();
+    final subscription = context.read<SubscriptionProvider>();
+    final deletedMessage = AppLocalizations.of(context)!.accountDeleted;
+
+    if (!await DeleteAccountDialog.show(context)) return;
+
+    petProvider.stopWatching();
+    await subscription.reset();
+    messenger.showSnackBar(SnackBar(content: Text(deletedMessage)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +111,12 @@ class SettingsScreen extends StatelessWidget {
               onPressed: () => context.read<AuthProvider>().signOut(),
               icon: const Icon(Icons.logout),
               label: Text(l10n.logOut),
+            ),
+            const SizedBox(height: 8),
+            TextButton(
+              style: TextButton.styleFrom(foregroundColor: colorScheme.error),
+              onPressed: () => _deleteAccount(context),
+              child: Text(l10n.deleteAccount),
             ),
           ],
         ),

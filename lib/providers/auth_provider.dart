@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
+import '../services/account_deletion_service.dart';
 import '../services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -13,8 +14,16 @@ class AuthProvider extends ChangeNotifier {
   /// BuildContext, so they must never hold display strings.
   String? errorCode;
 
-  AuthProvider({AuthService? authService})
-    : _authService = authService ?? AuthService();
+  final AccountDeletionService? _injectedAccountDeletion;
+  late final AccountDeletionService _accountDeletion =
+      _injectedAccountDeletion ??
+      AccountDeletionService(authService: _authService);
+
+  AuthProvider({
+    AuthService? authService,
+    AccountDeletionService? accountDeletionService,
+  }) : _authService = authService ?? AuthService(),
+       _injectedAccountDeletion = accountDeletionService;
 
   Stream<User?> get authStateChanges => _authService.authStateChanges;
 
@@ -31,6 +40,12 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> signOut() => _authService.signOut();
+
+  Future<bool> deleteAccount({required String password}) {
+    return _runAuthAction(
+      () => _accountDeletion.deleteAccount(password: password),
+    );
+  }
 
   Future<bool> _runAuthAction(Future<void> Function() action) async {
     isLoading = true;

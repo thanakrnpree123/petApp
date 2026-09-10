@@ -364,5 +364,14 @@
   "advLmParalysis": "Sudden weakness or paralysis in the back legs can be caused by a spinal injury or, in cats, a blood clot. This is an emergency — go to a vet now.",
   "advLmNonWeight": "Not putting any weight on a leg needs a vet check within 24 hours — it could be a fracture, torn ligament, or painful infection. Keep your pet rested until then.",
   "advLmPersistent": "A limp lasting more than a couple of days, or a swollen or hot leg, should be checked by a vet within 1–2 days.",
-  "advLmMonitor": "A mild limp is often a minor strain. Rest your pet for 24–48 hours, check their paw for thorns or cuts, and see a vet if it doesn't improve. Never give human painkillers — many are toxic to pets."
+  "advLmMonitor": "A mild limp is often a minor strain. Rest your pet for 24–48 hours, check their paw for thorns or cuts, and see a vet if it doesn't improve. Never give human painkillers — many are toxic to pets.",
+  "deleteAccount": "Delete Account",
+  "deleteAccountTitle": "Delete your account?",
+  "deleteAccountMessage": "This permanently deletes your account and everything in it — all pets, health records, vaccinations, symptom checks, and photos. This can't be undone.",
+  "deleteAccountSubscriptionNote": "Deleting your account doesn't cancel a subscription bought through the App Store or Google Play. Cancel it in your store settings to stop being charged.",
+  "confirmPasswordToDelete": "Enter your password to confirm",
+  "deleteAccountConfirm": "Delete Permanently",
+  "accountDeleted": "Your account has been deleted.",
+  "errIncorrectPassword": "Incorrect password.",
+  "deleteAccountFailed": "Couldn't finish deleting your account. Check your connection and try again — your account is still active, so you can finish deleting it."
 }

@@ -90,4 +90,9 @@ class NotificationService {
     if (!isSupported) return;
     await _plugin.cancel(id: id);
   }
+
+  Future<void> cancelAll() async {
+    if (!isSupported) return;
+    await _plugin.cancelAll();
+  }
 }

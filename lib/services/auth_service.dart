@@ -41,4 +41,22 @@ class AuthService {
   Future<void> signOut() {
     return _auth.signOut();
   }
+
+  /// Firebase only allows sensitive operations (like deleting the user)
+  /// shortly after a sign-in, so account deletion re-confirms the password
+  /// first. Throws FirebaseAuthException ('wrong-password' /
+  /// 'invalid-credential') on a bad password.
+  Future<void> reauthenticate(String password) async {
+    final user = _auth.currentUser!;
+    await user.reauthenticateWithCredential(
+      EmailAuthProvider.credential(email: user.email!, password: password),
+    );
+  }
+
+  Future<void> deleteProfile(String userId) {
+    return _firestore.collection('users').doc(userId).delete();
+  }
+
+  /// Deletes the Firebase Auth user — this also signs them out.
+  Future<void> deleteCurrentUser() => _auth.currentUser!.delete();
 }

@@ -29,10 +29,21 @@ class PetProvider extends ChangeNotifier {
     if (_watchingUserId == userId) return;
     _watchingUserId = userId;
     _petsSubscription?.cancel();
-    _petsSubscription = _petService.watchPets(userId).listen((updated) {
-      pets = updated;
-      notifyListeners();
-    });
+    _petsSubscription = _petService
+        .watchPets(userId)
+        .listen(
+          (updated) {
+            pets = updated;
+            notifyListeners();
+          },
+          // The listener outlives the user when they're signed out or their
+          // account is deleted; the rules then deny the read. Clear rather
+          // than surfacing an uncaught stream error.
+          onError: (Object _) {
+            pets = [];
+            notifyListeners();
+          },
+        );
   }
 
   void stopWatching() {

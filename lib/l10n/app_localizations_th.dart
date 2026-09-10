@@ -900,4 +900,34 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get advLmMonitor =>
       'อาการขาเจ็บเล็กน้อยมักเกิดจากกล้ามเนื้อหรือเอ็นเคล็ดเล็กน้อย ให้สัตว์เลี้ยงพักผ่อน 24–48 ชั่วโมง ตรวจดูอุ้งเท้าว่ามีหนามหรือบาดแผลหรือไม่ และพาไปพบสัตวแพทย์หากอาการไม่ดีขึ้น ห้ามให้ยาแก้ปวดของคนเด็ดขาด เพราะหลายชนิดเป็นพิษต่อสัตว์เลี้ยง';
+
+  @override
+  String get deleteAccount => 'ลบบัญชี';
+
+  @override
+  String get deleteAccountTitle => 'ลบบัญชีของคุณใช่ไหม?';
+
+  @override
+  String get deleteAccountMessage =>
+      'การดำเนินการนี้จะลบบัญชีและข้อมูลทั้งหมดอย่างถาวร ได้แก่ สัตว์เลี้ยง ประวัติสุขภาพ วัคซีน ผลตรวจอาการ และรูปภาพทั้งหมด ไม่สามารถย้อนกลับได้';
+
+  @override
+  String get deleteAccountSubscriptionNote =>
+      'การลบบัญชีไม่ได้ยกเลิกการสมัครสมาชิกที่ซื้อผ่าน App Store หรือ Google Play กรุณายกเลิกในการตั้งค่าของสโตร์เพื่อหยุดการเรียกเก็บเงิน';
+
+  @override
+  String get confirmPasswordToDelete => 'กรอกรหัสผ่านเพื่อยืนยัน';
+
+  @override
+  String get deleteAccountConfirm => 'ลบอย่างถาวร';
+
+  @override
+  String get accountDeleted => 'ลบบัญชีของคุณแล้ว';
+
+  @override
+  String get errIncorrectPassword => 'รหัสผ่านไม่ถูกต้อง';
+
+  @override
+  String get deleteAccountFailed =>
+      'ลบบัญชีไม่สำเร็จ กรุณาตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง บัญชีของคุณยังใช้งานได้ จึงสามารถลบต่อให้เสร็จได้';
 }

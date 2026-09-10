@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -27,20 +29,76 @@ import 'pdf_preview_screen.dart';
 class PetHealthDashboard extends StatefulWidget {
   final Pet pet;
 
-  const PetHealthDashboard({super.key, required this.pet});
+  /// Overrides for tests; production uses the real service and the
+  /// signed-in user.
+  final HealthLogService? healthLogService;
+  final String? userId;
+
+  const PetHealthDashboard({
+    super.key,
+    required this.pet,
+    this.healthLogService,
+    this.userId,
+  });
 
   @override
   State<PetHealthDashboard> createState() => _PetHealthDashboardState();
 }
 
 class _PetHealthDashboardState extends State<PetHealthDashboard> {
-  final _service = HealthLogService();
-  late final String _userId;
+  late final HealthLogService _service =
+      widget.healthLogService ?? HealthLogService();
+  late final String _userId =
+      widget.userId ?? FirebaseAuth.instance.currentUser!.uid;
+
+  // Subscribed once for the screen's lifetime. Creating the streams inside
+  // build() re-subscribed on every rebuild (e.g. each filter tap), and a
+  // StreamBuilder handed a new stream resets to "no data" — so the
+  // timeline flashed its empty state and re-read from Firestore each time.
+  // Null means "still loading", which is distinct from "no records".
+  final _subscriptions = <StreamSubscription<Object?>>[];
+  List<CareLog>? _careLogs;
+  List<Vaccination>? _vaccinations;
+  List<HealthLog>? _healthLogs;
 
   @override
   void initState() {
     super.initState();
-    _userId = FirebaseAuth.instance.currentUser!.uid;
+    final petId = widget.pet.id!;
+    _subscriptions.addAll([
+      _service
+          .watchCareLogs(_userId, petId)
+          .listen(
+            (logs) => setState(() => _careLogs = logs),
+            onError: (Object e) => _onStreamError(e, () => _careLogs = []),
+          ),
+      _service
+          .watchVaccinations(_userId, petId)
+          .listen(
+            (vaccinations) => setState(() => _vaccinations = vaccinations),
+            onError: (Object e) => _onStreamError(e, () => _vaccinations = []),
+          ),
+      _service
+          .watchLogs(_userId, petId)
+          .listen(
+            (logs) => setState(() => _healthLogs = logs),
+            onError: (Object e) => _onStreamError(e, () => _healthLogs = []),
+          ),
+    ]);
+  }
+
+  /// Stops the loading spinner rather than spinning forever.
+  void _onStreamError(Object error, VoidCallback clear) {
+    debugPrint('Health dashboard stream error: $error');
+    if (mounted) setState(clear);
+  }
+
+  @override
+  void dispose() {
+    for (final subscription in _subscriptions) {
+      subscription.cancel();
+    }
+    super.dispose();
   }
 
   Future<void> _addRecord() async {
@@ -252,9 +310,8 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
                               Expanded(
                                 child: Card(
                                   child: _UnifiedTimeline(
-                                    service: _service,
-                                    userId: _userId,
-                                    pet: widget.pet,
+                                    careLogs: _careLogs,
+                                    vaccinations: _vaccinations,
                                     onEditRecord: _editRecord,
                                     onEditVaccination: _editVaccination,
                                   ),
@@ -265,9 +322,7 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
                                 width: 340,
                                 child: SingleChildScrollView(
                                   child: _WeightSection(
-                                    service: _service,
-                                    userId: _userId,
-                                    pet: widget.pet,
+                                    healthLogs: _healthLogs,
                                     onAddWeight: _addWeight,
                                   ),
                                 ),
@@ -283,9 +338,8 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
                               Expanded(
                                 child: Card(
                                   child: _UnifiedTimeline(
-                                    service: _service,
-                                    userId: _userId,
-                                    pet: widget.pet,
+                                    careLogs: _careLogs,
+                                    vaccinations: _vaccinations,
                                     onEditRecord: _editRecord,
                                     onEditVaccination: _editVaccination,
                                   ),
@@ -293,9 +347,7 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
                               ),
                               const SizedBox(height: AppSpacing.md - 4),
                               _WeightSection(
-                                service: _service,
-                                userId: _userId,
-                                pet: widget.pet,
+                                healthLogs: _healthLogs,
                                 onAddWeight: _addWeight,
                               ),
                             ],
@@ -376,16 +428,15 @@ class _TimelineEntry {
 }
 
 class _UnifiedTimeline extends StatelessWidget {
-  final HealthLogService service;
-  final String userId;
-  final Pet pet;
+  /// Null while still loading.
+  final List<CareLog>? careLogs;
+  final List<Vaccination>? vaccinations;
   final ValueChanged<CareLog> onEditRecord;
   final ValueChanged<Vaccination> onEditVaccination;
 
   const _UnifiedTimeline({
-    required this.service,
-    required this.userId,
-    required this.pet,
+    required this.careLogs,
+    required this.vaccinations,
     required this.onEditRecord,
     required this.onEditVaccination,
   });
@@ -437,89 +488,84 @@ class _UnifiedTimeline extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat.yMMMd();
     final provider = context.watch<HealthTimelineProvider>();
+    final careLogs = this.careLogs;
+    final vaccinations = this.vaccinations;
 
-    return StreamBuilder<List<CareLog>>(
-      stream: service.watchCareLogs(userId, pet.id!),
-      builder: (context, careSnapshot) {
-        return StreamBuilder<List<Vaccination>>(
-          stream: service.watchVaccinations(userId, pet.id!),
-          builder: (context, vaccinationSnapshot) {
-            final entries = _buildEntries(
-              l10n,
-              dateFormat,
-              careSnapshot.data ?? [],
-              vaccinationSnapshot.data ?? [],
-            ).where((entry) => provider.matches(entry.kind)).toList();
+    if (careLogs == null || vaccinations == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-            final colorScheme = Theme.of(context).colorScheme;
+    final entries = _buildEntries(
+      l10n,
+      dateFormat,
+      careLogs,
+      vaccinations,
+    ).where((entry) => provider.matches(entry.kind)).toList();
 
-            if (entries.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.event_note_outlined,
-                        size: 40,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      Text(
-                        l10n.timelineEmpty,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
+    final colorScheme = Theme.of(context).colorScheme;
+
+    if (entries.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.event_note_outlined,
+                size: 40,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                l10n.timelineEmpty,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
-              );
-            }
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
-            return ListView.separated(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-              itemCount: entries.length,
-              separatorBuilder: (_, _) =>
-                  const Divider(indent: 72, endIndent: 16),
-              itemBuilder: (context, index) {
-                final entry = entries[index];
-                return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                  leading: CircleAvatar(
-                    radius: 22,
-                    backgroundColor: colorScheme.primaryContainer,
-                    child: Icon(
-                      entry.icon,
-                      size: 22,
-                      color: colorScheme.onPrimaryContainer,
-                    ),
-                  ),
-                  title: Text(
-                    entry.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Text(
-                    entry.subtitle,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: const Icon(Icons.chevron_right, size: 20),
-                  onTap: () {
-                    final careLog = entry.careLog;
-                    final vaccination = entry.vaccination;
-                    if (careLog != null) {
-                      onEditRecord(careLog);
-                    } else if (vaccination != null) {
-                      onEditVaccination(vaccination);
-                    }
-                  },
-                );
-              },
-            );
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      itemCount: entries.length,
+      separatorBuilder: (_, _) => const Divider(indent: 72, endIndent: 16),
+      itemBuilder: (context, index) {
+        final entry = entries[index];
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+          leading: CircleAvatar(
+            radius: 22,
+            backgroundColor: colorScheme.primaryContainer,
+            child: Icon(
+              entry.icon,
+              size: 22,
+              color: colorScheme.onPrimaryContainer,
+            ),
+          ),
+          title: Text(
+            entry.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(
+            entry.subtitle,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          trailing: const Icon(Icons.chevron_right, size: 20),
+          onTap: () {
+            final careLog = entry.careLog;
+            final vaccination = entry.vaccination;
+            if (careLog != null) {
+              onEditRecord(careLog);
+            } else if (vaccination != null) {
+              onEditVaccination(vaccination);
+            }
           },
         );
       },
@@ -528,17 +574,11 @@ class _UnifiedTimeline extends StatelessWidget {
 }
 
 class _WeightSection extends StatelessWidget {
-  final HealthLogService service;
-  final String userId;
-  final Pet pet;
+  /// Null while still loading.
+  final List<HealthLog>? healthLogs;
   final VoidCallback onAddWeight;
 
-  const _WeightSection({
-    required this.service,
-    required this.userId,
-    required this.pet,
-    required this.onAddWeight,
-  });
+  const _WeightSection({required this.healthLogs, required this.onAddWeight});
 
   @override
   Widget build(BuildContext context) {
@@ -564,18 +604,19 @@ class _WeightSection extends StatelessWidget {
                 ),
               ],
             ),
-            StreamBuilder<List<HealthLog>>(
-              stream: service.watchLogs(userId, pet.id!),
-              builder: (context, snapshot) {
-                final logs = snapshot.data ?? [];
-                final weightLogs = logs
-                    .where((l) => l.type == HealthLogType.weight)
-                    .toList();
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8, right: 8),
-                  child: WeightChart(weightLogs: weightLogs),
-                );
-              },
+            Padding(
+              padding: const EdgeInsets.only(top: 8, right: 8),
+              child: healthLogs == null
+                  ? const SizedBox(
+                      height: 160,
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  : WeightChart(
+                      weightLogs: [
+                        for (final log in healthLogs!)
+                          if (log.type == HealthLogType.weight) log,
+                      ],
+                    ),
             ),
           ],
         ),

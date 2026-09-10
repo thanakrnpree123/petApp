@@ -62,7 +62,7 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
 
   Future<void> _editVaccination(Vaccination vaccination) async {
     final result = await AddVaccineDialog.show(context, existing: vaccination);
-    final reminderId = vaccination.id!.hashCode;
+    final reminderId = NotificationService.vaccineReminderId(vaccination.id!);
     switch (result) {
       case VaccineSaved(:final vaccination):
         await _service.updateVaccination(_userId, widget.pet.id!, vaccination);
@@ -98,7 +98,7 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
     );
 
     await NotificationService().scheduleVaccineReminder(
-      id: vaccinationId.hashCode,
+      id: NotificationService.vaccineReminderId(vaccinationId),
       petName: widget.pet.name,
       vaccineName: result.vaccination.name,
       nextDueDate: result.vaccination.nextDueDate,

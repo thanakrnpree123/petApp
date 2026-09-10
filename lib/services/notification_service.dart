@@ -18,6 +18,20 @@ class NotificationService {
   /// service no-ops on web rather than throwing at startup.
   static bool get isSupported => !kIsWeb;
 
+  /// The notification id for a vaccination's reminder, derived from its
+  /// Firestore id. Must be stable across launches and SDK upgrades so a
+  /// reminder scheduled today can still be cancelled later — which
+  /// String.hashCode doesn't promise. A 31-bit polynomial hash fits the
+  /// 32-bit ids Android requires and stays exact under web int math.
+  static int vaccineReminderId(String vaccinationId) {
+    const modulus = 2147483647; // 2^31 - 1
+    var hash = 0;
+    for (final unit in vaccinationId.codeUnits) {
+      hash = (hash * 31 + unit) % modulus;
+    }
+    return hash;
+  }
+
   Future<void> init() async {
     if (_initialized || !isSupported) return;
 

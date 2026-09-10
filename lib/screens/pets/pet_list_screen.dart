@@ -7,6 +7,7 @@ import '../../models/pet.dart';
 import '../../providers/pet_provider.dart';
 import '../../providers/subscription_provider.dart';
 import '../../services/symptom_check_service.dart';
+import '../../theme/app_theme.dart';
 import '../../utils/l10n_helpers.dart';
 import '../../widgets/common/confirm_delete_dialog.dart';
 import '../../widgets/responsive/breakpoints.dart';
@@ -78,9 +79,7 @@ class _PetListScreenState extends State<PetListScreen> {
     messenger.showSnackBar(
       SnackBar(
         content: Text(
-          success
-              ? l10n.petDeleted(pet.name)
-              : l10n.deletePetFailed(pet.name),
+          success ? l10n.petDeleted(pet.name) : l10n.deletePetFailed(pet.name),
         ),
       ),
     );
@@ -93,7 +92,7 @@ class _PetListScreenState extends State<PetListScreen> {
 
     Widget body;
     if (pets.isEmpty) {
-      body = Center(child: Text(AppLocalizations.of(context)!.noPetsYet));
+      body = const _EmptyPets();
     } else if (isDesktop) {
       // A single narrow list column reads as empty on a wide window, so
       // desktop wraps the same _PetCard into a grid instead — same data,
@@ -103,9 +102,11 @@ class _PetListScreenState extends State<PetListScreen> {
           constraints: const BoxConstraints(maxWidth: 1120),
           child: GridView.builder(
             padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 360,
-              mainAxisExtent: 108,
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 380,
+              // Grows with the user's text-size setting so large system
+              // fonts never clip the card (104px at the default scale).
+              mainAxisExtent: MediaQuery.textScalerOf(context).scale(52) + 52,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
             ),
@@ -119,9 +120,10 @@ class _PetListScreenState extends State<PetListScreen> {
         ),
       );
     } else {
-      body = ListView.builder(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 88),
+      body = ListView.separated(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 104),
         itemCount: pets.length,
+        separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md - 4),
         itemBuilder: (context, index) => _PetCard(
           pet: pets[index],
           onCheckSymptoms: _openSymptomChecker,
@@ -132,13 +134,16 @@ class _PetListScreenState extends State<PetListScreen> {
 
     return Scaffold(
       body: body,
-      floatingActionButton: FloatingActionButton(
+      // A labeled button, not a bare "+": the action is readable at a
+      // glance for people who don't know Material's icon conventions.
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.of(
             context,
           ).push(MaterialPageRoute(builder: (_) => const PetFormScreen()));
         },
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
+        label: Text(AppLocalizations.of(context)!.addPet),
       ),
     );
   }
@@ -158,12 +163,9 @@ class _PetCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Card(
-      elevation: 2,
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
           Navigator.of(context).push(
@@ -171,12 +173,12 @@ class _PetCard extends StatelessWidget {
           );
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(16, 16, 4, 16),
           child: Row(
             children: [
               CircleAvatar(
-                radius: 28,
-                backgroundColor: colorScheme.secondaryContainer,
+                radius: 30,
+                backgroundColor: colorScheme.primaryContainer,
                 backgroundImage: pet.photoUrl != null
                     ? NetworkImage(pet.photoUrl!)
                     : null,
@@ -185,26 +187,28 @@ class _PetCard extends StatelessWidget {
                         pet.species == PetSpecies.dog
                             ? Icons.pets
                             : Icons.pets_outlined,
-                        color: colorScheme.onSecondaryContainer,
+                        size: 28,
+                        color: colorScheme.onPrimaryContainer,
                       )
                     : null,
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       pet.name,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: textTheme.titleMedium,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
                     Text(
                       '${pet.breed.isEmpty ? L10nHelpers.species(AppLocalizations.of(context)!, pet.species) : pet.breed}'
                       ' · ${L10nHelpers.petAge(AppLocalizations.of(context)!, pet)}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      style: textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
                       maxLines: 1,
@@ -269,3 +273,47 @@ class _PetCard extends StatelessWidget {
 }
 
 enum _PetCardAction { edit, delete }
+
+class _EmptyPets extends StatelessWidget {
+  const _EmptyPets();
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 104,
+              height: 104,
+              decoration: BoxDecoration(
+                color: colorScheme.primaryContainer,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.pets,
+                size: 48,
+                color: colorScheme.onPrimaryContainer,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 320),
+              child: Text(
+                AppLocalizations.of(context)!.noPetsYet,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

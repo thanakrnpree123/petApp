@@ -202,10 +202,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
               const SizedBox(height: 24),
               DropdownButtonFormField<PetSpecies>(
                 initialValue: _species,
-                decoration: InputDecoration(
-                  labelText: l10n.speciesLabel,
-                  border: const OutlineInputBorder(),
-                ),
+                decoration: InputDecoration(labelText: l10n.speciesLabel),
                 items: [
                   for (final species in PetSpecies.values)
                     DropdownMenuItem(
@@ -225,10 +222,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: l10n.petName,
-                  border: const OutlineInputBorder(),
-                ),
+                decoration: InputDecoration(labelText: l10n.petName),
                 validator: (value) => (value == null || value.trim().isEmpty)
                     ? l10n.nameRequired
                     : null,
@@ -274,10 +268,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
               if (_showCustomBreedField) ...[
                 TextFormField(
                   controller: _customBreedController,
-                  decoration: InputDecoration(
-                    labelText: l10n.breed,
-                    border: const OutlineInputBorder(),
-                  ),
+                  decoration: InputDecoration(labelText: l10n.breed),
                 ),
                 const SizedBox(height: 16),
               ],
@@ -292,10 +283,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
-                decoration: InputDecoration(
-                  labelText: l10n.weightKg,
-                  border: const OutlineInputBorder(),
-                ),
+                decoration: InputDecoration(labelText: l10n.weightKg),
                 validator: (value) {
                   final parsed = double.tryParse(value?.trim() ?? '');
                   if (parsed == null || parsed <= 0) {
@@ -307,20 +295,14 @@ class _PetFormScreenState extends State<PetFormScreen> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _microchipController,
-                decoration: InputDecoration(
-                  labelText: l10n.microchipId,
-                  border: const OutlineInputBorder(),
-                ),
+                decoration: InputDecoration(labelText: l10n.microchipId),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _allergiesController,
                 maxLines: 2,
                 minLines: 1,
-                decoration: InputDecoration(
-                  labelText: l10n.allergies,
-                  border: const OutlineInputBorder(),
-                ),
+                decoration: InputDecoration(labelText: l10n.allergies),
               ),
               const SizedBox(height: 24),
               if (_validationError != null)
@@ -328,7 +310,9 @@ class _PetFormScreenState extends State<PetFormScreen> {
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Text(
                     _validationError!,
-                    style: const TextStyle(color: Colors.red),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                   ),
                 ),
               FilledButton(

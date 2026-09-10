@@ -1,7 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,6 +10,7 @@ import 'providers/locale_provider.dart';
 import 'providers/pet_provider.dart';
 import 'providers/subscription_provider.dart';
 import 'screens/auth/auth_wrapper.dart';
+import 'theme/app_theme.dart';
 import 'widgets/settings/language_dialog.dart';
 import 'services/notification_service.dart';
 
@@ -46,64 +45,6 @@ class PawHealthApp extends StatelessWidget {
 
   const PawHealthApp({super.key, required this.prefs});
 
-  /// Locale-appropriate playful fonts: Fredoka has no Thai or CJK glyphs,
-  /// so Thai gets Mali and Simplified Chinese gets Noto Sans SC (full
-  /// simplified-Chinese coverage — decorative CJK fonts like ZCOOL KuaiLe
-  /// only ship a subset of characters and would leave tofu boxes).
-  static ThemeData _themeForLocale(Locale locale) {
-    final baseTheme = ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-    );
-
-    final TextTheme fontTheme;
-    final TextStyle appBarFont;
-    switch (locale.languageCode) {
-      case 'th':
-        fontTheme = GoogleFonts.maliTextTheme(baseTheme.textTheme);
-        appBarFont = GoogleFonts.mali();
-      case 'zh':
-        fontTheme = GoogleFonts.notoSansScTextTheme(baseTheme.textTheme);
-        appBarFont = GoogleFonts.notoSansSc();
-      default:
-        fontTheme = GoogleFonts.fredokaTextTheme(baseTheme.textTheme);
-        appBarFont = GoogleFonts.fredoka();
-    }
-
-    // Slightly heavier weights across the board: semi-bold headings/titles,
-    // medium body — playful without sacrificing legibility.
-    final textTheme = fontTheme.copyWith(
-      headlineMedium: fontTheme.headlineMedium?.copyWith(
-        fontWeight: FontWeight.w600,
-      ),
-      headlineSmall: fontTheme.headlineSmall?.copyWith(
-        fontWeight: FontWeight.w600,
-      ),
-      titleLarge: fontTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-      titleMedium: fontTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-      bodyLarge: fontTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
-      bodyMedium: fontTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
-    );
-
-    return baseTheme.copyWith(
-      textTheme: textTheme,
-      appBarTheme: AppBarTheme(
-        titleTextStyle: appBarFont.copyWith(
-          fontSize: 22,
-          fontWeight: FontWeight.w600,
-          color: baseTheme.colorScheme.onSurface,
-        ),
-        // Draw the status bar transparently over the app's own surface
-        // color (no OS-default black/white strip), with dark icons for
-        // contrast on the light theme.
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -121,12 +62,12 @@ class PawHealthApp extends StatelessWidget {
           // Manual override: the user's stored choice wins over the system
           // locale (defaults to English until they pick one).
           locale: context.watch<LocaleProvider>().locale,
-          theme: _themeForLocale(const Locale('en')),
+          theme: AppTheme.forLocale(const Locale('en')),
           // The active locale is resolved by MaterialApp above this builder,
           // so the font-matched theme can be swapped in per locale here and
           // every route below the Navigator inherits it.
           builder: (context, child) {
-            final theme = _themeForLocale(Localizations.localeOf(context));
+            final theme = AppTheme.forLocale(Localizations.localeOf(context));
             return Theme(data: theme, child: child!);
           },
           home: const _FirstLaunchLanguageGate(child: AuthWrapper()),

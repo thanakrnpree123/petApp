@@ -76,15 +76,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         fit: BoxFit.contain,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 12),
                     Text(
                       l10n.appTitle,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineMedium
-                          ?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
+                    // Desktop shows the tagline in the brand panel instead.
+                    if (!isDesktop) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.loginBrandTagline,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 40),
                     AuthTextField(
                       controller: _emailController,
@@ -105,7 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         padding: const EdgeInsets.only(bottom: 16),
                         child: Text(
                           L10nHelpers.authError(l10n, auth.errorCode!),
-                          style: const TextStyle(color: Colors.red),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
                         ),
                       ),
                     FilledButton(
@@ -143,7 +153,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
-      appBar: isDesktop ? null : AppBar(title: Text(l10n.logIn)),
       body: isDesktop
           ? Row(
               children: [
@@ -151,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Expanded(flex: 4, child: Center(child: formColumn)),
               ],
             )
-          : form,
+          : SafeArea(child: form),
     );
   }
 }
@@ -168,14 +177,8 @@ class _LoginBrandPanel extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [colorScheme.primary, colorScheme.primaryContainer],
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 40),
+      color: colorScheme.primary,
+      padding: const EdgeInsets.symmetric(horizontal: 56, vertical: 48),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,9 +194,9 @@ class _LoginBrandPanel extends StatelessWidget {
               const SizedBox(width: 10),
               Text(
                 l10n.appTitle,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: colorScheme.onPrimary,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(color: colorScheme.onPrimary),
               ),
             ],
           ),
@@ -201,10 +204,9 @@ class _LoginBrandPanel extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 380),
             child: Text(
               l10n.loginBrandTagline,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: colorScheme.onPrimary,
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.displaySmall?.copyWith(color: colorScheme.onPrimary),
             ),
           ),
           const SizedBox.shrink(),

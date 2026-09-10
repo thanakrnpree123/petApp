@@ -112,11 +112,10 @@ class _MainTabScreenState extends State<MainTabScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 20, 24, 4),
+                    padding: const EdgeInsets.fromLTRB(24, 28, 24, 4),
                     child: Text(
                       titles[_currentIndex],
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.w600),
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ),
                   Expanded(child: SafeArea(top: false, child: content)),
@@ -146,26 +145,35 @@ class _MainTabScreenState extends State<MainTabScreen> {
         ],
       ),
       body: SafeArea(child: content),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) => setState(() => _currentIndex = index),
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.pets_outlined),
-            selectedIcon: const Icon(Icons.pets),
-            label: l10n.myPets,
+      bottomNavigationBar: DecoratedBox(
+        // A hairline instead of a shadow separates the bar from content.
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Theme.of(context).dividerColor),
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.menu_book_outlined),
-            selectedIcon: const Icon(Icons.menu_book),
-            label: l10n.articlesTab,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.settings_outlined),
-            selectedIcon: const Icon(Icons.settings),
-            label: l10n.settings,
-          ),
-        ],
+        ),
+        child: NavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (index) =>
+              setState(() => _currentIndex = index),
+          destinations: [
+            NavigationDestination(
+              icon: const Icon(Icons.pets_outlined),
+              selectedIcon: const Icon(Icons.pets),
+              label: l10n.myPets,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.menu_book_outlined),
+              selectedIcon: const Icon(Icons.menu_book),
+              label: l10n.articlesTab,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.settings_outlined),
+              selectedIcon: const Icon(Icons.settings),
+              label: l10n.settings,
+            ),
+          ],
+        ),
       ),
     );
   }

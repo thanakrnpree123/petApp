@@ -169,7 +169,9 @@ class _AddVaccineDialogState extends State<AddVaccineDialog> {
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
                     _dueDateError!,
-                    style: const TextStyle(color: Colors.red, fontSize: 12),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                   ),
                 ),
             ],

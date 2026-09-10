@@ -45,7 +45,7 @@ class _ArticleListScreenState extends State<ArticleListScreen> {
         return Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -79,12 +79,12 @@ class _ArticleListScreenState extends State<ArticleListScreen> {
             ),
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
                 itemCount: filtered.length,
                 itemBuilder: (context, index) {
                   final article = filtered[index];
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.only(bottom: 16),
                     child: ArticleCard(
                       article: article,
                       onTap: () {

@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../providers/locale_provider.dart';
+import '../../theme/app_theme.dart';
 
 class LanguageDialog extends StatelessWidget {
   const LanguageDialog({super.key});
 
   /// Each language name must be drawn in a font that covers its own script.
-  /// The active theme font follows the *current* locale (e.g. Fredoka for
+  /// The active theme font follows the *current* locale (e.g. Nunito for
   /// English), which has no Thai or CJK glyphs — leaving the other options
   /// rendered as tofu boxes for the very users who need to find them.
-  static TextStyle _styleFor(Locale locale) => switch (locale.languageCode) {
-    'th' => GoogleFonts.mali(),
-    'zh' => GoogleFonts.notoSansSc(),
-    _ => GoogleFonts.fredoka(),
-  };
+  static TextStyle _styleFor(Locale locale) => AppTheme.fontFor(
+    locale,
+    const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+  );
 
   static Future<void> show(BuildContext context) {
     return showDialog<void>(

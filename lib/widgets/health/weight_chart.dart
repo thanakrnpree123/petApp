@@ -11,11 +11,23 @@ class WeightChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final axisStyle = theme.textTheme.labelSmall?.copyWith(
+      color: colorScheme.onSurfaceVariant,
+    );
+
     if (weightLogs.length < 2) {
       return SizedBox(
         height: 160,
         child: Center(
-          child: Text(AppLocalizations.of(context)!.weightChartNeedTwo),
+          child: Text(
+            AppLocalizations.of(context)!.weightChartNeedTwo,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
         ),
       );
     }
@@ -32,8 +44,14 @@ class WeightChart extends StatelessWidget {
       child: LineChart(
         LineChartData(
           minY: 0,
-          gridData: const FlGridData(show: true),
-          borderData: FlBorderData(show: true),
+          // Horizontal guides only, in the hairline color — the line is
+          // the content, the grid just helps read values off it.
+          gridData: FlGridData(
+            drawVerticalLine: false,
+            getDrawingHorizontalLine: (_) =>
+                FlLine(color: colorScheme.outlineVariant, strokeWidth: 1),
+          ),
+          borderData: FlBorderData(show: false),
           titlesData: FlTitlesData(
             topTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false),
@@ -53,10 +71,7 @@ class WeightChart extends StatelessWidget {
                   final date = sorted[index].loggedAt;
                   return SideTitleWidget(
                     meta: meta,
-                    child: Text(
-                      '${date.month}/${date.day}',
-                      style: const TextStyle(fontSize: 10),
-                    ),
+                    child: Text('${date.month}/${date.day}', style: axisStyle),
                   );
                 },
               ),
@@ -64,11 +79,9 @@ class WeightChart extends StatelessWidget {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                reservedSize: 36,
-                getTitlesWidget: (value, meta) => Text(
-                  '${value.toInt()}kg',
-                  style: const TextStyle(fontSize: 10),
-                ),
+                reservedSize: 44,
+                getTitlesWidget: (value, meta) =>
+                    Text('${value.toInt()}kg', style: axisStyle),
               ),
             ),
           ),
@@ -76,12 +89,20 @@ class WeightChart extends StatelessWidget {
             LineChartBarData(
               spots: spots,
               isCurved: true,
-              color: Colors.teal,
+              color: colorScheme.primary,
               barWidth: 3,
-              dotData: const FlDotData(show: true),
+              isStrokeCapRound: true,
+              dotData: FlDotData(
+                getDotPainter: (_, _, _, _) => FlDotCirclePainter(
+                  radius: 4,
+                  color: colorScheme.surface,
+                  strokeWidth: 2.5,
+                  strokeColor: colorScheme.primary,
+                ),
+              ),
               belowBarData: BarAreaData(
                 show: true,
-                color: Colors.teal.withValues(alpha: 0.15),
+                color: colorScheme.primary.withValues(alpha: 0.08),
               ),
             ),
           ],

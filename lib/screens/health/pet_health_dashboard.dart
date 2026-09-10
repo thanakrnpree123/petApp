@@ -14,6 +14,7 @@ import '../../providers/subscription_provider.dart';
 import '../../services/health_log_service.dart';
 import '../../utils/l10n_helpers.dart';
 import '../../services/notification_service.dart';
+import '../../theme/app_theme.dart';
 import '../../widgets/health/add_health_record_dialog.dart';
 import '../../widgets/health/add_vaccine_dialog.dart';
 import '../../widgets/health/add_weight_dialog.dart';
@@ -184,8 +185,8 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
                       child: IgnorePointer(
                         child: Container(
                           padding: const EdgeInsets.all(2),
-                          decoration: const BoxDecoration(
-                            color: Colors.amber,
+                          decoration: BoxDecoration(
+                            color: context.statusColors.premium,
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -231,26 +232,28 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.md),
                   _FilterChipsRow(showHeatCycle: widget.pet.tracksHeatCycle),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.md - 4),
                   Expanded(
                     child: isDesktop
                         ? Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
-                                child: _UnifiedTimeline(
-                                  service: _service,
-                                  userId: _userId,
-                                  pet: widget.pet,
-                                  onEditRecord: _editRecord,
-                                  onEditVaccination: _editVaccination,
+                                child: Card(
+                                  child: _UnifiedTimeline(
+                                    service: _service,
+                                    userId: _userId,
+                                    pet: widget.pet,
+                                    onEditRecord: _editRecord,
+                                    onEditVaccination: _editVaccination,
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 24),
                               SizedBox(
-                                width: 320,
+                                width: 340,
                                 child: SingleChildScrollView(
                                   child: _WeightSection(
                                     service: _service,
@@ -262,22 +265,24 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
                               ),
                             ],
                           )
-                        // Below desktop width: today's stacked layout,
-                        // unchanged — timeline scrolls independently while
-                        // the weight section stays pinned at the bottom.
+                        // Below desktop width: stacked — the timeline
+                        // scrolls independently while the weight section
+                        // stays pinned at the bottom.
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Expanded(
-                                child: _UnifiedTimeline(
-                                  service: _service,
-                                  userId: _userId,
-                                  pet: widget.pet,
-                                  onEditRecord: _editRecord,
-                                  onEditVaccination: _editVaccination,
+                                child: Card(
+                                  child: _UnifiedTimeline(
+                                    service: _service,
+                                    userId: _userId,
+                                    pet: widget.pet,
+                                    onEditRecord: _editRecord,
+                                    onEditVaccination: _editVaccination,
+                                  ),
                                 ),
                               ),
-                              const Divider(height: 24),
+                              const SizedBox(height: AppSpacing.md - 4),
                               _WeightSection(
                                 service: _service,
                                 userId: _userId,
@@ -317,7 +322,6 @@ class _FilterChipsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final provider = context.watch<HealthTimelineProvider>();
-    final colorScheme = Theme.of(context).colorScheme;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -330,12 +334,6 @@ class _FilterChipsRow extends StatelessWidget {
                 child: ChoiceChip(
                   label: Text(_label(l10n, filter)),
                   selected: provider.filter == filter,
-                  selectedColor: colorScheme.primary,
-                  labelStyle: TextStyle(
-                    color: provider.filter == filter
-                        ? colorScheme.onPrimary
-                        : null,
-                  ),
                   onSelected: (_) =>
                       context.read<HealthTimelineProvider>().setFilter(filter),
                 ),
@@ -444,35 +442,50 @@ class _UnifiedTimeline extends StatelessWidget {
               vaccinationSnapshot.data ?? [],
             ).where((entry) => provider.matches(entry.kind)).toList();
 
+            final colorScheme = Theme.of(context).colorScheme;
+
             if (entries.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24),
-                child: Center(
-                  child: Text(
-                    l10n.timelineEmpty,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.event_note_outlined,
+                        size: 40,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        l10n.timelineEmpty,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               );
             }
 
-            return ListView.builder(
-              padding: EdgeInsets.zero,
+            return ListView.separated(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
               itemCount: entries.length,
+              separatorBuilder: (_, _) =>
+                  const Divider(indent: 72, endIndent: 16),
               itemBuilder: (context, index) {
                 final entry = entries[index];
                 return ListTile(
-                  contentPadding: EdgeInsets.zero,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                   leading: CircleAvatar(
-                    backgroundColor: Theme.of(
-                      context,
-                    ).colorScheme.secondaryContainer,
+                    radius: 22,
+                    backgroundColor: colorScheme.primaryContainer,
                     child: Icon(
                       entry.icon,
-                      size: 20,
-                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                      size: 22,
+                      color: colorScheme.onPrimaryContainer,
                     ),
                   ),
                   title: Text(
@@ -522,34 +535,42 @@ class _WeightSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 8, 8, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(l10n.weight, style: Theme.of(context).textTheme.titleLarge),
-            IconButton(
-              icon: const Icon(Icons.add_circle_outline),
-              tooltip: l10n.logWeight,
-              onPressed: onAddWeight,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  l10n.weight,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                IconButton.filledTonal(
+                  icon: const Icon(Icons.add),
+                  tooltip: l10n.logWeight,
+                  onPressed: onAddWeight,
+                ),
+              ],
+            ),
+            StreamBuilder<List<HealthLog>>(
+              stream: service.watchLogs(userId, pet.id!),
+              builder: (context, snapshot) {
+                final logs = snapshot.data ?? [];
+                final weightLogs = logs
+                    .where((l) => l.type == HealthLogType.weight)
+                    .toList();
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8, right: 8),
+                  child: WeightChart(weightLogs: weightLogs),
+                );
+              },
             ),
           ],
         ),
-        StreamBuilder<List<HealthLog>>(
-          stream: service.watchLogs(userId, pet.id!),
-          builder: (context, snapshot) {
-            final logs = snapshot.data ?? [];
-            final weightLogs = logs
-                .where((l) => l.type == HealthLogType.weight)
-                .toList();
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: WeightChart(weightLogs: weightLogs),
-            );
-          },
-        ),
-      ],
+      ),
     );
   }
 }

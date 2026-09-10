@@ -379,5 +379,8 @@
   "resetLinkSent": "如果存在使用 {email} 的账户，重置链接已发出。请查看收件箱和垃圾邮件文件夹。",
   "reminderPromptTitle": "开启疫苗提醒？",
   "reminderPromptMessage": "我们会在{petName}的疫苗到期前一天提醒您。您可以随时在手机设置中更改。",
-  "turnOnReminders": "开启"
+  "turnOnReminders": "开启",
+  "paywallMobileOnly": "PawHealth Plus 可在 iPhone 和 Android 版 PawHealth 应用中订阅。目前暂不支持在网页上购买订阅。",
+  "paywallUnavailable": "目前暂时无法订阅，请稍后再试。",
+  "tryAgain": "重试"
 }

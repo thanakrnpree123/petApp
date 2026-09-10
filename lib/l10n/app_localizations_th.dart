@@ -959,4 +959,15 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get turnOnReminders => 'เปิดการแจ้งเตือน';
+
+  @override
+  String get paywallMobileOnly =>
+      'PawHealth Plus สมัครได้ในแอป PawHealth บน iPhone และ Android ขณะนี้ยังไม่สามารถสมัครผ่านเว็บได้';
+
+  @override
+  String get paywallUnavailable =>
+      'ขณะนี้ยังไม่สามารถสมัครสมาชิกได้ กรุณาลองใหม่ภายหลัง';
+
+  @override
+  String get tryAgain => 'ลองอีกครั้ง';
 }

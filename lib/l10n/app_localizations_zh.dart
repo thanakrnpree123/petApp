@@ -892,4 +892,14 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get turnOnReminders => '开启';
+
+  @override
+  String get paywallMobileOnly =>
+      'PawHealth Plus 可在 iPhone 和 Android 版 PawHealth 应用中订阅。目前暂不支持在网页上购买订阅。';
+
+  @override
+  String get paywallUnavailable => '目前暂时无法订阅，请稍后再试。';
+
+  @override
+  String get tryAgain => '重试';
 }

@@ -961,4 +961,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get turnOnReminders => 'Turn On';
+
+  @override
+  String get paywallMobileOnly =>
+      'PawHealth Plus is available in the PawHealth app for iPhone and Android. Subscriptions can\'t be purchased on the web yet.';
+
+  @override
+  String get paywallUnavailable =>
+      'Subscriptions aren\'t available right now. Please try again later.';
+
+  @override
+  String get tryAgain => 'Try Again';
 }

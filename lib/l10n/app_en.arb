@@ -383,5 +383,8 @@
   "reminderPromptTitle": "Get vaccine reminders?",
   "reminderPromptMessage": "We'll remind you the day before {petName}'s vaccine is due. You can change this anytime in your phone's settings.",
   "@reminderPromptMessage": {"placeholders": {"petName": {"type": "String"}}},
-  "turnOnReminders": "Turn On"
+  "turnOnReminders": "Turn On",
+  "paywallMobileOnly": "PawHealth Plus is available in the PawHealth app for iPhone and Android. Subscriptions can't be purchased on the web yet.",
+  "paywallUnavailable": "Subscriptions aren't available right now. Please try again later.",
+  "tryAgain": "Try Again"
 }

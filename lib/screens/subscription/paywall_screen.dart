@@ -15,9 +15,7 @@ class PaywallScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final subscription = context.watch<SubscriptionProvider>();
-    final packages =
-        subscription.offerings?.current?.availablePackages ?? <Package>[];
-    final package = packages.isEmpty ? null : packages.first;
+    final package = subscription.currentPackage;
 
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -49,14 +47,18 @@ class PaywallScreen extends StatelessWidget {
                             l10n.upgradeToPlus,
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            l10n.monthlyPrice(
-                              package?.storeProduct.priceString ?? '\$2.99',
+                          // Only the store's real, localized price — a
+                          // hardcoded "\$2.99" is wrong in baht or yuan.
+                          if (package != null) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              l10n.monthlyPrice(
+                                package.storeProduct.priceString,
+                              ),
+                              style: Theme.of(context).textTheme.titleLarge
+                                  ?.copyWith(color: colorScheme.primary),
                             ),
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(color: colorScheme.primary),
-                          ),
+                          ],
                           const SizedBox(height: 24),
                           Card(
                             child: Padding(
@@ -100,51 +102,9 @@ class PaywallScreen extends StatelessWidget {
                             muted: true,
                           ),
                           const Spacer(),
-                          if (subscription.errorCode != null)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: Text(
-                                L10nHelpers.subscriptionError(
-                                  l10n,
-                                  subscription.errorCode!,
-                                ),
-                                style: TextStyle(color: colorScheme.error),
-                              ),
-                            ),
-                          FilledButton(
-                            onPressed: subscription.isLoading || package == null
-                                ? null
-                                : () async {
-                                    final success =
-                                        await PawLoaderOverlay.during(
-                                          context,
-                                          subscription.purchase(package),
-                                          message: l10n.processingPurchase,
-                                        );
-                                    if (success && context.mounted) {
-                                      Navigator.of(context).pop();
-                                    }
-                                  },
-                            child: Text(l10n.subscribe),
-                          ),
-                          const SizedBox(height: 8),
-                          TextButton(
-                            onPressed: subscription.isLoading
-                                ? null
-                                : () async {
-                                    final success =
-                                        await PawLoaderOverlay.during(
-                                          context,
-                                          subscription.restore(),
-                                          message: l10n.restoringPurchases,
-                                        );
-                                    if (success &&
-                                        context.mounted &&
-                                        subscription.isPlusMember) {
-                                      Navigator.of(context).pop();
-                                    }
-                                  },
-                            child: Text(l10n.restorePurchases),
+                          _PurchaseActions(
+                            subscription: subscription,
+                            package: package,
                           ),
                         ],
                       ),
@@ -154,6 +114,126 @@ class PaywallScreen extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The bottom of the paywall: the buy buttons when a subscription can be
+/// sold, otherwise an explanation (and a retry where one could help) —
+/// never a disabled button with no reason given.
+class _PurchaseActions extends StatelessWidget {
+  final SubscriptionProvider subscription;
+  final Package? package;
+
+  const _PurchaseActions({required this.subscription, required this.package});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return switch (subscription.availability) {
+      PurchaseAvailability.available => _buyButtons(context, l10n, colorScheme),
+      PurchaseAvailability.loading => const Padding(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      PurchaseAvailability.loadFailed => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _Notice(text: l10n.errSubscriptionLoad),
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
+            onPressed: subscription.retry,
+            icon: const Icon(Icons.refresh),
+            label: Text(l10n.tryAgain),
+          ),
+        ],
+      ),
+      PurchaseAvailability.mobileOnly => _Notice(
+        icon: Icons.phone_iphone,
+        text: l10n.paywallMobileOnly,
+      ),
+      PurchaseAvailability.unavailable => _Notice(
+        text: l10n.paywallUnavailable,
+      ),
+    };
+  }
+
+  Widget _buyButtons(
+    BuildContext context,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+  ) {
+    final package = this.package!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (subscription.errorCode != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text(
+              L10nHelpers.subscriptionError(l10n, subscription.errorCode!),
+              style: TextStyle(color: colorScheme.error),
+            ),
+          ),
+        FilledButton(
+          onPressed: subscription.isLoading
+              ? null
+              : () async {
+                  final success = await PawLoaderOverlay.during(
+                    context,
+                    subscription.purchase(package),
+                    message: l10n.processingPurchase,
+                  );
+                  if (success && context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                },
+          child: Text(l10n.subscribe),
+        ),
+        const SizedBox(height: 8),
+        TextButton(
+          onPressed: subscription.isLoading
+              ? null
+              : () async {
+                  final success = await PawLoaderOverlay.during(
+                    context,
+                    subscription.restore(),
+                    message: l10n.restoringPurchases,
+                  );
+                  if (success && context.mounted && subscription.isPlusMember) {
+                    Navigator.of(context).pop();
+                  }
+                },
+          child: Text(l10n.restorePurchases),
+        ),
+      ],
+    );
+  }
+}
+
+class _Notice extends StatelessWidget {
+  final IconData icon;
+  final String text;
+
+  const _Notice({this.icon = Icons.info_outline, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: colorScheme.primary),
+            const SizedBox(width: 12),
+            Expanded(child: Text(text)),
+          ],
         ),
       ),
     );

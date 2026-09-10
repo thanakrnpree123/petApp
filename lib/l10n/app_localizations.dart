@@ -1743,6 +1743,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Turn On'**
   String get turnOnReminders;
+
+  /// No description provided for @paywallMobileOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'PawHealth Plus is available in the PawHealth app for iPhone and Android. Subscriptions can\'t be purchased on the web yet.'**
+  String get paywallMobileOnly;
+
+  /// No description provided for @paywallUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscriptions aren\'t available right now. Please try again later.'**
+  String get paywallUnavailable;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
 }
 
 class _AppLocalizationsDelegate

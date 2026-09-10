@@ -19,12 +19,17 @@ class ArticleListScreen extends StatefulWidget {
 
 class _ArticleListScreenState extends State<ArticleListScreen> {
   late final _service = widget.articleService ?? ArticleService();
+
+  // Created once: a new stream per build() — i.e. per category-chip tap —
+  // made the StreamBuilder reset to "waiting", flashing the loader and
+  // re-querying Firestore on every tap.
+  late final Stream<List<Article>> _articles = _service.watchArticles();
   String? _selectedCategory;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Article>>(
-      stream: _service.watchArticles(),
+      stream: _articles,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return PawLoader(

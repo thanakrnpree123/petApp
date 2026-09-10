@@ -18,6 +18,8 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 | 8 | **#6** Paywall dead end on web | Subscribe disabled, no explanation | 400 | 0.5 d | ✅ | Paywall explains each state (web / unavailable / load failed + retry / loading); no hardcoded price |
 | 9 | **#1** Articles "All" chip hardcoded English | 5-minute fix | 1500 | 0.05 d | ✅ | Uses l10n.filterAll |
 
+**Found along the way:** Articles tab re-queried Firestore and flashed its loader on every category tap (same stream-in-`build` bug as #4) — fixed in its own commit.
+
 ## Backlog (not in this batch)
 
 #8 stale auth error on Register (250) · #9 weight sanity + chart dates (160) · #11 vaccine date validation (96) · #12 photo picker camera/permissions (70) · #13 shared-device logout leak (40) · #14 unsaved form warning (36)

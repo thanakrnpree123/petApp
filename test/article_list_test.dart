@@ -56,4 +56,19 @@ void main() {
     expect(find.widgetWithText(ChoiceChip, 'ทั้งหมด'), findsOneWidget);
     expect(find.text('All'), findsNothing);
   });
+
+  testWidgets('tapping a category keeps the list instead of reloading', (
+    tester,
+  ) async {
+    final service = _FakeArticleService();
+    await _pump(tester, service);
+    expect(find.text('Heatstroke first aid'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(ChoiceChip, 'Nutrition'));
+    await tester.pump();
+
+    expect(find.text('Feeding a senior cat'), findsOneWidget);
+    expect(find.text('Heatstroke first aid'), findsNothing);
+    expect(service.watchCalls, 1);
+  });
 }

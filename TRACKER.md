@@ -16,7 +16,7 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 | 6 | **#5** Vaccine reminders fire at midnight | Due date 00:00 minus 1 day | 400 | 0.25 d | ✅ | 9:00 AM the day before; due-morning fallback when added late |
 | 7 | **#4** Timeline flashes empty state on filter tap | Streams recreated in `build` | 540 | 0.5 d | ✅ | Streams subscribed once in state; loading spinner instead of empty-state flash |
 | 8 | **#6** Paywall dead end on web | Subscribe disabled, no explanation | 400 | 0.5 d | ✅ | Paywall explains each state (web / unavailable / load failed + retry / loading); no hardcoded price |
-| 9 | **#1** Articles "All" chip hardcoded English | 5-minute fix | 1500 | 0.05 d | ⬜ | |
+| 9 | **#1** Articles "All" chip hardcoded English | 5-minute fix | 1500 | 0.05 d | ✅ | Uses l10n.filterAll |
 
 ## Backlog (not in this batch)
 

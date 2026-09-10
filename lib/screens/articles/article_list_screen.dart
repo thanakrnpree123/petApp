@@ -8,14 +8,17 @@ import '../../widgets/common/paw_loader.dart';
 import 'article_detail_screen.dart';
 
 class ArticleListScreen extends StatefulWidget {
-  const ArticleListScreen({super.key});
+  /// Override for tests; production uses the real service.
+  final ArticleService? articleService;
+
+  const ArticleListScreen({super.key, this.articleService});
 
   @override
   State<ArticleListScreen> createState() => _ArticleListScreenState();
 }
 
 class _ArticleListScreenState extends State<ArticleListScreen> {
-  final _service = ArticleService();
+  late final _service = widget.articleService ?? ArticleService();
   String? _selectedCategory;
 
   @override
@@ -53,7 +56,7 @@ class _ArticleListScreenState extends State<ArticleListScreen> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: ChoiceChip(
-                        label: const Text('All'),
+                        label: Text(AppLocalizations.of(context)!.filterAll),
                         selected: _selectedCategory == null,
                         onSelected: (_) =>
                             setState(() => _selectedCategory = null),

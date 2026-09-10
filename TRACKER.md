@@ -13,7 +13,7 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 | 3 | **#10** Deleting a pet keeps its vaccine reminders and photo | Override: grief moment → 1-star review | 120 | 0.5 d | ✅ | Reminders cancelled + photo folder deleted; stable reminder ids |
 | 4 | **#7** No "Forgot password" | Override: locked-out user is lost for good | 360 | 0.5 d | ✅ | Reset dialog from login; email sent in app language; no account enumeration |
 | 5 | **#2** Notification permission asked at first launch | One-shot iOS prompt kills reminders | 840 | 0.5 d | ✅ | No prompt at launch; explainer on first vaccine add, OS prompt only on Turn On |
-| 6 | **#5** Vaccine reminders fire at midnight | Due date 00:00 minus 1 day | 400 | 0.25 d | ⬜ | Fire 9:00 AM local |
+| 6 | **#5** Vaccine reminders fire at midnight | Due date 00:00 minus 1 day | 400 | 0.25 d | ✅ | 9:00 AM the day before; due-morning fallback when added late |
 | 7 | **#4** Timeline flashes empty state on filter tap | Streams recreated in `build` | 540 | 0.5 d | ⬜ | Also saves Firestore reads |
 | 8 | **#6** Paywall dead end on web | Subscribe disabled, no explanation | 400 | 0.5 d | ⬜ | Mobile too until RevenueCat keys |
 | 9 | **#1** Articles "All" chip hardcoded English | 5-minute fix | 1500 | 0.05 d | ⬜ | |

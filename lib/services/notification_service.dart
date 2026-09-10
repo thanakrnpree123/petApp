@@ -97,6 +97,29 @@ class NotificationService {
         false;
   }
 
+  /// Local hour reminders are delivered at.
+  static const reminderHour = 9;
+
+  /// When to remind about a vaccine due on [dueDate]: [reminderHour] on the
+  /// day before. If that moment has passed but [reminderHour] on the due
+  /// day hasn't (a vaccine added late the day before), remind that morning
+  /// instead. Null when both are past.
+  ///
+  /// Due dates come from a date picker, i.e. local midnight — subtracting a
+  /// day from that fired reminders at 00:00.
+  static ({DateTime at, bool dueToday})? vaccineReminderSchedule(
+    DateTime dueDate, {
+    required DateTime now,
+  }) {
+    final due = dueDate.toLocal();
+    final dayBefore = DateTime(due.year, due.month, due.day - 1, reminderHour);
+    if (dayBefore.isAfter(now)) return (at: dayBefore, dueToday: false);
+
+    final dueMorning = DateTime(due.year, due.month, due.day, reminderHour);
+    if (dueMorning.isAfter(now)) return (at: dueMorning, dueToday: true);
+    return null;
+  }
+
   Future<void> scheduleVaccineReminder({
     required int id,
     required String petName,
@@ -106,20 +129,21 @@ class NotificationService {
     if (!isSupported) return;
     await init();
 
-    final reminderTime = nextDueDate.subtract(const Duration(days: 1));
-    if (reminderTime.isBefore(DateTime.now())) return;
+    final schedule = vaccineReminderSchedule(nextDueDate, now: DateTime.now());
+    if (schedule == null) return;
 
     // tz.local defaults to UTC when setLocalLocation() hasn't been called,
-    // but TZDateTime.from preserves the real-world instant from reminderTime
-    // regardless of which zone it's labeled with, so a one-off (non-recurring)
-    // schedule still fires at the correct moment without detecting the device's
-    // actual time zone name.
-    final scheduledDate = tz.TZDateTime.from(reminderTime, tz.local);
+    // but TZDateTime.from preserves the real-world instant of the local
+    // DateTime it's given, so a one-off schedule still fires at 9:00 AM on
+    // the device's clock without detecting the zone name.
+    final scheduledDate = tz.TZDateTime.from(schedule.at, tz.local);
 
     await _plugin.zonedSchedule(
       id: id,
       title: 'Vaccine reminder for $petName',
-      body: '$vaccineName is due tomorrow.',
+      body: schedule.dueToday
+          ? '$vaccineName is due today.'
+          : '$vaccineName is due tomorrow.',
       scheduledDate: scheduledDate,
       notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(

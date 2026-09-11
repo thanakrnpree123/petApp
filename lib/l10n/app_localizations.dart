@@ -1096,12 +1096,6 @@ abstract class AppLocalizations {
   /// **'{months} mo'**
   String ageMonths(int months);
 
-  /// No description provided for @optNoSymptoms.
-  ///
-  /// In en, this message translates to:
-  /// **'No symptoms / General checkup'**
-  String get optNoSymptoms;
-
   /// No description provided for @advHealthy.
   ///
   /// In en, this message translates to:

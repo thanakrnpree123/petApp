@@ -563,9 +563,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get optNoSymptoms => 'No symptoms / General checkup';
-
-  @override
   String get advHealthy =>
       'Your pet seems healthy! Keep up the good work — continue regular checkups and preventive care.';
 

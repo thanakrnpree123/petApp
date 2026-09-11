@@ -564,9 +564,6 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
-  String get optNoSymptoms => 'ไม่มีอาการ / ตรวจสุขภาพทั่วไป';
-
-  @override
   String get advHealthy =>
       'สัตว์เลี้ยงของคุณดูแข็งแรงดี! ดูแลแบบนี้ต่อไป และพาไปตรวจสุขภาพกับสัตวแพทย์เป็นประจำ';
 

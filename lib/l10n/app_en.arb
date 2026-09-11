@@ -272,7 +272,6 @@
       }
     }
   },
-  "optNoSymptoms": "No symptoms / General checkup",
   "advHealthy": "Your pet seems healthy! Keep up the good work — continue regular checkups and preventive care.",
   "shareWithVet": "Share with Vet",
   "checkSavedToHistory": "Saved to {petName}'s health history",

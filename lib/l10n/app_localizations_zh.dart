@@ -540,9 +540,6 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get optNoSymptoms => '无症状／常规体检';
-
-  @override
   String get advHealthy => '您的宠物看起来很健康！继续保持，定期体检并做好预防护理。';
 
   @override

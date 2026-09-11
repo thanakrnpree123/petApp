@@ -272,7 +272,6 @@
       }
     }
   },
-  "optNoSymptoms": "无症状／常规体检",
   "advHealthy": "您的宠物看起来很健康！继续保持，定期体检并做好预防护理。",
   "shareWithVet": "分享给兽医",
   "checkSavedToHistory": "已保存到{petName}的健康记录",

@@ -30,4 +30,13 @@ void main() {
       'Old wording from 2025.',
     );
   });
+
+  test('checks saved from a retired result are still translated', () {
+    // "No symptoms / General checkup" was removed from the vomiting tree;
+    // history saved before then must not revert to English.
+    const retired =
+        'Your pet seems healthy! Keep up the good work — continue regular '
+        'checkups and preventive care.';
+    expect(L10nHelpers.savedAdvice(th, _check(retired)), th.advHealthy);
+  });
 }

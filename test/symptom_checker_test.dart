@@ -52,14 +52,15 @@ void main() {
       expect((checker.currentNode as QuestionNode).id, 'blood_check_mild');
     });
 
-    test('no-symptoms path resolves immediately to the healthy result', () {
-      final checker = SymptomChecker(dogVomitingTree);
-      _answerByLabel(checker, 'No symptoms / General checkup');
-
-      expect(checker.isComplete, isTrue);
-      expect(checker.result.id, 'result_healthy');
-      expect(checker.result.level, TriageLevel.monitor);
-      expect(checker.path, hasLength(1));
+    test('there is no "no symptoms" shortcut to a reassuring result', () {
+      // A symptom check is for a pet that is vomiting; "seems healthy" at
+      // the first question was false reassurance (pending vet review).
+      final start = dogVomitingTree['start'] as QuestionNode;
+      expect(start.options.map((o) => o.label), [
+        '1 time',
+        '2-3 times',
+        '4 or more times',
+      ]);
     });
 
     test('every node reachable from start terminates in a ResultNode', () {

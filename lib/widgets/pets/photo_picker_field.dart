@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../l10n/app_localizations.dart';
+import 'webcam_capture_screen.dart';
 
 /// Picks raw image bytes from [source]; null when the user cancels.
 typedef ImageBytesPicker = Future<Uint8List?> Function(ImageSource source);
@@ -20,6 +22,8 @@ class PhotoPickerField extends StatelessWidget {
   /// Overrides for tests.
   final ImageBytesPicker? pickImage;
   final bool? cameraAvailable;
+  final bool? isWeb;
+  final Future<Uint8List?> Function(BuildContext context)? webcamCapture;
 
   const PhotoPickerField({
     super.key,
@@ -28,6 +32,8 @@ class PhotoPickerField extends StatelessWidget {
     this.existingPhotoUrl,
     this.pickImage,
     this.cameraAvailable,
+    this.isWeb,
+    this.webcamCapture,
   });
 
   static Future<Uint8List?> _pickWithImagePicker(ImageSource source) async {
@@ -41,9 +47,13 @@ class PhotoPickerField extends StatelessWidget {
 
   Future<void> _choose(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
+    final web = isWeb ?? kIsWeb;
+    // On the web, checking for a camera would itself trigger the browser's
+    // permission prompt, so "Take Photo" is always offered and the capture
+    // screen explains if there's no camera.
     final hasCamera =
         cameraAvailable ??
-        ImagePicker().supportsImageSource(ImageSource.camera);
+        (web || ImagePicker().supportsImageSource(ImageSource.camera));
 
     // Only ask "camera or library?" when there's a camera to offer.
     final source = hasCamera
@@ -72,6 +82,14 @@ class PhotoPickerField extends StatelessWidget {
           )
         : ImageSource.gallery;
     if (source == null || !context.mounted) return;
+
+    // image_picker's web camera is a file input, which desktop browsers
+    // answer with a file chooser — use a real webcam preview instead.
+    if (web && source == ImageSource.camera) {
+      final bytes = await (webcamCapture ?? WebcamCaptureScreen.open)(context);
+      if (bytes != null) onPicked(bytes);
+      return;
+    }
 
     final messenger = ScaffoldMessenger.of(context);
     try {

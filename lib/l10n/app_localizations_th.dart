@@ -1009,4 +1009,28 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get discard => 'ยกเลิกการแก้ไข';
+
+  @override
+  String get retake => 'ถ่ายใหม่';
+
+  @override
+  String get usePhoto => 'ใช้รูปนี้';
+
+  @override
+  String get switchCamera => 'สลับกล้อง';
+
+  @override
+  String get cameraPermissionDenied =>
+      'PawHealth ไม่สามารถใช้กล้องได้ กรุณาอนุญาตการเข้าถึงกล้องสำหรับเว็บไซต์นี้ในแถบที่อยู่หรือการตั้งค่าของเบราว์เซอร์ แล้วลองอีกครั้ง';
+
+  @override
+  String get cameraNotFound =>
+      'ไม่พบกล้อง กรุณาเชื่อมต่อเว็บแคม หรือเลือกรูปจากไฟล์แทน';
+
+  @override
+  String get cameraInUse =>
+      'กล้องกำลังถูกใช้งานโดยแอปอื่น เช่น การประชุมวิดีโอ กรุณาปิดแอปนั้นแล้วลองอีกครั้ง';
+
+  @override
+  String get cameraStartFailed => 'เปิดกล้องไม่สำเร็จ กรุณาลองอีกครั้ง';
 }

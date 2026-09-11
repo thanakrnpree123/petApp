@@ -900,4 +900,113 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get advLmMonitor =>
       'อาการขาเจ็บเล็กน้อยมักเกิดจากกล้ามเนื้อหรือเอ็นเคล็ดเล็กน้อย ให้สัตว์เลี้ยงพักผ่อน 24–48 ชั่วโมง ตรวจดูอุ้งเท้าว่ามีหนามหรือบาดแผลหรือไม่ และพาไปพบสัตวแพทย์หากอาการไม่ดีขึ้น ห้ามให้ยาแก้ปวดของคนเด็ดขาด เพราะหลายชนิดเป็นพิษต่อสัตว์เลี้ยง';
+
+  @override
+  String get deleteAccount => 'ลบบัญชี';
+
+  @override
+  String get deleteAccountTitle => 'ลบบัญชีของคุณใช่ไหม?';
+
+  @override
+  String get deleteAccountMessage =>
+      'การดำเนินการนี้จะลบบัญชีและข้อมูลทั้งหมดอย่างถาวร ได้แก่ สัตว์เลี้ยง ประวัติสุขภาพ วัคซีน ผลตรวจอาการ และรูปภาพทั้งหมด ไม่สามารถย้อนกลับได้';
+
+  @override
+  String get deleteAccountSubscriptionNote =>
+      'การลบบัญชีไม่ได้ยกเลิกการสมัครสมาชิกที่ซื้อผ่าน App Store หรือ Google Play กรุณายกเลิกในการตั้งค่าของสโตร์เพื่อหยุดการเรียกเก็บเงิน';
+
+  @override
+  String get confirmPasswordToDelete => 'กรอกรหัสผ่านเพื่อยืนยัน';
+
+  @override
+  String get deleteAccountConfirm => 'ลบอย่างถาวร';
+
+  @override
+  String get accountDeleted => 'ลบบัญชีของคุณแล้ว';
+
+  @override
+  String get errIncorrectPassword => 'รหัสผ่านไม่ถูกต้อง';
+
+  @override
+  String get deleteAccountFailed =>
+      'ลบบัญชีไม่สำเร็จ กรุณาตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง บัญชีของคุณยังใช้งานได้ จึงสามารถลบต่อให้เสร็จได้';
+
+  @override
+  String get forgotPassword => 'ลืมรหัสผ่าน?';
+
+  @override
+  String get resetPasswordTitle => 'ตั้งรหัสผ่านใหม่';
+
+  @override
+  String get resetPasswordMessage =>
+      'กรอกอีเมลของบัญชี แล้วเราจะส่งลิงก์สำหรับตั้งรหัสผ่านใหม่ให้คุณ';
+
+  @override
+  String get sendResetLink => 'ส่งลิงก์ตั้งรหัสผ่าน';
+
+  @override
+  String resetLinkSent(String email) {
+    return 'หากมีบัญชีที่ใช้อีเมล $email เราได้ส่งลิงก์ตั้งรหัสผ่านใหม่ไปแล้ว กรุณาตรวจสอบกล่องจดหมายและโฟลเดอร์สแปม';
+  }
+
+  @override
+  String get reminderPromptTitle => 'รับการแจ้งเตือนวัคซีนไหม?';
+
+  @override
+  String reminderPromptMessage(String petName) {
+    return 'เราจะแจ้งเตือนคุณล่วงหน้า 1 วันก่อนถึงกำหนดฉีดวัคซีนของ $petName คุณเปลี่ยนการตั้งค่านี้ได้ทุกเมื่อในการตั้งค่าโทรศัพท์';
+  }
+
+  @override
+  String get turnOnReminders => 'เปิดการแจ้งเตือน';
+
+  @override
+  String get paywallMobileOnly =>
+      'PawHealth Plus สมัครได้ในแอป PawHealth บน iPhone และ Android ขณะนี้ยังไม่สามารถสมัครผ่านเว็บได้';
+
+  @override
+  String get paywallUnavailable =>
+      'ขณะนี้ยังไม่สามารถสมัครสมาชิกได้ กรุณาลองใหม่ภายหลัง';
+
+  @override
+  String get tryAgain => 'ลองอีกครั้ง';
+
+  @override
+  String get weightOutOfRange => 'กรุณากรอกน้ำหนักระหว่าง 0.1 ถึง 150 กก.';
+
+  @override
+  String get nextDueBeforeGivenError =>
+      'วันครบกำหนดครั้งถัดไปต้องอยู่หลังวันที่ฉีดวัคซีน';
+
+  @override
+  String get takePhoto => 'ถ่ายรูป';
+
+  @override
+  String get chooseFromLibrary => 'เลือกจากคลังรูปภาพ';
+
+  @override
+  String get addPetPhoto => 'เพิ่มรูปสัตว์เลี้ยงของคุณ';
+
+  @override
+  String get changePetPhoto => 'เปลี่ยนรูปสัตว์เลี้ยงของคุณ';
+
+  @override
+  String get photoAccessDenied =>
+      'PawHealth ไม่สามารถเปิดกล้องหรือรูปภาพได้ คุณสามารถอนุญาตการเข้าถึงได้ในการตั้งค่าโทรศัพท์';
+
+  @override
+  String get photoPickFailed => 'โหลดรูปนี้ไม่สำเร็จ กรุณาลองเลือกรูปอื่น';
+
+  @override
+  String get discardChangesTitle => 'ยกเลิกการแก้ไขไหม?';
+
+  @override
+  String get discardChangesMessage =>
+      'คุณมีการแก้ไขข้อมูลสัตว์เลี้ยงที่ยังไม่ได้บันทึก หากออกตอนนี้ การแก้ไขจะหายไป';
+
+  @override
+  String get keepEditing => 'แก้ไขต่อ';
+
+  @override
+  String get discard => 'ยกเลิกการแก้ไข';
 }

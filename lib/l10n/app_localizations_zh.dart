@@ -835,4 +835,107 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get advLmMonitor =>
       '轻微跛行通常是轻度拉伤。让宠物休息 24–48 小时，检查脚掌是否有刺或伤口；如未好转，请就医。切勿给宠物服用人用止痛药——很多对宠物有毒。';
+
+  @override
+  String get deleteAccount => '删除账户';
+
+  @override
+  String get deleteAccountTitle => '确定删除账户吗？';
+
+  @override
+  String get deleteAccountMessage =>
+      '此操作将永久删除您的账户及其中的所有内容——包括所有宠物、健康记录、疫苗、症状检查和照片。此操作无法撤销。';
+
+  @override
+  String get deleteAccountSubscriptionNote =>
+      '删除账户不会取消通过 App Store 或 Google Play 购买的订阅。请在商店设置中取消订阅以停止扣费。';
+
+  @override
+  String get confirmPasswordToDelete => '请输入密码以确认';
+
+  @override
+  String get deleteAccountConfirm => '永久删除';
+
+  @override
+  String get accountDeleted => '您的账户已删除。';
+
+  @override
+  String get errIncorrectPassword => '密码错误。';
+
+  @override
+  String get deleteAccountFailed => '未能完成账户删除。请检查网络连接后重试——您的账户仍然有效，可以继续完成删除。';
+
+  @override
+  String get forgotPassword => '忘记密码？';
+
+  @override
+  String get resetPasswordTitle => '重置密码';
+
+  @override
+  String get resetPasswordMessage => '请输入您的账户邮箱，我们会发送一个用于设置新密码的链接。';
+
+  @override
+  String get sendResetLink => '发送重置链接';
+
+  @override
+  String resetLinkSent(String email) {
+    return '如果存在使用 $email 的账户，重置链接已发出。请查看收件箱和垃圾邮件文件夹。';
+  }
+
+  @override
+  String get reminderPromptTitle => '开启疫苗提醒？';
+
+  @override
+  String reminderPromptMessage(String petName) {
+    return '我们会在$petName的疫苗到期前一天提醒您。您可以随时在手机设置中更改。';
+  }
+
+  @override
+  String get turnOnReminders => '开启';
+
+  @override
+  String get paywallMobileOnly =>
+      'PawHealth Plus 可在 iPhone 和 Android 版 PawHealth 应用中订阅。目前暂不支持在网页上购买订阅。';
+
+  @override
+  String get paywallUnavailable => '目前暂时无法订阅，请稍后再试。';
+
+  @override
+  String get tryAgain => '重试';
+
+  @override
+  String get weightOutOfRange => '请输入 0.1 到 150 公斤之间的体重。';
+
+  @override
+  String get nextDueBeforeGivenError => '下次到期日期必须晚于接种日期。';
+
+  @override
+  String get takePhoto => '拍照';
+
+  @override
+  String get chooseFromLibrary => '从相册选择';
+
+  @override
+  String get addPetPhoto => '添加宠物照片';
+
+  @override
+  String get changePetPhoto => '更换宠物照片';
+
+  @override
+  String get photoAccessDenied => 'PawHealth 无法打开相机或照片。您可以在手机设置中允许访问。';
+
+  @override
+  String get photoPickFailed => '无法加载这张照片，请换一张试试。';
+
+  @override
+  String get discardChangesTitle => '放弃更改？';
+
+  @override
+  String get discardChangesMessage => '您对这只宠物的更改尚未保存。现在离开，这些更改将会丢失。';
+
+  @override
+  String get keepEditing => '继续编辑';
+
+  @override
+  String get discard => '放弃';
 }

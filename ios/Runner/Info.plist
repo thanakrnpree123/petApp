@@ -26,6 +26,8 @@
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
+		<key>NSCameraUsageDescription</key>
+		<string>PawHealth uses the camera so you can take a profile picture of your pet.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>PawHealth needs access to your photo library to set your pet's profile picture.</string>
 		<key>UIApplicationSceneManifest</key>

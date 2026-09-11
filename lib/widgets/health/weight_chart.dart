@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/health_log.dart';
@@ -8,6 +9,34 @@ class WeightChart extends StatelessWidget {
   final List<HealthLog> weightLogs;
 
   const WeightChart({super.key, required this.weightLogs});
+
+  /// Plots each log at its real date — x is days since the first log — so
+  /// a gap of two months looks like two months, not like the next day.
+  @visibleForTesting
+  static ({List<FlSpot> spots, DateTime origin}) spotsFor(
+    List<HealthLog> logs,
+  ) {
+    final sorted = [...logs]..sort((a, b) => a.loggedAt.compareTo(b.loggedAt));
+    final origin = sorted.first.loggedAt;
+    return (
+      spots: [
+        for (final log in sorted)
+          FlSpot(_daysBetween(origin, log.loggedAt), log.value ?? 0),
+      ],
+      origin: origin,
+    );
+  }
+
+  static double _daysBetween(DateTime from, DateTime to) =>
+      to.difference(from).inMinutes / Duration.minutesPerDay;
+
+  /// Day and month in the order the locale expects (19/9 in Thai, 9/19 in
+  /// US English).
+  @visibleForTesting
+  static String dateLabel(DateTime date, String locale) =>
+      DateFormat.Md(locale).format(date);
+
+  static final _weightFormat = NumberFormat('0.#');
 
   @override
   Widget build(BuildContext context) {
@@ -32,17 +61,19 @@ class WeightChart extends StatelessWidget {
       );
     }
 
-    final sorted = [...weightLogs]
-      ..sort((a, b) => a.loggedAt.compareTo(b.loggedAt));
-    final spots = [
-      for (var i = 0; i < sorted.length; i++)
-        FlSpot(i.toDouble(), sorted[i].value ?? 0),
-    ];
+    final locale = Localizations.localeOf(context).toString();
+    final (:spots, :origin) = spotsFor(weightLogs);
+    // Logs all on one day would give a zero-width axis.
+    final span = spots.last.x > 0 ? spots.last.x : 1.0;
+    // About four date labels across the axis, never closer than a day.
+    final labelInterval = span / 4 < 1 ? 1.0 : span / 4;
 
     return SizedBox(
       height: 220,
       child: LineChart(
         LineChartData(
+          minX: 0,
+          maxX: span,
           minY: 0,
           // Horizontal guides only, in the hairline color — the line is
           // the content, the grid just helps read values off it.
@@ -63,15 +94,14 @@ class WeightChart extends StatelessWidget {
               sideTitles: SideTitles(
                 showTitles: true,
                 reservedSize: 28,
+                interval: labelInterval,
                 getTitlesWidget: (value, meta) {
-                  final index = value.toInt();
-                  if (index < 0 || index >= sorted.length) {
-                    return const SizedBox.shrink();
-                  }
-                  final date = sorted[index].loggedAt;
+                  final date = origin.add(
+                    Duration(minutes: (value * Duration.minutesPerDay).round()),
+                  );
                   return SideTitleWidget(
                     meta: meta,
-                    child: Text('${date.month}/${date.day}', style: axisStyle),
+                    child: Text(dateLabel(date, locale), style: axisStyle),
                   );
                 },
               ),
@@ -81,7 +111,7 @@ class WeightChart extends StatelessWidget {
                 showTitles: true,
                 reservedSize: 44,
                 getTitlesWidget: (value, meta) =>
-                    Text('${value.toInt()}kg', style: axisStyle),
+                    Text('${_weightFormat.format(value)}kg', style: axisStyle),
               ),
             ),
           ),
@@ -89,6 +119,8 @@ class WeightChart extends StatelessWidget {
             LineChartBarData(
               spots: spots,
               isCurved: true,
+              // Keeps the curve from overshooting between uneven points.
+              preventCurveOverShooting: true,
               color: colorScheme.primary,
               barWidth: 3,
               isStrokeCapRound: true,

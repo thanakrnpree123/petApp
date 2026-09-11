@@ -6,6 +6,26 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../services/revenuecat_service.dart';
 
+/// Whether the paywall can sell a subscription right now — and if not, why,
+/// so it can say so instead of showing a disabled button.
+enum PurchaseAvailability {
+  /// A package is loaded and can be bought.
+  available,
+
+  /// Offerings are still loading.
+  loading,
+
+  /// Web: no App Store / Play Store in-app purchase exists.
+  mobileOnly,
+
+  /// Offerings failed to load (e.g. offline) — worth a retry.
+  loadFailed,
+
+  /// No product to sell: RevenueCat not configured (placeholder keys) or
+  /// no current offering.
+  unavailable,
+}
+
 class SubscriptionProvider extends ChangeNotifier {
   final RevenueCatService _service;
   final FirebaseFirestore _firestore;
@@ -16,6 +36,48 @@ class SubscriptionProvider extends ChangeNotifier {
   Offerings? offerings;
 
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? _premiumSub;
+  String? _userId;
+
+  /// The package the paywall sells, if one is loaded.
+  Package? get currentPackage {
+    final packages = offerings?.current?.availablePackages ?? const [];
+    return packages.isEmpty ? null : packages.first;
+  }
+
+  PurchaseAvailability get availability => availabilityFor(
+    isWeb: kIsWeb,
+    hasPlaceholderKeys: RevenueCatService.hasPlaceholderKeys,
+    isLoading: isLoading,
+    loadFailed: errorCode == 'load-failed',
+    hasPackage: currentPackage != null,
+  );
+
+  @visibleForTesting
+  static PurchaseAvailability availabilityFor({
+    required bool isWeb,
+    required bool hasPlaceholderKeys,
+    required bool isLoading,
+    required bool loadFailed,
+    required bool hasPackage,
+  }) {
+    if (isWeb) return PurchaseAvailability.mobileOnly;
+    if (hasPlaceholderKeys) return PurchaseAvailability.unavailable;
+    // A loaded package stays "available" during a purchase/restore — the
+    // paywall disables its buttons while isLoading instead.
+    if (hasPackage) return PurchaseAvailability.available;
+    if (isLoading) return PurchaseAvailability.loading;
+    if (loadFailed) return PurchaseAvailability.loadFailed;
+    return PurchaseAvailability.unavailable;
+  }
+
+  /// Re-runs [init] for the current user, e.g. after offerings failed to
+  /// load while offline.
+  Future<void> retry() async {
+    final userId = _userId;
+    if (userId == null) return;
+    errorCode = null;
+    await init(userId);
+  }
 
   SubscriptionProvider({RevenueCatService? service, FirebaseFirestore? firestore})
     : _service = service ?? RevenueCatService(),
@@ -24,6 +86,7 @@ class SubscriptionProvider extends ChangeNotifier {
   }
 
   Future<void> init(String userId) async {
+    _userId = userId;
     // App Store / Play Store in-app purchase doesn't exist on the web, so
     // Plus access there is granted by flipping `isPremium` on the user's
     // own Firestore document instead (see users/{uid}.isPremium — set via
@@ -120,6 +183,19 @@ class SubscriptionProvider extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  /// Drops all state tied to the current user (e.g. after their account
+  /// is deleted) so nothing carries over to the next sign-in.
+  Future<void> reset() async {
+    await _premiumSub?.cancel();
+    _premiumSub = null;
+    _userId = null;
+    isPlusMember = false;
+    isLoading = false;
+    errorCode = null;
+    offerings = null;
+    notifyListeners();
   }
 
   @override

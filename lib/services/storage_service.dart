@@ -27,4 +27,21 @@ class StorageService {
         .timeout(const Duration(seconds: 45));
     return ref.getDownloadURL().timeout(const Duration(seconds: 15));
   }
+
+  /// Deletes every file under [path], recursing into sub-folders. Storage
+  /// has no folder delete, so each object is listed and removed.
+  Future<void> deleteFolder(String path) async {
+    final listing = await _storage.ref(path).listAll();
+    for (final item in listing.items) {
+      try {
+        await item.delete();
+      } on FirebaseException catch (e) {
+        // Already gone (e.g. a concurrent delete) is the outcome we want.
+        if (e.code != 'object-not-found') rethrow;
+      }
+    }
+    for (final folder in listing.prefixes) {
+      await deleteFolder(folder.fullPath);
+    }
+  }
 }

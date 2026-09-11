@@ -1641,6 +1641,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A mild limp is often a minor strain. Rest your pet for 24–48 hours, check their paw for thorns or cuts, and see a vet if it doesn\'t improve. Never give human painkillers — many are toxic to pets.'**
   String get advLmMonitor;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your account?'**
+  String get deleteAccountTitle;
+
+  /// No description provided for @deleteAccountMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This permanently deletes your account and everything in it — all pets, health records, vaccinations, symptom checks, and photos. This can\'t be undone.'**
+  String get deleteAccountMessage;
+
+  /// No description provided for @deleteAccountSubscriptionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting your account doesn\'t cancel a subscription bought through the App Store or Google Play. Cancel it in your store settings to stop being charged.'**
+  String get deleteAccountSubscriptionNote;
+
+  /// No description provided for @confirmPasswordToDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password to confirm'**
+  String get confirmPasswordToDelete;
+
+  /// No description provided for @deleteAccountConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Permanently'**
+  String get deleteAccountConfirm;
+
+  /// No description provided for @accountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been deleted.'**
+  String get accountDeleted;
+
+  /// No description provided for @errIncorrectPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect password.'**
+  String get errIncorrectPassword;
+
+  /// No description provided for @deleteAccountFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t finish deleting your account. Check your connection and try again — your account is still active, so you can finish deleting it.'**
+  String get deleteAccountFailed;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPassword;
+
+  /// No description provided for @resetPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset your password'**
+  String get resetPasswordTitle;
+
+  /// No description provided for @resetPasswordMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your account email and we\'ll send you a link to set a new password.'**
+  String get resetPasswordMessage;
+
+  /// No description provided for @sendResetLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Link'**
+  String get sendResetLink;
+
+  /// No description provided for @resetLinkSent.
+  ///
+  /// In en, this message translates to:
+  /// **'If an account exists for {email}, a reset link is on its way. Check your inbox and spam folder.'**
+  String resetLinkSent(String email);
+
+  /// No description provided for @reminderPromptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get vaccine reminders?'**
+  String get reminderPromptTitle;
+
+  /// No description provided for @reminderPromptMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll remind you the day before {petName}\'s vaccine is due. You can change this anytime in your phone\'s settings.'**
+  String reminderPromptMessage(String petName);
+
+  /// No description provided for @turnOnReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn On'**
+  String get turnOnReminders;
+
+  /// No description provided for @paywallMobileOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'PawHealth Plus is available in the PawHealth app for iPhone and Android. Subscriptions can\'t be purchased on the web yet.'**
+  String get paywallMobileOnly;
+
+  /// No description provided for @paywallUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscriptions aren\'t available right now. Please try again later.'**
+  String get paywallUnavailable;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @weightOutOfRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a weight between 0.1 and 150 kg.'**
+  String get weightOutOfRange;
+
+  /// No description provided for @nextDueBeforeGivenError.
+  ///
+  /// In en, this message translates to:
+  /// **'The next due date must be after the date the vaccine was given.'**
+  String get nextDueBeforeGivenError;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseFromLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Library'**
+  String get chooseFromLibrary;
+
+  /// No description provided for @addPetPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo of your pet'**
+  String get addPetPhoto;
+
+  /// No description provided for @changePetPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change your pet\'s photo'**
+  String get changePetPhoto;
+
+  /// No description provided for @photoAccessDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'PawHealth can\'t open your camera or photos. You can allow access in your phone\'s Settings.'**
+  String get photoAccessDenied;
+
+  /// No description provided for @photoPickFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load that photo. Please try another one.'**
+  String get photoPickFailed;
+
+  /// No description provided for @discardChangesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard changes?'**
+  String get discardChangesTitle;
+
+  /// No description provided for @discardChangesMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You have unsaved changes to this pet. If you leave now, they\'ll be lost.'**
+  String get discardChangesMessage;
+
+  /// No description provided for @keepEditing.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Editing'**
+  String get keepEditing;
+
+  /// No description provided for @discard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discard;
 }
 
 class _AppLocalizationsDelegate

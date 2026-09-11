@@ -18,6 +18,24 @@ class NotificationService {
   /// service no-ops on web rather than throwing at startup.
   static bool get isSupported => !kIsWeb;
 
+  /// The notification id for a vaccination's reminder, derived from its
+  /// Firestore id. Must be stable across launches and SDK upgrades so a
+  /// reminder scheduled today can still be cancelled later — which
+  /// String.hashCode doesn't promise. A 31-bit polynomial hash fits the
+  /// 32-bit ids Android requires and stays exact under web int math.
+  static int vaccineReminderId(String vaccinationId) {
+    const modulus = 2147483647; // 2^31 - 1
+    var hash = 0;
+    for (final unit in vaccinationId.codeUnits) {
+      hash = (hash * 31 + unit) % modulus;
+    }
+    return hash;
+  }
+
+  /// Sets up the plugin WITHOUT asking for permission. Permission is
+  /// requested in context — when the user first adds a vaccine — by
+  /// [requestPermission]; asking at launch, before the user knows what
+  /// reminders are for, gets denied, and iOS never asks twice.
   Future<void> init() async {
     if (_initialized || !isSupported) return;
 
@@ -26,27 +44,80 @@ class NotificationService {
     const androidSettings = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
     );
-    final darwinSettings = DarwinInitializationSettings();
-    final settings = InitializationSettings(
+    // The Darwin settings default to prompting inside initialize().
+    const darwinSettings = DarwinInitializationSettings(
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+    );
+    const settings = InitializationSettings(
       android: androidSettings,
       iOS: darwinSettings,
     );
 
     await _plugin.initialize(settings: settings);
-
-    await _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.requestNotificationsPermission();
-
-    await _plugin
-        .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin
-        >()
-        ?.requestPermissions(alert: true, badge: true, sound: true);
-
     _initialized = true;
+  }
+
+  AndroidFlutterLocalNotificationsPlugin? get _android => _plugin
+      .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >();
+
+  IOSFlutterLocalNotificationsPlugin? get _ios => _plugin
+      .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin
+      >();
+
+  Future<bool> areNotificationsEnabled() async {
+    if (!isSupported) return false;
+    await init();
+    final android = _android;
+    if (android != null) {
+      return await android.areNotificationsEnabled() ?? false;
+    }
+    final permissions = await _ios?.checkPermissions();
+    return permissions?.isEnabled ?? false;
+  }
+
+  /// Shows the OS permission prompt (a no-op if the user already decided —
+  /// the OS won't ask again). Returns whether notifications are allowed.
+  Future<bool> requestPermission() async {
+    if (!isSupported) return false;
+    await init();
+    final android = _android;
+    if (android != null) {
+      return await android.requestNotificationsPermission() ?? false;
+    }
+    return await _ios?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        ) ??
+        false;
+  }
+
+  /// Local hour reminders are delivered at.
+  static const reminderHour = 9;
+
+  /// When to remind about a vaccine due on [dueDate]: [reminderHour] on the
+  /// day before. If that moment has passed but [reminderHour] on the due
+  /// day hasn't (a vaccine added late the day before), remind that morning
+  /// instead. Null when both are past.
+  ///
+  /// Due dates come from a date picker, i.e. local midnight — subtracting a
+  /// day from that fired reminders at 00:00.
+  static ({DateTime at, bool dueToday})? vaccineReminderSchedule(
+    DateTime dueDate, {
+    required DateTime now,
+  }) {
+    final due = dueDate.toLocal();
+    final dayBefore = DateTime(due.year, due.month, due.day - 1, reminderHour);
+    if (dayBefore.isAfter(now)) return (at: dayBefore, dueToday: false);
+
+    final dueMorning = DateTime(due.year, due.month, due.day, reminderHour);
+    if (dueMorning.isAfter(now)) return (at: dueMorning, dueToday: true);
+    return null;
   }
 
   Future<void> scheduleVaccineReminder({
@@ -58,20 +129,21 @@ class NotificationService {
     if (!isSupported) return;
     await init();
 
-    final reminderTime = nextDueDate.subtract(const Duration(days: 1));
-    if (reminderTime.isBefore(DateTime.now())) return;
+    final schedule = vaccineReminderSchedule(nextDueDate, now: DateTime.now());
+    if (schedule == null) return;
 
     // tz.local defaults to UTC when setLocalLocation() hasn't been called,
-    // but TZDateTime.from preserves the real-world instant from reminderTime
-    // regardless of which zone it's labeled with, so a one-off (non-recurring)
-    // schedule still fires at the correct moment without detecting the device's
-    // actual time zone name.
-    final scheduledDate = tz.TZDateTime.from(reminderTime, tz.local);
+    // but TZDateTime.from preserves the real-world instant of the local
+    // DateTime it's given, so a one-off schedule still fires at 9:00 AM on
+    // the device's clock without detecting the zone name.
+    final scheduledDate = tz.TZDateTime.from(schedule.at, tz.local);
 
     await _plugin.zonedSchedule(
       id: id,
       title: 'Vaccine reminder for $petName',
-      body: '$vaccineName is due tomorrow.',
+      body: schedule.dueToday
+          ? '$vaccineName is due today.'
+          : '$vaccineName is due tomorrow.',
       scheduledDate: scheduledDate,
       notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
@@ -89,5 +161,10 @@ class NotificationService {
   Future<void> cancelReminder(int id) async {
     if (!isSupported) return;
     await _plugin.cancel(id: id);
+  }
+
+  Future<void> cancelAll() async {
+    if (!isSupported) return;
+    await _plugin.cancelAll();
   }
 }

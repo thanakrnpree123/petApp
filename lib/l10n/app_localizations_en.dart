@@ -902,4 +902,114 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get advLmMonitor =>
       'A mild limp is often a minor strain. Rest your pet for 24–48 hours, check their paw for thorns or cuts, and see a vet if it doesn\'t improve. Never give human painkillers — many are toxic to pets.';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get deleteAccountTitle => 'Delete your account?';
+
+  @override
+  String get deleteAccountMessage =>
+      'This permanently deletes your account and everything in it — all pets, health records, vaccinations, symptom checks, and photos. This can\'t be undone.';
+
+  @override
+  String get deleteAccountSubscriptionNote =>
+      'Deleting your account doesn\'t cancel a subscription bought through the App Store or Google Play. Cancel it in your store settings to stop being charged.';
+
+  @override
+  String get confirmPasswordToDelete => 'Enter your password to confirm';
+
+  @override
+  String get deleteAccountConfirm => 'Delete Permanently';
+
+  @override
+  String get accountDeleted => 'Your account has been deleted.';
+
+  @override
+  String get errIncorrectPassword => 'Incorrect password.';
+
+  @override
+  String get deleteAccountFailed =>
+      'Couldn\'t finish deleting your account. Check your connection and try again — your account is still active, so you can finish deleting it.';
+
+  @override
+  String get forgotPassword => 'Forgot password?';
+
+  @override
+  String get resetPasswordTitle => 'Reset your password';
+
+  @override
+  String get resetPasswordMessage =>
+      'Enter your account email and we\'ll send you a link to set a new password.';
+
+  @override
+  String get sendResetLink => 'Send Reset Link';
+
+  @override
+  String resetLinkSent(String email) {
+    return 'If an account exists for $email, a reset link is on its way. Check your inbox and spam folder.';
+  }
+
+  @override
+  String get reminderPromptTitle => 'Get vaccine reminders?';
+
+  @override
+  String reminderPromptMessage(String petName) {
+    return 'We\'ll remind you the day before $petName\'s vaccine is due. You can change this anytime in your phone\'s settings.';
+  }
+
+  @override
+  String get turnOnReminders => 'Turn On';
+
+  @override
+  String get paywallMobileOnly =>
+      'PawHealth Plus is available in the PawHealth app for iPhone and Android. Subscriptions can\'t be purchased on the web yet.';
+
+  @override
+  String get paywallUnavailable =>
+      'Subscriptions aren\'t available right now. Please try again later.';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get weightOutOfRange => 'Enter a weight between 0.1 and 150 kg.';
+
+  @override
+  String get nextDueBeforeGivenError =>
+      'The next due date must be after the date the vaccine was given.';
+
+  @override
+  String get takePhoto => 'Take Photo';
+
+  @override
+  String get chooseFromLibrary => 'Choose from Library';
+
+  @override
+  String get addPetPhoto => 'Add a photo of your pet';
+
+  @override
+  String get changePetPhoto => 'Change your pet\'s photo';
+
+  @override
+  String get photoAccessDenied =>
+      'PawHealth can\'t open your camera or photos. You can allow access in your phone\'s Settings.';
+
+  @override
+  String get photoPickFailed =>
+      'Couldn\'t load that photo. Please try another one.';
+
+  @override
+  String get discardChangesTitle => 'Discard changes?';
+
+  @override
+  String get discardChangesMessage =>
+      'You have unsaved changes to this pet. If you leave now, they\'ll be lost.';
+
+  @override
+  String get keepEditing => 'Keep Editing';
+
+  @override
+  String get discard => 'Discard';
 }

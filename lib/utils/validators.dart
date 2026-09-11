@@ -32,4 +32,24 @@ class Validators {
     }
     return null;
   }
+
+  /// Plausible pet weights. The ceiling catches unit slips (grams typed as
+  /// kilograms) that would otherwise flatten the weight chart; the largest
+  /// giant breeds stay well under it.
+  static const minWeightKg = 0.1;
+  static const maxWeightKg = 150.0;
+
+  /// Parses a weight, accepting a decimal comma ("4,5") as well as a dot —
+  /// many keyboards offer only the comma.
+  static double? parseWeight(String? value) =>
+      double.tryParse((value ?? '').trim().replaceAll(',', '.'));
+
+  static String? weightKg(String? value, AppLocalizations l10n) {
+    final parsed = parseWeight(value);
+    if (parsed == null) return l10n.enterValidWeight;
+    if (parsed < minWeightKg || parsed > maxWeightKg) {
+      return l10n.weightOutOfRange;
+    }
+    return null;
+  }
 }

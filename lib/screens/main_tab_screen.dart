@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../providers/subscription_provider.dart';
+import '../services/reminder_sync_service.dart';
 import '../widgets/responsive/breakpoints.dart';
 import 'articles/article_list_screen.dart';
 import 'pets/pet_list_screen.dart';
@@ -33,6 +34,11 @@ class _MainTabScreenState extends State<MainTabScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<SubscriptionProvider>().init(userId);
     });
+    // Reminders are device-local and cleared on sign-out; rebuild them from
+    // the account. Fire-and-forget — a failure just keeps the old set.
+    ReminderSyncService()
+        .resync(userId)
+        .catchError((Object e) => debugPrint('Reminder sync failed: $e'));
   }
 
   void _openPaywall() {

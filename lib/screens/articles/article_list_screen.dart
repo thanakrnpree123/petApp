@@ -8,20 +8,28 @@ import '../../widgets/common/paw_loader.dart';
 import 'article_detail_screen.dart';
 
 class ArticleListScreen extends StatefulWidget {
-  const ArticleListScreen({super.key});
+  /// Override for tests; production uses the real service.
+  final ArticleService? articleService;
+
+  const ArticleListScreen({super.key, this.articleService});
 
   @override
   State<ArticleListScreen> createState() => _ArticleListScreenState();
 }
 
 class _ArticleListScreenState extends State<ArticleListScreen> {
-  final _service = ArticleService();
+  late final _service = widget.articleService ?? ArticleService();
+
+  // Created once: a new stream per build() — i.e. per category-chip tap —
+  // made the StreamBuilder reset to "waiting", flashing the loader and
+  // re-querying Firestore on every tap.
+  late final Stream<List<Article>> _articles = _service.watchArticles();
   String? _selectedCategory;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Article>>(
-      stream: _service.watchArticles(),
+      stream: _articles,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return PawLoader(
@@ -53,7 +61,7 @@ class _ArticleListScreenState extends State<ArticleListScreen> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: ChoiceChip(
-                        label: const Text('All'),
+                        label: Text(AppLocalizations.of(context)!.filterAll),
                         selected: _selectedCategory == null,
                         onSelected: (_) =>
                             setState(() => _selectedCategory = null),

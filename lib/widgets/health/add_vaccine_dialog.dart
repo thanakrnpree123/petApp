@@ -36,6 +36,33 @@ class AddVaccineDialog extends StatefulWidget {
     );
   }
 
+  static DateTime dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
+
+  /// Null when the pair is valid. The next due date must fall on a later
+  /// day than the date given — a reminder "due" before the shot makes no
+  /// sense and would never fire.
+  @visibleForTesting
+  static String? dueDateError(
+    DateTime administeredAt,
+    DateTime? nextDueAt,
+    AppLocalizations l10n,
+  ) {
+    if (nextDueAt == null) return l10n.selectNextDueDateError;
+    if (!dateOnly(nextDueAt).isAfter(dateOnly(administeredAt))) {
+      return l10n.nextDueBeforeGivenError;
+    }
+    return null;
+  }
+
+  /// showDatePicker asserts that initialDate lies within [first, last];
+  /// saved data (e.g. a record from before these limits) may not.
+  @visibleForTesting
+  static DateTime clampDate(DateTime date, DateTime first, DateTime last) {
+    if (date.isBefore(first)) return first;
+    if (date.isAfter(last)) return last;
+    return date;
+  }
+
   @override
   State<AddVaccineDialog> createState() => _AddVaccineDialogState();
 }
@@ -64,32 +91,52 @@ class _AddVaccineDialogState extends State<AddVaccineDialog> {
   }
 
   Future<void> _pickDate({required bool isAdministeredDate}) async {
-    final now = DateTime.now();
+    final today = AddVaccineDialog.dateOnly(DateTime.now());
+    // A vaccine can't have been given in the future, and can't come due
+    // before it was given — so the pickers don't offer those days at all.
+    final firstDate = isAdministeredDate
+        ? DateTime(today.year - 20)
+        : AddVaccineDialog.dateOnly(
+            _administeredAt,
+          ).add(const Duration(days: 1));
+    final lastDate = isAdministeredDate ? today : DateTime(today.year + 20);
+    final current = isAdministeredDate
+        ? _administeredAt
+        : (_nextDueAt ?? today.add(const Duration(days: 365)));
+
     final picked = await showDatePicker(
       context: context,
-      initialDate: isAdministeredDate ? _administeredAt : (_nextDueAt ?? now),
-      firstDate: DateTime(now.year - 20),
-      lastDate: DateTime(now.year + 20),
+      initialDate: AddVaccineDialog.clampDate(current, firstDate, lastDate),
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
-    if (picked == null) return;
+    if (picked == null || !mounted) return;
     setState(() {
       if (isAdministeredDate) {
         _administeredAt = picked;
       } else {
         _nextDueAt = picked;
-        _dueDateError = null;
       }
+      // Re-check whenever either date moves, not just on save. Only an
+      // actual conflict is flagged here — "not chosen yet" waits for Save.
+      final error = AddVaccineDialog.dueDateError(
+        _administeredAt,
+        _nextDueAt,
+        AppLocalizations.of(context)!,
+      );
+      _dueDateError = _nextDueAt == null ? null : error;
     });
   }
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-    if (_nextDueAt == null) {
-      setState(
-        () => _dueDateError = AppLocalizations.of(
-          context,
-        )!.selectNextDueDateError,
-      );
+    final error = AddVaccineDialog.dueDateError(
+      _administeredAt,
+      _nextDueAt,
+      AppLocalizations.of(context)!,
+    );
+    if (error != null) {
+      setState(() => _dueDateError = error);
       return;
     }
     Navigator.of(context).pop(

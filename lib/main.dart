@@ -32,9 +32,9 @@ Future<void> main() async {
   // );
   runApp(PawHealthApp(prefs: prefs));
   // Deferred until after the first frame: init parses the timezone database
-  // on the main thread and may show the OS notification-permission prompt —
-  // neither should block app startup. scheduleVaccineReminder() also calls
-  // init() itself, so scheduling stays safe regardless of timing.
+  // on the main thread, which shouldn't block app startup. It never asks
+  // for notification permission — that happens in context, when the user
+  // first adds a vaccine (see ReminderPermissionPrompt).
   WidgetsBinding.instance.addPostFrameCallback((_) {
     NotificationService().init();
   });

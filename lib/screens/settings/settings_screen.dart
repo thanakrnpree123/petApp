@@ -5,13 +5,41 @@ import 'package:provider/provider.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/locale_provider.dart';
+import '../../providers/pet_provider.dart';
+import '../../providers/session.dart';
 import '../../providers/subscription_provider.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/settings/delete_account_dialog.dart';
 import '../../widgets/settings/language_dialog.dart';
 import '../subscription/paywall_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
+
+  Future<void> _deleteAccount(BuildContext context) async {
+    // Captured up front: once the account is gone, AuthWrapper swaps this
+    // screen out for the login screen and this context is unmounted.
+    final messenger = ScaffoldMessenger.of(context);
+    final petProvider = context.read<PetProvider>();
+    final subscription = context.read<SubscriptionProvider>();
+    final deletedMessage = AppLocalizations.of(context)!.accountDeleted;
+
+    if (!await DeleteAccountDialog.show(context)) return;
+
+    await endUserSession(pets: petProvider, subscription: subscription);
+    messenger.showSnackBar(SnackBar(content: Text(deletedMessage)));
+  }
+
+  Future<void> _signOut(BuildContext context) async {
+    final auth = context.read<AuthProvider>();
+    // Before signOut: the pets listener must stop while it still has
+    // permission to read, and the next user mustn't inherit any state.
+    await endUserSession(
+      pets: context.read<PetProvider>(),
+      subscription: context.read<SubscriptionProvider>(),
+    );
+    await auth.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +119,15 @@ class SettingsScreen extends StatelessWidget {
               style: OutlinedButton.styleFrom(
                 foregroundColor: colorScheme.error,
               ),
-              onPressed: () => context.read<AuthProvider>().signOut(),
+              onPressed: () => _signOut(context),
               icon: const Icon(Icons.logout),
               label: Text(l10n.logOut),
+            ),
+            const SizedBox(height: 8),
+            TextButton(
+              style: TextButton.styleFrom(foregroundColor: colorScheme.error),
+              onPressed: () => _deleteAccount(context),
+              child: Text(l10n.deleteAccount),
             ),
           ],
         ),

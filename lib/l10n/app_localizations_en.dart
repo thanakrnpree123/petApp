@@ -975,4 +975,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get weightOutOfRange => 'Enter a weight between 0.1 and 150 kg.';
+
+  @override
+  String get nextDueBeforeGivenError =>
+      'The next due date must be after the date the vaccine was given.';
 }

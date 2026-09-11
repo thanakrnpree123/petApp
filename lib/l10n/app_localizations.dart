@@ -1767,6 +1767,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter a weight between 0.1 and 150 kg.'**
   String get weightOutOfRange;
+
+  /// No description provided for @nextDueBeforeGivenError.
+  ///
+  /// In en, this message translates to:
+  /// **'The next due date must be after the date the vaccine was given.'**
+  String get nextDueBeforeGivenError;
 }
 
 class _AppLocalizationsDelegate

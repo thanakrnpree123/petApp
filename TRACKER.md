@@ -26,7 +26,7 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 |---|---|---|---|---|---|
 | 10 | **#8** Failed-login error shows on the Register screen | 250 | 0.1 d | ✅ | AuthProvider.clearError() on the way to and back from Register |
 | 11 | **#9** Weight entry has no sanity bound; chart spaces points by index; US date labels | 160 | 0.5 d | ✅ | 0.1–150 kg bound, decimal comma accepted; chart x = real dates; locale date labels |
-| 12 | **#11** Vaccine next-due date can precede the date given | 96 | 0.25 d | ⬜ | |
+| 12 | **#11** Vaccine next-due date can precede the date given | 96 | 0.25 d | ✅ | Pickers bounded (given ≤ today, due > given); pair re-checked on change and save |
 | 13 | **#12** Photo picker: gallery only, no feedback on denied permission | 70 | 0.5 d | ⬜ | |
 | 14 | **#13** Shared device: previous user's pets flash after logout; listeners keep running | 40 | 0.25 d | ⬜ | |
 | 15 | **#14** Pet form discards unsaved edits on Back without asking | 36 | 0.25 d | ⬜ | |

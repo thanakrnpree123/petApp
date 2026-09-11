@@ -905,4 +905,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get weightOutOfRange => '请输入 0.1 到 150 公斤之间的体重。';
+
+  @override
+  String get nextDueBeforeGivenError => '下次到期日期必须晚于接种日期。';
 }

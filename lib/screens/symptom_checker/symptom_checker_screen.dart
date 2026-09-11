@@ -249,7 +249,8 @@ class _SymptomCheckerScreenState extends State<SymptomCheckerScreen> {
     catUrinarySymptomId => Icons.opacity,
     toxinSymptomId => Icons.dangerous_outlined,
     breathingSymptomId => Icons.air,
-    limpingSymptomId => Icons.accessible_forward,
+    // A bandage — the previous icon read as a wheelchair.
+    limpingSymptomId => Icons.healing_outlined,
     _ when symptomId.startsWith('not_eating') => Icons.no_meals_outlined,
     _ => Icons.sick_outlined,
   };

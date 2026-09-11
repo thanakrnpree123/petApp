@@ -41,6 +41,14 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> signOut() => _authService.signOut();
 
+  /// The login and register screens share [errorCode]; clear it when moving
+  /// between them so one form's failure isn't shown on the other.
+  void clearError() {
+    if (errorCode == null) return;
+    errorCode = null;
+    notifyListeners();
+  }
+
   /// Returns null on success, or an error code for L10nHelpers.authError.
   ///
   /// Deliberately doesn't touch [isLoading]/[errorCode]: those drive the

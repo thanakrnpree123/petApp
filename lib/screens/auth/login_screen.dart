@@ -135,12 +135,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 12),
                     TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
+                      onPressed: () async {
+                        // Don't carry a failed login onto the register
+                        // form — or a failed sign-up back to this one.
+                        auth.clearError();
+                        await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => const RegisterScreen(),
                           ),
                         );
+                        if (context.mounted) {
+                          context.read<AuthProvider>().clearError();
+                        }
                       },
                       child: Text(l10n.noAccountRegister),
                     ),

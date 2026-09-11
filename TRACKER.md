@@ -24,7 +24,7 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 
 | Order | Item | RICE | Effort | Status | Notes |
 |---|---|---|---|---|---|
-| 10 | **#8** Failed-login error shows on the Register screen | 250 | 0.1 d | ⬜ | |
+| 10 | **#8** Failed-login error shows on the Register screen | 250 | 0.1 d | ✅ | AuthProvider.clearError() on the way to and back from Register |
 | 11 | **#9** Weight entry has no sanity bound; chart spaces points by index; US date labels | 160 | 0.5 d | ⬜ | |
 | 12 | **#11** Vaccine next-due date can precede the date given | 96 | 0.25 d | ⬜ | |
 | 13 | **#12** Photo picker: gallery only, no feedback on denied permission | 70 | 0.5 d | ⬜ | |

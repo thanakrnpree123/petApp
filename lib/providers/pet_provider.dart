@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 
 import '../models/pet.dart';
+import '../models/health_log.dart';
+import '../services/health_log_service.dart';
 import '../services/notification_service.dart';
 import '../services/pet_service.dart';
 import '../services/storage_service.dart';
@@ -15,6 +17,10 @@ class PetProvider extends ChangeNotifier {
   final PetService _petService;
   final StorageService _storageService;
   final NotificationService _notificationService;
+  final HealthLogService? _injectedHealthLogs;
+  // Lazy: only needed when an edit changes the weight.
+  late final HealthLogService _healthLogs =
+      _injectedHealthLogs ?? HealthLogService();
 
   StreamSubscription<List<Pet>>? _petsSubscription;
   String? _watchingUserId;
@@ -27,9 +33,11 @@ class PetProvider extends ChangeNotifier {
     PetService? petService,
     StorageService? storageService,
     NotificationService? notificationService,
+    HealthLogService? healthLogService,
   }) : _petService = petService ?? PetService(),
        _storageService = storageService ?? StorageService(),
-       _notificationService = notificationService ?? NotificationService();
+       _notificationService = notificationService ?? NotificationService(),
+       _injectedHealthLogs = healthLogService;
 
   void startWatching(String userId) {
     if (_watchingUserId == userId) return;
@@ -66,10 +74,23 @@ class PetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Latest known version of a pet, from the live list.
+  Pet? petById(String? petId) {
+    for (final pet in pets) {
+      if (pet.id == petId) return pet;
+    }
+    return null;
+  }
+
+  /// Saves a pet. A weight changed in the edit form is also recorded as a
+  /// weight entry so the chart reflects it (a new pet's first weight is
+  /// written by PetService.createPet). Pass [logWeightChange] false when
+  /// the caller has already logged the weigh-in itself.
   Future<bool> savePet({
     required String userId,
     required Pet pet,
     Uint8List? photoBytes,
+    bool logWeightChange = true,
   }) async {
     isLoading = true;
     errorCode = null;
@@ -96,7 +117,21 @@ class PetProvider extends ChangeNotifier {
       if (isNew) {
         await _petService.createPet(userId, petId, finalPet);
       } else {
+        final previousWeight = petById(pet.id)?.weightKg;
         await _petService.updatePet(userId, finalPet);
+        if (logWeightChange &&
+            previousWeight != null &&
+            previousWeight != pet.weightKg) {
+          await _healthLogs.addLog(
+            userId,
+            petId,
+            HealthLog(
+              type: HealthLogType.weight,
+              value: pet.weightKg,
+              loggedAt: DateTime.now(),
+            ),
+          );
+        }
       }
       saved = true;
 

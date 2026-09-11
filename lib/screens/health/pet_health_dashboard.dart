@@ -201,9 +201,15 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
     );
 
     if (!mounted) return;
-    await context.read<PetProvider>().savePet(
+    final pets = context.read<PetProvider>();
+    // The latest version of the pet, not the snapshot this screen opened
+    // with — saving that would undo any edits made since.
+    final latest = pets.petById(widget.pet.id) ?? widget.pet;
+    await pets.savePet(
       userId: _userId,
-      pet: widget.pet.copyWith(weightKg: weight),
+      pet: latest.copyWith(weightKg: weight),
+      // Already recorded above — even an unchanged weigh-in is a data point.
+      logWeightChange: false,
     );
   }
 

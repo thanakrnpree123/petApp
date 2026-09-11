@@ -51,7 +51,7 @@ This project already has `firebase_options.dart` generated via FlutterFire CLI. 
 flutterfire configure --project=<your-project-id> --platforms=android,ios
 ```
 
-**⚠️ Deploy Firestore & Storage security rules before shipping.** No `firestore.rules` / `storage.rules` have been written or deployed yet — reads/writes will fail under default-deny production mode until rules scoping access to `request.auth.uid` are pushed via the Firebase Console or `firebase deploy --only firestore:rules,storage:rules`.
+**⚠️ Deploy Firestore & Storage security rules before shipping.** `firestore.rules` and `storage.rules` scope every read/write to `request.auth.uid` (users may delete their own profile, for in-app account deletion). Push them with `firebase deploy --only firestore:rules,storage:rules`.
 
 ### 3. RevenueCat
 `lib/services/revenuecat_service.dart` has placeholder API keys:
@@ -86,7 +86,8 @@ dart run flutter_native_splash:create
 - **Article `content` field is plain text**, not Markdown — no markdown-rendering package is included yet.
 - **Article model doesn't yet carry `species`/`related_disorders`** — breed-specific article surfacing isn't wired up.
 - **Localization covers EN/TH/ZH** via `.arb` files (`lib/l10n/`): UI shell, auth, pet form, paywall, overlay/progress messages, provider errors (as codes localized in the UI via `L10nHelpers`), and the symptom-checker Q&A + triage advice (canonical English stays in the tree data and Firestore; presentation is localized). Still English-only: health dashboard section labels/dialogs, vaccine notification text, and the PDF report (service layer has no BuildContext — an explicit locale would need to be passed in). **All symptom-checker content — the English decision trees and the AI-translated TH/ZH strings — must be reviewed by a veterinary professional before release.** Fonts switch per locale: Nunito (en), IBM Plex Sans Thai Looped (th), Noto Sans SC (zh) — see `lib/theme/app_theme.dart`.
-- **Firestore/Storage security rules** not yet written — see Setup step 2.
+- **Firestore/Storage security rules** are written but must be deployed — see Setup step 2.
+- **Pre-release checklist** lives in `TRACKER.md`.
 - **Firebase App Check is disabled** — activation is commented out in `main.dart` (see the `TODO(app-check)` block) after attestation failures during development. Re-enable and verify (debug token registered, providers configured in Firebase Console, enforcement initially off) before production.
 - **Fonts load at runtime** via `google_fonts` (fetched once, then cached on-device). For a fully offline-first production build, bundle the `.ttf` files as assets per the google_fonts docs and disable runtime fetching.
 

@@ -29,7 +29,7 @@ abstract class WebcamDevice {
 
   bool get canSwitchCamera;
 
-  /// Cycles to the next camera (e.g. an external webcam).
+  /// Front ⇄ back on a phone; the next webcam otherwise ([CameraChoice]).
   Future<void> switchCamera();
 
   Future<void> dispose();
@@ -66,12 +66,7 @@ class PluginWebcamDevice implements WebcamDevice {
     if (_cameras.isEmpty) {
       throw const WebcamException(WebcamFailure.notFound);
     }
-    // Prefer the rear camera (phones in a browser), else the first one —
-    // a laptop's built-in webcam.
-    final back = _cameras.indexWhere(
-      (c) => c.lensDirection == CameraLensDirection.back,
-    );
-    _index = back >= 0 ? back : 0;
+    _index = CameraChoice.initial(_cameras);
     await _open(_cameras[_index]);
   }
 
@@ -149,10 +144,77 @@ class PluginWebcamDevice implements WebcamDevice {
   @override
   Future<void> switchCamera() async {
     if (!canSwitchCamera) return;
-    _index = (_index + 1) % _cameras.length;
+    _index = CameraChoice.next(_cameras, _index);
     await _open(_cameras[_index]);
   }
 
   @override
   Future<void> dispose() => _close();
+}
+
+/// Which camera to open first, and which one "switch camera" goes to.
+///
+/// A phone browser lists every lens as its own camera — an iPhone Pro
+/// reports Back, Back Ultra Wide, Back Telephoto, Back Dual, Back Triple
+/// and Front — so stepping through the list meant several taps through
+/// near-identical rear lenses before reaching the selfie camera. On a
+/// phone the switch is a front ⇄ back toggle between the main lenses;
+/// cameras with no known facing (a laptop's webcams) are cycled in order.
+@visibleForTesting
+abstract final class CameraChoice {
+  static final _specialLens = RegExp(
+    r'ultra|tele|wide|dual|triple|macro|depth|infrared',
+    caseSensitive: false,
+  );
+
+  /// Facing direction, falling back to the label when the browser didn't
+  /// report one ("camera2 1, facing front", "Back Camera").
+  static CameraLensDirection directionOf(CameraDescription camera) {
+    if (camera.lensDirection != CameraLensDirection.external) {
+      return camera.lensDirection;
+    }
+    final name = camera.name.toLowerCase();
+    if (name.contains('front')) return CameraLensDirection.front;
+    if (name.contains('back') || name.contains('rear')) {
+      return CameraLensDirection.back;
+    }
+    return CameraLensDirection.external;
+  }
+
+  /// Index of the main camera facing [direction], or -1 if there is none.
+  static int primary(
+    List<CameraDescription> cameras,
+    CameraLensDirection direction,
+  ) {
+    final facing = [
+      for (var i = 0; i < cameras.length; i++)
+        if (directionOf(cameras[i]) == direction) i,
+    ];
+    if (facing.isEmpty) return -1;
+    return facing.firstWhere(
+      (i) => !_specialLens.hasMatch(cameras[i].name),
+      orElse: () => facing.first,
+    );
+  }
+
+  /// The main rear camera (a phone), else the first camera (a laptop).
+  static int initial(List<CameraDescription> cameras) {
+    final back = primary(cameras, CameraLensDirection.back);
+    return back >= 0 ? back : 0;
+  }
+
+  static int next(List<CameraDescription> cameras, int current) {
+    final direction = directionOf(cameras[current]);
+    if (direction == CameraLensDirection.back ||
+        direction == CameraLensDirection.front) {
+      final other = primary(
+        cameras,
+        direction == CameraLensDirection.back
+            ? CameraLensDirection.front
+            : CameraLensDirection.back,
+      );
+      if (other >= 0) return other;
+    }
+    return (current + 1) % cameras.length;
+  }
 }

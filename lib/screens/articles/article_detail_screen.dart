@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../models/article.dart';
 import '../../theme/app_theme.dart';
+import '../../utils/app_dates.dart';
 
 class ArticleDetailScreen extends StatelessWidget {
   final Article article;
@@ -44,7 +44,7 @@ class ArticleDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                DateFormat.yMMMd().format(article.publishedAt),
+                AppDates.medium(context).format(article.publishedAt),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),

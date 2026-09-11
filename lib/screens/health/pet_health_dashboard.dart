@@ -25,6 +25,7 @@ import '../../widgets/health/weight_chart.dart';
 import '../../widgets/responsive/breakpoints.dart';
 import '../../widgets/subscription/upgrade_prompt_dialog.dart';
 import 'pdf_preview_screen.dart';
+import '../../utils/app_dates.dart';
 
 class PetHealthDashboard extends StatefulWidget {
   final Pet pet;
@@ -486,7 +487,7 @@ class _UnifiedTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final dateFormat = DateFormat.yMMMd();
+    final dateFormat = AppDates.medium(context);
     final provider = context.watch<HealthTimelineProvider>();
     final careLogs = this.careLogs;
     final vaccinations = this.vaccinations;

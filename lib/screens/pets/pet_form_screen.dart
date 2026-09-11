@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/breed_repository.dart';
@@ -13,6 +12,7 @@ import '../../utils/validators.dart';
 import '../../widgets/common/paw_loader.dart';
 import '../../widgets/pets/breed_dropdown.dart';
 import '../../widgets/pets/photo_picker_field.dart';
+import '../../utils/app_dates.dart';
 
 class PetFormScreen extends StatefulWidget {
   final Pet? existingPet;
@@ -253,7 +253,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
     final isLoading = context.watch<PetProvider>().isLoading;
     final dateLabel = _birthdate == null
         ? l10n.selectBirthdate
-        : DateFormat.yMMMd().format(_birthdate!);
+        : AppDates.medium(context).format(_birthdate!);
 
     // A successful save leaves via Navigator.pop, which PopScope doesn't
     // block; only Back (button, gesture, system) is intercepted.

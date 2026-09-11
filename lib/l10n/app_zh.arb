@@ -400,5 +400,6 @@
   "cameraNotFound": "未找到摄像头。请连接网络摄像头，或改为从文件中选择照片。",
   "cameraInUse": "摄像头正被其他应用（如视频通话）占用。请关闭该应用后重试。",
   "cameraStartFailed": "无法启动摄像头，请重试。",
-  "filterSymptomChecks": "症状检查"
+  "filterSymptomChecks": "症状检查",
+  "birthdate": "出生日期"
 }

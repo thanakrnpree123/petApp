@@ -1869,6 +1869,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Symptom checks'**
   String get filterSymptomChecks;
+
+  /// No description provided for @birthdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthdate'**
+  String get birthdate;
 }
 
 class _AppLocalizationsDelegate

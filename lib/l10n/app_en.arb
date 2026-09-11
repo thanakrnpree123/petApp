@@ -404,5 +404,6 @@
   "cameraNotFound": "No camera was found. Connect a webcam, or choose a photo from your files instead.",
   "cameraInUse": "Your camera is being used by another app, like a video call. Close it and try again.",
   "cameraStartFailed": "Couldn't start the camera. Please try again.",
-  "filterSymptomChecks": "Symptom checks"
+  "filterSymptomChecks": "Symptom checks",
+  "birthdate": "Birthdate"
 }

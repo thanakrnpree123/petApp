@@ -14,11 +14,15 @@ class BreedDropdown extends StatefulWidget {
   final String? initialBreed;
   final ValueChanged<String> onChanged;
 
+  /// Shown under the field, like any other form error.
+  final String? errorText;
+
   const BreedDropdown({
     super.key,
     required this.species,
     required this.onChanged,
     this.initialBreed,
+    this.errorText,
   });
 
   @override
@@ -66,6 +70,7 @@ class _BreedDropdownState extends State<BreedDropdown> {
           key: ValueKey(widget.species),
           initialSelection: initial,
           label: Text(AppLocalizations.of(context)!.breed),
+          errorText: widget.errorText,
           expandedInsets: EdgeInsets.zero,
           // ~150 breeds: keep the list a scrollable panel rather than a
           // sheet that covers the whole form.

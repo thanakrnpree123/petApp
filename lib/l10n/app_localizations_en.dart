@@ -1034,4 +1034,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filterSymptomChecks => 'Symptom checks';
+
+  @override
+  String get birthdate => 'Birthdate';
 }

@@ -1030,4 +1030,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get filterSymptomChecks => 'ตรวจอาการ';
+
+  @override
+  String get birthdate => 'วันเกิด';
 }

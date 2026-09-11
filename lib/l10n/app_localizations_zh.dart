@@ -957,4 +957,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get filterSymptomChecks => '症状检查';
+
+  @override
+  String get birthdate => '出生日期';
 }

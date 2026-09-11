@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/subscription_provider.dart';
 import '../services/reminder_sync_service.dart';
+import '../widgets/common/brand_mark.dart';
 import '../widgets/responsive/breakpoints.dart';
 import '../widgets/responsive/content_width.dart';
 import 'articles/article_list_screen.dart';
@@ -63,13 +64,6 @@ class _MainTabScreenState extends State<MainTabScreen> {
     final titles = [l10n.myPets, l10n.healthArticles, l10n.settings];
     final isDesktop = screenSizeOf(context).isDesktop;
 
-    final logo = Image.asset(
-      'assets/images/splash_logo.png',
-      height: isDesktop ? 28 : 32,
-      width: isDesktop ? 28 : 32,
-      fit: BoxFit.contain,
-    );
-
     final content = IndexedStack(index: _currentIndex, children: _screens);
 
     // Desktop: a persistent side rail replaces the bottom navigation bar —
@@ -84,9 +78,9 @@ class _MainTabScreenState extends State<MainTabScreen> {
               onDestinationSelected: (index) =>
                   setState(() => _currentIndex = index),
               labelType: NavigationRailLabelType.all,
-              leading: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: logo,
+              leading: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: BrandMark(size: 36, showWordmark: true),
               ),
               trailing: Expanded(
                 child: Align(
@@ -144,7 +138,11 @@ class _MainTabScreenState extends State<MainTabScreen> {
         title: _currentIndex == 0
             ? Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [logo, const SizedBox(width: 8), Text(l10n.myPets)],
+                children: [
+                  const BrandMark(),
+                  const SizedBox(width: 10),
+                  Text(l10n.myPets),
+                ],
               )
             : Text(titles[_currentIndex]),
         actions: [

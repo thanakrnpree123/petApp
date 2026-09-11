@@ -61,7 +61,9 @@ class _WebcamCaptureScreenState extends State<WebcamCaptureScreen> {
       if (mounted) setState(() => _stage = _Stage.live);
     } catch (e) {
       // Anything unexpected still ends in a message, never an endless
-      // spinner.
+      // spinner — but log it: a swallowed MissingPluginException is how
+      // an unregistered camera plugin once looked like "couldn't start".
+      if (e is! WebcamException) debugPrint('Webcam start failed: $e');
       await _device.dispose();
       if (mounted) {
         setState(() {

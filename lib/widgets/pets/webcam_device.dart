@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import 'webcam_registration.dart';
+
 /// Why the webcam couldn't start — each gets its own message.
 enum WebcamFailure { permissionDenied, notFound, inUse, unknown }
 
@@ -51,6 +53,7 @@ class PluginWebcamDevice implements WebcamDevice {
 
   @override
   Future<void> start() async {
+    ensureWebcamPluginRegistered();
     try {
       // On web this is also the permission prompt: it opens a stream to
       // request access before listing devices.

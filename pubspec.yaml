@@ -53,6 +53,9 @@ dependencies:
   google_fonts: ^8.2.0
   flutter_localizations:
     sdk: flutter
+  # Registers camera_web explicitly (see webcam_registration_web.dart).
+  flutter_web_plugins:
+    sdk: flutter
   shared_preferences: ^2.5.5
   camera_platform_interface: ^2.13.1
   camera_web: ^0.3.5+6

@@ -390,5 +390,9 @@
   "addPetPhoto": "添加宠物照片",
   "changePetPhoto": "更换宠物照片",
   "photoAccessDenied": "PawHealth 无法打开相机或照片。您可以在手机设置中允许访问。",
-  "photoPickFailed": "无法加载这张照片，请换一张试试。"
+  "photoPickFailed": "无法加载这张照片，请换一张试试。",
+  "discardChangesTitle": "放弃更改？",
+  "discardChangesMessage": "您对这只宠物的更改尚未保存。现在离开，这些更改将会丢失。",
+  "keepEditing": "继续编辑",
+  "discard": "放弃"
 }

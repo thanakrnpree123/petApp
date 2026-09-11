@@ -926,4 +926,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get photoPickFailed => '无法加载这张照片，请换一张试试。';
+
+  @override
+  String get discardChangesTitle => '放弃更改？';
+
+  @override
+  String get discardChangesMessage => '您对这只宠物的更改尚未保存。现在离开，这些更改将会丢失。';
+
+  @override
+  String get keepEditing => '继续编辑';
+
+  @override
+  String get discard => '放弃';
 }

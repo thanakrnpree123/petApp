@@ -394,5 +394,9 @@
   "addPetPhoto": "Add a photo of your pet",
   "changePetPhoto": "Change your pet's photo",
   "photoAccessDenied": "PawHealth can't open your camera or photos. You can allow access in your phone's Settings.",
-  "photoPickFailed": "Couldn't load that photo. Please try another one."
+  "photoPickFailed": "Couldn't load that photo. Please try another one.",
+  "discardChangesTitle": "Discard changes?",
+  "discardChangesMessage": "You have unsaved changes to this pet. If you leave now, they'll be lost.",
+  "keepEditing": "Keep Editing",
+  "discard": "Discard"
 }

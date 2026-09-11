@@ -1,6 +1,5 @@
-import 'dart:typed_data';
-
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +39,35 @@ class _PetFormScreenState extends State<PetFormScreen> {
   Uint8List? _photoBytes;
   String? _validationError;
 
+  /// The form's values when it opened; anything different on Back asks
+  /// before discarding.
+  late List<Object?> _initialValues;
+  bool _hasUnsavedChanges = false;
+
   bool get _isEditing => widget.existingPet != null;
+
+  List<Object?> _currentValues() => [
+    _nameController.text.trim(),
+    _weightController.text.trim(),
+    _customBreedController.text.trim(),
+    _microchipController.text.trim(),
+    _allergiesController.text.trim(),
+    _species,
+    _gender,
+    _isNeutered,
+    _breedSelection,
+    _birthdate,
+    _photoBytes,
+  ];
+
+  /// Recomputed after every edit so PopScope.canPop stays accurate — an
+  /// untouched form still closes with the back button/gesture as usual.
+  void _updateUnsavedChanges() {
+    final changed = !listEquals(_currentValues(), _initialValues);
+    if (changed != _hasUnsavedChanges) {
+      setState(() => _hasUnsavedChanges = changed);
+    }
+  }
 
   bool get _hasBreedList =>
       _species == PetSpecies.dog || _species == PetSpecies.cat;
@@ -75,11 +102,51 @@ class _PetFormScreenState extends State<PetFormScreen> {
             _breedSelection = kOtherBreedValue;
             _customBreedController.text = pet.breed;
           });
+          // This fix-up is the app's doing, not the user's edit.
+          _initialValues = _currentValues();
+          _updateUnsavedChanges();
         }
       });
     } else if (pet != null && !_hasBreedList) {
       _customBreedController.text = pet.breed;
     }
+
+    _initialValues = _currentValues();
+    for (final controller in [
+      _nameController,
+      _weightController,
+      _customBreedController,
+      _microchipController,
+      _allergiesController,
+    ]) {
+      controller.addListener(_updateUnsavedChanges);
+    }
+  }
+
+  Future<void> _confirmDiscard() async {
+    final l10n = AppLocalizations.of(context)!;
+    final discard = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.discardChangesTitle),
+        content: Text(l10n.discardChangesMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.keepEditing),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(dialogContext).colorScheme.error,
+              foregroundColor: Theme.of(dialogContext).colorScheme.onError,
+            ),
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.discard),
+          ),
+        ],
+      ),
+    );
+    if ((discard ?? false) && mounted) Navigator.of(context).pop();
   }
 
   @override
@@ -102,6 +169,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
     );
     if (picked != null) {
       setState(() => _birthdate = picked);
+      _updateUnsavedChanges();
     }
   }
 
@@ -187,134 +255,151 @@ class _PetFormScreenState extends State<PetFormScreen> {
         ? l10n.selectBirthdate
         : DateFormat.yMMMd().format(_birthdate!);
 
-    return Scaffold(
-      appBar: AppBar(title: Text(_isEditing ? l10n.editPet : l10n.addPet)),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              PhotoPickerField(
-                selectedBytes: _photoBytes,
-                existingPhotoUrl: widget.existingPet?.photoUrl,
-                onPicked: (bytes) => setState(() => _photoBytes = bytes),
-              ),
-              const SizedBox(height: 24),
-              DropdownButtonFormField<PetSpecies>(
-                initialValue: _species,
-                decoration: InputDecoration(labelText: l10n.speciesLabel),
-                items: [
-                  for (final species in PetSpecies.values)
-                    DropdownMenuItem(
-                      value: species,
-                      child: Text(L10nHelpers.species(l10n, species)),
-                    ),
-                ],
-                onChanged: (value) {
-                  if (value == null) return;
-                  setState(() {
-                    _species = value;
-                    _breedSelection = null;
-                    _customBreedController.clear();
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(labelText: l10n.petName),
-                validator: (value) => (value == null || value.trim().isEmpty)
-                    ? l10n.nameRequired
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              SegmentedButton<PetGender>(
-                segments: [
-                  ButtonSegment(
-                    value: PetGender.male,
-                    icon: const Icon(Icons.male),
-                    label: Text(l10n.genderMale),
-                  ),
-                  ButtonSegment(
-                    value: PetGender.female,
-                    icon: const Icon(Icons.female),
-                    label: Text(l10n.genderFemale),
-                  ),
-                ],
-                selected: {_gender},
-                onSelectionChanged: (selection) {
-                  setState(() => _gender = selection.first);
-                },
-              ),
-              const SizedBox(height: 8),
-              CheckboxListTile(
-                value: _isNeutered,
-                onChanged: (value) {
-                  setState(() => _isNeutered = value ?? false);
-                },
-                title: Text(l10n.spayedNeutered),
-                controlAffinity: ListTileControlAffinity.leading,
-                contentPadding: EdgeInsets.zero,
-              ),
-              const SizedBox(height: 8),
-              if (_hasBreedList) ...[
-                BreedDropdown(
-                  species: _species,
-                  initialBreed: _breedSelection,
-                  onChanged: (value) => setState(() => _breedSelection = value),
+    // A successful save leaves via Navigator.pop, which PopScope doesn't
+    // block; only Back (button, gesture, system) is intercepted.
+    return PopScope(
+      canPop: !_hasUnsavedChanges,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _confirmDiscard();
+      },
+      child: Scaffold(
+        appBar: AppBar(title: Text(_isEditing ? l10n.editPet : l10n.addPet)),
+        body: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                PhotoPickerField(
+                  selectedBytes: _photoBytes,
+                  existingPhotoUrl: widget.existingPet?.photoUrl,
+                  onPicked: (bytes) {
+                    setState(() => _photoBytes = bytes);
+                    _updateUnsavedChanges();
+                  },
+                ),
+                const SizedBox(height: 24),
+                DropdownButtonFormField<PetSpecies>(
+                  initialValue: _species,
+                  decoration: InputDecoration(labelText: l10n.speciesLabel),
+                  items: [
+                    for (final species in PetSpecies.values)
+                      DropdownMenuItem(
+                        value: species,
+                        child: Text(L10nHelpers.species(l10n, species)),
+                      ),
+                  ],
+                  onChanged: (value) {
+                    if (value == null) return;
+                    setState(() {
+                      _species = value;
+                      _breedSelection = null;
+                      _customBreedController.clear();
+                    });
+                    _updateUnsavedChanges();
+                  },
                 ),
                 const SizedBox(height: 16),
-              ],
-              if (_showCustomBreedField) ...[
                 TextFormField(
-                  controller: _customBreedController,
-                  decoration: InputDecoration(labelText: l10n.breed),
+                  controller: _nameController,
+                  decoration: InputDecoration(labelText: l10n.petName),
+                  validator: (value) => (value == null || value.trim().isEmpty)
+                      ? l10n.nameRequired
+                      : null,
                 ),
                 const SizedBox(height: 16),
-              ],
-              OutlinedButton.icon(
-                onPressed: _pickBirthdate,
-                icon: const Icon(Icons.cake_outlined),
-                label: Text(dateLabel),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _weightController,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
+                SegmentedButton<PetGender>(
+                  segments: [
+                    ButtonSegment(
+                      value: PetGender.male,
+                      icon: const Icon(Icons.male),
+                      label: Text(l10n.genderMale),
+                    ),
+                    ButtonSegment(
+                      value: PetGender.female,
+                      icon: const Icon(Icons.female),
+                      label: Text(l10n.genderFemale),
+                    ),
+                  ],
+                  selected: {_gender},
+                  onSelectionChanged: (selection) {
+                    setState(() => _gender = selection.first);
+                    _updateUnsavedChanges();
+                  },
                 ),
-                decoration: InputDecoration(labelText: l10n.weightKg),
-                validator: (value) => Validators.weightKg(value, l10n),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _microchipController,
-                decoration: InputDecoration(labelText: l10n.microchipId),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _allergiesController,
-                maxLines: 2,
-                minLines: 1,
-                decoration: InputDecoration(labelText: l10n.allergies),
-              ),
-              const SizedBox(height: 24),
-              if (_validationError != null)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Text(
-                    _validationError!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
+                const SizedBox(height: 8),
+                CheckboxListTile(
+                  value: _isNeutered,
+                  onChanged: (value) {
+                    setState(() => _isNeutered = value ?? false);
+                    _updateUnsavedChanges();
+                  },
+                  title: Text(l10n.spayedNeutered),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  contentPadding: EdgeInsets.zero,
+                ),
+                const SizedBox(height: 8),
+                if (_hasBreedList) ...[
+                  BreedDropdown(
+                    species: _species,
+                    initialBreed: _breedSelection,
+                    onChanged: (value) {
+                      setState(() => _breedSelection = value);
+                      _updateUnsavedChanges();
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                ],
+                if (_showCustomBreedField) ...[
+                  TextFormField(
+                    controller: _customBreedController,
+                    decoration: InputDecoration(labelText: l10n.breed),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+                OutlinedButton.icon(
+                  onPressed: _pickBirthdate,
+                  icon: const Icon(Icons.cake_outlined),
+                  label: Text(dateLabel),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _weightController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  decoration: InputDecoration(labelText: l10n.weightKg),
+                  validator: (value) => Validators.weightKg(value, l10n),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _microchipController,
+                  decoration: InputDecoration(labelText: l10n.microchipId),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _allergiesController,
+                  maxLines: 2,
+                  minLines: 1,
+                  decoration: InputDecoration(labelText: l10n.allergies),
+                ),
+                const SizedBox(height: 24),
+                if (_validationError != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Text(
+                      _validationError!,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
                     ),
                   ),
+                FilledButton(
+                  onPressed: isLoading ? null : _submit,
+                  child: Text(_isEditing ? l10n.saveChanges : l10n.addPet),
                 ),
-              FilledButton(
-                onPressed: isLoading ? null : _submit,
-                child: Text(_isEditing ? l10n.saveChanges : l10n.addPet),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -999,4 +999,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get photoPickFailed =>
       'Couldn\'t load that photo. Please try another one.';
+
+  @override
+  String get discardChangesTitle => 'Discard changes?';
+
+  @override
+  String get discardChangesMessage =>
+      'You have unsaved changes to this pet. If you leave now, they\'ll be lost.';
+
+  @override
+  String get keepEditing => 'Keep Editing';
+
+  @override
+  String get discard => 'Discard';
 }

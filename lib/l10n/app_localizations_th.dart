@@ -996,4 +996,17 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get photoPickFailed => 'โหลดรูปนี้ไม่สำเร็จ กรุณาลองเลือกรูปอื่น';
+
+  @override
+  String get discardChangesTitle => 'ยกเลิกการแก้ไขไหม?';
+
+  @override
+  String get discardChangesMessage =>
+      'คุณมีการแก้ไขข้อมูลสัตว์เลี้ยงที่ยังไม่ได้บันทึก หากออกตอนนี้ การแก้ไขจะหายไป';
+
+  @override
+  String get keepEditing => 'แก้ไขต่อ';
+
+  @override
+  String get discard => 'ยกเลิกการแก้ไข';
 }

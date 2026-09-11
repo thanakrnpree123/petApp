@@ -1,0 +1,12 @@
+{
+  "name": "pawhealth-seed-articles",
+  "private": true,
+  "description": "Seeds the PawHealth health articles into Firestore.",
+  "scripts": {
+    "check": "node seed.js",
+    "review": "node seed.js --review > review.md"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  }
+}

@@ -1773,6 +1773,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The next due date must be after the date the vaccine was given.'**
   String get nextDueBeforeGivenError;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseFromLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Library'**
+  String get chooseFromLibrary;
+
+  /// No description provided for @addPetPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo of your pet'**
+  String get addPetPhoto;
+
+  /// No description provided for @changePetPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change your pet\'s photo'**
+  String get changePetPhoto;
+
+  /// No description provided for @photoAccessDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'PawHealth can\'t open your camera or photos. You can allow access in your phone\'s Settings.'**
+  String get photoAccessDenied;
+
+  /// No description provided for @photoPickFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load that photo. Please try another one.'**
+  String get photoPickFailed;
 }
 
 class _AppLocalizationsDelegate

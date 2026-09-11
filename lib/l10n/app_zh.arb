@@ -384,5 +384,11 @@
   "paywallUnavailable": "目前暂时无法订阅，请稍后再试。",
   "tryAgain": "重试",
   "weightOutOfRange": "请输入 0.1 到 150 公斤之间的体重。",
-  "nextDueBeforeGivenError": "下次到期日期必须晚于接种日期。"
+  "nextDueBeforeGivenError": "下次到期日期必须晚于接种日期。",
+  "takePhoto": "拍照",
+  "chooseFromLibrary": "从相册选择",
+  "addPetPhoto": "添加宠物照片",
+  "changePetPhoto": "更换宠物照片",
+  "photoAccessDenied": "PawHealth 无法打开相机或照片。您可以在手机设置中允许访问。",
+  "photoPickFailed": "无法加载这张照片，请换一张试试。"
 }

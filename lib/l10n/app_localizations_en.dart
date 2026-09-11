@@ -979,4 +979,24 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get nextDueBeforeGivenError =>
       'The next due date must be after the date the vaccine was given.';
+
+  @override
+  String get takePhoto => 'Take Photo';
+
+  @override
+  String get chooseFromLibrary => 'Choose from Library';
+
+  @override
+  String get addPetPhoto => 'Add a photo of your pet';
+
+  @override
+  String get changePetPhoto => 'Change your pet\'s photo';
+
+  @override
+  String get photoAccessDenied =>
+      'PawHealth can\'t open your camera or photos. You can allow access in your phone\'s Settings.';
+
+  @override
+  String get photoPickFailed =>
+      'Couldn\'t load that photo. Please try another one.';
 }

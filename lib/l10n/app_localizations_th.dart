@@ -977,4 +977,23 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get nextDueBeforeGivenError =>
       'วันครบกำหนดครั้งถัดไปต้องอยู่หลังวันที่ฉีดวัคซีน';
+
+  @override
+  String get takePhoto => 'ถ่ายรูป';
+
+  @override
+  String get chooseFromLibrary => 'เลือกจากคลังรูปภาพ';
+
+  @override
+  String get addPetPhoto => 'เพิ่มรูปสัตว์เลี้ยงของคุณ';
+
+  @override
+  String get changePetPhoto => 'เปลี่ยนรูปสัตว์เลี้ยงของคุณ';
+
+  @override
+  String get photoAccessDenied =>
+      'PawHealth ไม่สามารถเปิดกล้องหรือรูปภาพได้ คุณสามารถอนุญาตการเข้าถึงได้ในการตั้งค่าโทรศัพท์';
+
+  @override
+  String get photoPickFailed => 'โหลดรูปนี้ไม่สำเร็จ กรุณาลองเลือกรูปอื่น';
 }

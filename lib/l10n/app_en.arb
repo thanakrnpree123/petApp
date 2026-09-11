@@ -388,5 +388,11 @@
   "paywallUnavailable": "Subscriptions aren't available right now. Please try again later.",
   "tryAgain": "Try Again",
   "weightOutOfRange": "Enter a weight between 0.1 and 150 kg.",
-  "nextDueBeforeGivenError": "The next due date must be after the date the vaccine was given."
+  "nextDueBeforeGivenError": "The next due date must be after the date the vaccine was given.",
+  "takePhoto": "Take Photo",
+  "chooseFromLibrary": "Choose from Library",
+  "addPetPhoto": "Add a photo of your pet",
+  "changePetPhoto": "Change your pet's photo",
+  "photoAccessDenied": "PawHealth can't open your camera or photos. You can allow access in your phone's Settings.",
+  "photoPickFailed": "Couldn't load that photo. Please try another one."
 }

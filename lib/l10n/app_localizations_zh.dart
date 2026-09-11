@@ -908,4 +908,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get nextDueBeforeGivenError => '下次到期日期必须晚于接种日期。';
+
+  @override
+  String get takePhoto => '拍照';
+
+  @override
+  String get chooseFromLibrary => '从相册选择';
+
+  @override
+  String get addPetPhoto => '添加宠物照片';
+
+  @override
+  String get changePetPhoto => '更换宠物照片';
+
+  @override
+  String get photoAccessDenied => 'PawHealth 无法打开相机或照片。您可以在手机设置中允许访问。';
+
+  @override
+  String get photoPickFailed => '无法加载这张照片，请换一张试试。';
 }

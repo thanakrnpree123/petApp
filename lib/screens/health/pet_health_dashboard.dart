@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -496,7 +495,7 @@ class _UnifiedTimeline extends StatelessWidget {
   List<_TimelineEntry> _buildEntries(
     BuildContext context,
     AppLocalizations l10n,
-    DateFormat dateFormat,
+    AppDateFormat dateFormat,
     List<CareLog> careLogs,
     List<Vaccination> vaccinations,
     List<SymptomCheck> symptomChecks,

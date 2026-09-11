@@ -31,14 +31,28 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 | 14 | **#13** Shared device: previous user's pets flash after logout; listeners keep running | 40 | 0.25 d | ✅ | Logout ends the session (listeners, Plus state, reminders); sign-in re-syncs reminders from Firestore |
 | 15 | **#14** Pet form discards unsaved edits on Back without asking | 36 | 0.25 d | ✅ | PopScope + "Discard changes?" only when values differ from when the form opened |
 
+## QA polish batch (`fix/qa-polish-and-articles`)
+
+| # | Item | Status | Resolution |
+|---|---|---|---|
+| 16 | **#13** Limping symptom showed a generic icon | ✅ | Healing icon |
+| 17 | **#11** Breed list opened over its own label on short screens | ✅ | Scrolls the field up to make room, then opens the list below it |
+| 18 | **#10** Pet card cut off the age on desktop ("1 ปี 0 เ…") | ✅ | Breed and age on separate lines; grid row height scales with text size |
+| 19 | **#9** Desktop page titles didn't line up with centered content | ✅ | Shared `ContentWidth`/`CenteredContent`; articles and pet form capped at 640px |
+| 20 | **#15** Logo unreadable in the nav rail and app bar | ✅ interim | `BrandMark` paw badge + wordmark; swap in a small-size logo asset later |
+| 21 | **#14** Vomiting check offered "No symptoms", which led to "seems healthy" | ✅ | Option and result removed; older saved checks stay translated. Include in the vet review |
+| 22 | **#12** Thai dates showed the Gregorian year | ✅ | Buddhist Era year (พ.ศ.) in Thai; date picker and PDF stay Gregorian |
+| 23 | **#4** Articles tab empty | ✅ content ready | Articles localized (EN/TH/ZH); 6 starter articles + `tool/seed_articles`. Seed after the vet review |
+
 ## Pre-release checklist
 
 ### Must do before submitting to the stores
 - [ ] **Deploy security rules** — `firebase deploy --only firestore:rules,storage:rules`. Account deletion fails at the profile step without the new `delete` rule.
 - [ ] **Veterinary review** of all symptom-checker content: 9 trees in `lib/data/decision_trees/`, English canonical text plus the AI-translated TH/ZH strings.
+- [ ] **Veterinary review of the 6 starter articles** — `node tool/seed_articles/seed.js --review > review.md`. Then set `vet_reviewed`/`reviewed_by` and seed: `node seed.js --apply --project pawhealth-app-2026`. Until then, the Articles tab shows "No articles available".
 - [ ] **RevenueCat** — real API keys in `revenuecat_service.dart`; the $2.99/mo product in App Store Connect and Play Console; an offering with the `plus` entitlement.
 - [ ] **Re-enable App Check** (`TODO(app-check)` in `main.dart`): register debug tokens, configure providers, start with enforcement off, then turn it on.
-- [ ] **Final app icon and splash** — replace the placeholders, then `dart run flutter_launcher_icons` and `dart run flutter_native_splash:create`.
+- [ ] **Final app icon and splash** — replace the placeholders, add a small-size logo to `BrandMark`, then `dart run flutter_launcher_icons` and `dart run flutter_native_splash:create`.
 - [ ] **Store privacy disclosures** — privacy policy URL; App Store privacy labels and Play Data safety form (email, pet health data, photos).
 - [ ] **Google Play account-deletion web link** — Play requires a web page or form for deletion requests in addition to the in-app option.
 - [ ] **Medical-app review notes** — App Store guideline 1.4.1: keep the disclaimer visible and be ready to explain where the triage content comes from.

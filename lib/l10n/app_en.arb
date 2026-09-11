@@ -272,7 +272,6 @@
       }
     }
   },
-  "optNoSymptoms": "No symptoms / General checkup",
   "advHealthy": "Your pet seems healthy! Keep up the good work — continue regular checkups and preventive care.",
   "shareWithVet": "Share with Vet",
   "checkSavedToHistory": "Saved to {petName}'s health history",
@@ -405,5 +404,17 @@
   "cameraInUse": "Your camera is being used by another app, like a video call. Close it and try again.",
   "cameraStartFailed": "Couldn't start the camera. Please try again.",
   "filterSymptomChecks": "Symptom checks",
-  "birthdate": "Birthdate"
+  "birthdate": "Birthdate",
+  "articleCatFirstAid": "First aid",
+  "@articleCatFirstAid": {"description": "Health article category"},
+  "articleCatSafety": "Safety",
+  "@articleCatSafety": {"description": "Health article category: poisons and hazards"},
+  "articleCatPreventiveCare": "Preventive care",
+  "@articleCatPreventiveCare": {"description": "Health article category: vaccines and parasite prevention"},
+  "articleCatNutrition": "Nutrition",
+  "@articleCatNutrition": {"description": "Health article category"},
+  "articleCatSymptoms": "Symptoms",
+  "@articleCatSymptoms": {"description": "Health article category: signs of illness"},
+  "articleDisclaimer": "General information, not a substitute for advice from your vet. If your pet seems unwell, contact a vet.",
+  "@articleDisclaimer": {"description": "Footer under every health article"}
 }

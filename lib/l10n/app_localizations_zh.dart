@@ -540,9 +540,6 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get optNoSymptoms => '无症状／常规体检';
-
-  @override
   String get advHealthy => '您的宠物看起来很健康！继续保持，定期体检并做好预防护理。';
 
   @override
@@ -960,4 +957,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get birthdate => '出生日期';
+
+  @override
+  String get articleCatFirstAid => '急救';
+
+  @override
+  String get articleCatSafety => '安全';
+
+  @override
+  String get articleCatPreventiveCare => '预防保健';
+
+  @override
+  String get articleCatNutrition => '营养';
+
+  @override
+  String get articleCatSymptoms => '症状';
+
+  @override
+  String get articleDisclaimer => '仅为一般信息，不能替代兽医的建议。如果您的宠物看起来不舒服，请联系兽医。';
 }

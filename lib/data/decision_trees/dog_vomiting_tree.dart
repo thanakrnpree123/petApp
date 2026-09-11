@@ -17,10 +17,6 @@ final DecisionTree dogVomitingTree = {
         label: '4 or more times',
         nextNodeId: 'result_emergency_frequent',
       ),
-      SymptomOption(
-        label: 'No symptoms / General checkup',
-        nextNodeId: 'result_healthy',
-      ),
     ],
   ),
   'blood_check_mild': const QuestionNode(
@@ -131,11 +127,5 @@ final DecisionTree dogVomitingTree = {
     level: TriageLevel.monitor,
     advice:
         'A single vomiting episode with no other symptoms can often be monitored at home. Withhold food for a few hours, ensure fresh water, and watch for recurrence.',
-  ),
-  'result_healthy': const ResultNode(
-    id: 'result_healthy',
-    level: TriageLevel.monitor,
-    advice:
-        'Your pet seems healthy! Keep up the good work — continue regular checkups and preventive care.',
   ),
 };

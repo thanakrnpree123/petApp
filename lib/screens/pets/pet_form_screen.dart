@@ -12,6 +12,7 @@ import '../../utils/validators.dart';
 import '../../widgets/common/paw_loader.dart';
 import '../../widgets/pets/breed_dropdown.dart';
 import '../../widgets/pets/photo_picker_field.dart';
+import '../../widgets/responsive/content_width.dart';
 import '../../utils/app_dates.dart';
 import '../../theme/app_theme.dart';
 
@@ -284,14 +285,18 @@ class _PetFormScreenState extends State<PetFormScreen> {
       },
       child: Scaffold(
         appBar: AppBar(title: Text(_isEditing ? l10n.editPet : l10n.addPet)),
-        body: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            // Not a lazy ListView: every field must stay built so the
-            // form can scroll back up to an error on a field that's
-            // off screen (a lazy list would have disposed it).
-            child: SingleChildScrollView(
+        body: Form(
+          key: _formKey,
+          // Not a lazy ListView: every field must stay built so the
+          // form can scroll back up to an error on a field that's
+          // off screen (a lazy list would have disposed it).
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            // Full-width fields on a desktop window are hard to scan;
+            // the scroll view stays full width so the wheel works
+            // anywhere.
+            child: CenteredContent(
+              maxWidth: ContentWidth.reading,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

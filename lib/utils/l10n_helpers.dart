@@ -10,6 +10,7 @@ import '../data/decision_trees/limping_tree.dart';
 import '../data/decision_trees/symptom_catalog.dart';
 import '../data/decision_trees/toxin_tree.dart';
 import '../l10n/app_localizations.dart';
+import '../models/article.dart';
 import '../models/care_log.dart';
 import '../models/symptom_check.dart';
 import '../models/pet.dart';
@@ -86,7 +87,6 @@ abstract final class L10nHelpers {
       '4 or more times' => l10n.opt4Plus,
       'Yes' => l10n.optYes,
       'No' => l10n.optNo,
-      'No symptoms / General checkup' => l10n.optNoSymptoms,
       'Less than 24 hours' => l10n.optLess24h,
       'More than 24 hours' => l10n.optMore24h,
       'Human medication' => l10n.optHumanMedication,
@@ -113,7 +113,6 @@ abstract final class L10nHelpers {
       'result_vet_vulnerable' => l10n.advVetVulnerable,
       'result_vet_moderate' => l10n.advVetModerate,
       'result_monitor_mild' => l10n.advMonitorMild,
-      'result_healthy' => l10n.advHealthy,
       // Shared across trees
       'dn_result_emergency_collapse' ||
       'cn_result_emergency_collapse' ||
@@ -183,7 +182,32 @@ abstract final class L10nHelpers {
         }
       }
     }
-    return check.advice;
+    return _retiredAdvice[check.advice]?.call(l10n) ?? check.advice;
+  }
+
+  /// Advice of results since removed from the trees, keyed by the English
+  /// text stored with older saved checks, so their history still shows in
+  /// the user's language.
+  static final _retiredAdvice = <String, String Function(AppLocalizations)>{
+    // Dog vomiting's "No symptoms / General checkup" answer: a symptom
+    // check isn't a wellness check, and "seems healthy" was false
+    // reassurance.
+    'Your pet seems healthy! Keep up the good work — continue regular '
+        'checkups and preventive care.': (l10n) =>
+        l10n.advHealthy,
+  };
+
+  /// Category ids used by the seeded articles (tool/seed_articles); any
+  /// other id falls back to a title-cased label.
+  static String articleCategory(AppLocalizations l10n, Article article) {
+    return switch (article.category) {
+      'first_aid' => l10n.articleCatFirstAid,
+      'safety' => l10n.articleCatSafety,
+      'preventive_care' => l10n.articleCatPreventiveCare,
+      'nutrition' => l10n.articleCatNutrition,
+      'symptoms' => l10n.articleCatSymptoms,
+      _ => article.categoryLabel,
+    };
   }
 
   static String triageLabel(AppLocalizations l10n, TriageLevel level) {

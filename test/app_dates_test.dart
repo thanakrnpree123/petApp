@@ -17,7 +17,7 @@ void main() {
 
   for (final (locale, expected) in [
     (const Locale('en'), 'Sep 11, 2026'),
-    (const Locale('th'), '11 ก.ย. 2026'),
+    (const Locale('th'), '11 ก.ย. 2569'),
     (const Locale('zh'), '2026年9月11日'),
   ]) {
     testWidgets('formats dates in ${locale.languageCode}', (tester) async {
@@ -36,6 +36,26 @@ void main() {
       expect(formatted, expected);
     });
   }
+
+  testWidgets('Thai years are Buddhist Era, even on a leap day', (
+    tester,
+  ) async {
+    late String formatted;
+    await tester.pumpWidget(
+      _app(
+        const Locale('th'),
+        Builder(
+          builder: (context) {
+            // 2567 B.E. isn't a leap year in the Gregorian rules — the day
+            // must not roll over to 1 March.
+            formatted = AppDates.medium(context).format(DateTime(2024, 2, 29));
+            return const SizedBox();
+          },
+        ),
+      ),
+    );
+    expect(formatted, '29 ก.พ. 2567');
+  });
 
   testWidgets('the vaccine dialog shows Thai dates in Thai', (tester) async {
     await tester.pumpWidget(
@@ -60,7 +80,7 @@ void main() {
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('11 ก.ย. 2026'), findsOneWidget);
+    expect(find.textContaining('11 ก.ย. 2569'), findsOneWidget);
     expect(find.textContaining('Sep'), findsNothing);
   });
 }

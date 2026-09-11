@@ -9,6 +9,7 @@ import '../../providers/pet_provider.dart';
 import '../../providers/session.dart';
 import '../../providers/subscription_provider.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/responsive/content_width.dart';
 import '../../widgets/settings/delete_account_dialog.dart';
 import '../../widgets/settings/language_dialog.dart';
 import '../subscription/paywall_screen.dart';
@@ -49,88 +50,85 @@ class SettingsScreen extends StatelessWidget {
 
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Align(
-      alignment: Alignment.topCenter,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 640),
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
-              child: Text(
-                l10n.account,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  letterSpacing: 0.8,
+    final gutter = pageGutter(context);
+
+    return CenteredContent(
+      maxWidth: ContentWidth.reading,
+      child: ListView(
+        padding: EdgeInsets.fromLTRB(gutter, 16, gutter, 32),
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
+            child: Text(
+              l10n.account,
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                letterSpacing: 0.8,
+              ),
+            ),
+          ),
+          Card(
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.email_outlined),
+                  title: Text(l10n.email),
+                  subtitle: Text(email),
                 ),
-              ),
-            ),
-            Card(
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.email_outlined),
-                    title: Text(l10n.email),
-                    subtitle: Text(email),
+                const Divider(indent: 56),
+                ListTile(
+                  leading: Icon(
+                    isPlusMember
+                        ? Icons.workspace_premium
+                        : Icons.workspace_premium_outlined,
+                    color: isPlusMember ? context.statusColors.premium : null,
                   ),
-                  const Divider(indent: 56),
-                  ListTile(
-                    leading: Icon(
-                      isPlusMember
-                          ? Icons.workspace_premium
-                          : Icons.workspace_premium_outlined,
-                      color: isPlusMember ? context.statusColors.premium : null,
-                    ),
-                    title: Text(l10n.subscription),
-                    subtitle: Text(
-                      isPlusMember ? l10n.pawHealthPlus : l10n.freeTier,
-                    ),
-                    trailing: isPlusMember
-                        ? null
-                        : TextButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => const PaywallScreen(),
-                                ),
-                              );
-                            },
-                            child: Text(l10n.upgrade),
-                          ),
+                  title: Text(l10n.subscription),
+                  subtitle: Text(
+                    isPlusMember ? l10n.pawHealthPlus : l10n.freeTier,
                   ),
-                  const Divider(indent: 56),
-                  ListTile(
-                    leading: const Icon(Icons.language),
-                    title: Text(l10n.language),
-                    subtitle: Text(
-                      LocaleProvider.endonym(
-                        context.watch<LocaleProvider>().locale,
-                      ),
+                  trailing: isPlusMember
+                      ? null
+                      : TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const PaywallScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(l10n.upgrade),
+                        ),
+                ),
+                const Divider(indent: 56),
+                ListTile(
+                  leading: const Icon(Icons.language),
+                  title: Text(l10n.language),
+                  subtitle: Text(
+                    LocaleProvider.endonym(
+                      context.watch<LocaleProvider>().locale,
                     ),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => LanguageDialog.show(context),
                   ),
-                ],
-              ),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => LanguageDialog.show(context),
+                ),
+              ],
             ),
-            const SizedBox(height: 24),
-            OutlinedButton.icon(
-              style: OutlinedButton.styleFrom(
-                foregroundColor: colorScheme.error,
-              ),
-              onPressed: () => _signOut(context),
-              icon: const Icon(Icons.logout),
-              label: Text(l10n.logOut),
-            ),
-            const SizedBox(height: 8),
-            TextButton(
-              style: TextButton.styleFrom(foregroundColor: colorScheme.error),
-              onPressed: () => _deleteAccount(context),
-              child: Text(l10n.deleteAccount),
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 24),
+          OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(foregroundColor: colorScheme.error),
+            onPressed: () => _signOut(context),
+            icon: const Icon(Icons.logout),
+            label: Text(l10n.logOut),
+          ),
+          const SizedBox(height: 8),
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: colorScheme.error),
+            onPressed: () => _deleteAccount(context),
+            child: Text(l10n.deleteAccount),
+          ),
+        ],
       ),
     );
   }

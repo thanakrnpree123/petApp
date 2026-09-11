@@ -53,16 +53,10 @@ class AppLocalizationsTh extends AppLocalizations {
   String get unlimitedPdfReports => 'รายงาน PDF สำหรับสัตวแพทย์ไม่จำกัด';
 
   @override
-  String get adFreeExperience => 'ไม่มีโฆษณา';
-
-  @override
   String get freeTierIncludes => 'แพ็กเกจฟรีประกอบด้วย';
 
   @override
   String get freeChecksPerMonth => 'ตรวจอาการ 5 ครั้ง/เดือน';
-
-  @override
-  String get containsAds => 'มีโฆษณา';
 
   @override
   String get subscribe => 'สมัครสมาชิก';

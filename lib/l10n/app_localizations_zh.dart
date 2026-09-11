@@ -53,16 +53,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unlimitedPdfReports => '无限份兽医 PDF 报告';
 
   @override
-  String get adFreeExperience => '无广告体验';
-
-  @override
   String get freeTierIncludes => '免费版包含';
 
   @override
   String get freeChecksPerMonth => '每月 5 次症状检查';
-
-  @override
-  String get containsAds => '含广告';
 
   @override
   String get subscribe => '订阅';

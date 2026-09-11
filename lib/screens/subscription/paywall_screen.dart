@@ -76,10 +76,6 @@ class PaywallScreen extends StatelessWidget {
                                     icon: Icons.check_circle,
                                     text: l10n.unlimitedPdfReports,
                                   ),
-                                  _BenefitRow(
-                                    icon: Icons.check_circle,
-                                    text: l10n.adFreeExperience,
-                                  ),
                                 ],
                               ),
                             ),
@@ -94,11 +90,6 @@ class PaywallScreen extends StatelessWidget {
                           _BenefitRow(
                             icon: Icons.remove_circle_outline,
                             text: l10n.freeChecksPerMonth,
-                            muted: true,
-                          ),
-                          _BenefitRow(
-                            icon: Icons.remove_circle_outline,
-                            text: l10n.containsAds,
                             muted: true,
                           ),
                           const Spacer(),

@@ -184,12 +184,6 @@ abstract class AppLocalizations {
   /// **'Unlimited PDF vet reports'**
   String get unlimitedPdfReports;
 
-  /// No description provided for @adFreeExperience.
-  ///
-  /// In en, this message translates to:
-  /// **'Ad-free experience'**
-  String get adFreeExperience;
-
   /// No description provided for @freeTierIncludes.
   ///
   /// In en, this message translates to:
@@ -201,12 +195,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'5 symptom checks / month'**
   String get freeChecksPerMonth;
-
-  /// No description provided for @containsAds.
-  ///
-  /// In en, this message translates to:
-  /// **'Contains ads'**
-  String get containsAds;
 
   /// No description provided for @subscribe.
   ///

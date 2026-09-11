@@ -53,16 +53,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unlimitedPdfReports => 'Unlimited PDF vet reports';
 
   @override
-  String get adFreeExperience => 'Ad-free experience';
-
-  @override
   String get freeTierIncludes => 'Free tier includes';
 
   @override
   String get freeChecksPerMonth => '5 symptom checks / month';
-
-  @override
-  String get containsAds => 'Contains ads';
 
   @override
   String get subscribe => 'Subscribe';

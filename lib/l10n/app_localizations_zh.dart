@@ -902,4 +902,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get tryAgain => '重试';
+
+  @override
+  String get weightOutOfRange => '请输入 0.1 到 150 公斤之间的体重。';
 }

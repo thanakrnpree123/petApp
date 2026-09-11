@@ -970,4 +970,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get tryAgain => 'ลองอีกครั้ง';
+
+  @override
+  String get weightOutOfRange => 'กรุณากรอกน้ำหนักระหว่าง 0.1 ถึง 150 กก.';
 }

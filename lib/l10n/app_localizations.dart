@@ -1761,6 +1761,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try Again'**
   String get tryAgain;
+
+  /// No description provided for @weightOutOfRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a weight between 0.1 and 150 kg.'**
+  String get weightOutOfRange;
 }
 
 class _AppLocalizationsDelegate

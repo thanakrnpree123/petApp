@@ -972,4 +972,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tryAgain => 'Try Again';
+
+  @override
+  String get weightOutOfRange => 'Enter a weight between 0.1 and 150 kg.';
 }

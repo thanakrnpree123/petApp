@@ -382,5 +382,6 @@
   "turnOnReminders": "เปิดการแจ้งเตือน",
   "paywallMobileOnly": "PawHealth Plus สมัครได้ในแอป PawHealth บน iPhone และ Android ขณะนี้ยังไม่สามารถสมัครผ่านเว็บได้",
   "paywallUnavailable": "ขณะนี้ยังไม่สามารถสมัครสมาชิกได้ กรุณาลองใหม่ภายหลัง",
-  "tryAgain": "ลองอีกครั้ง"
+  "tryAgain": "ลองอีกครั้ง",
+  "weightOutOfRange": "กรุณากรอกน้ำหนักระหว่าง 0.1 ถึง 150 กก."
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../utils/validators.dart';
 
 class AddWeightDialog extends StatefulWidget {
   const AddWeightDialog({super.key});
@@ -28,7 +29,7 @@ class _AddWeightDialogState extends State<AddWeightDialog> {
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-    Navigator.of(context).pop(double.parse(_controller.text.trim()));
+    Navigator.of(context).pop(Validators.parseWeight(_controller.text));
   }
 
   @override
@@ -44,11 +45,7 @@ class _AddWeightDialogState extends State<AddWeightDialog> {
           autofocus: true,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           decoration: InputDecoration(labelText: l10n.weightKg),
-          validator: (value) {
-            final parsed = double.tryParse(value?.trim() ?? '');
-            if (parsed == null || parsed <= 0) return l10n.enterValidWeight;
-            return null;
-          },
+          validator: (value) => Validators.weightKg(value, l10n),
         ),
       ),
       actions: [

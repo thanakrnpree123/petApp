@@ -10,6 +10,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/pet.dart';
 import '../../providers/pet_provider.dart';
 import '../../utils/l10n_helpers.dart';
+import '../../utils/validators.dart';
 import '../../widgets/common/paw_loader.dart';
 import '../../widgets/pets/breed_dropdown.dart';
 import '../../widgets/pets/photo_picker_field.dart';
@@ -151,7 +152,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
       breed: breed,
       breedDisorders: disorders,
       birthdate: _birthdate!,
-      weightKg: double.parse(_weightController.text.trim()),
+      weightKg: Validators.parseWeight(_weightController.text)!,
       gender: _gender,
       isNeutered: _isNeutered,
       microchipId: microchip.isEmpty ? null : microchip,
@@ -284,13 +285,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
                   decimal: true,
                 ),
                 decoration: InputDecoration(labelText: l10n.weightKg),
-                validator: (value) {
-                  final parsed = double.tryParse(value?.trim() ?? '');
-                  if (parsed == null || parsed <= 0) {
-                    return l10n.enterValidWeight;
-                  }
-                  return null;
-                },
+                validator: (value) => Validators.weightKg(value, l10n),
               ),
               const SizedBox(height: 16),
               TextFormField(

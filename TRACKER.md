@@ -20,9 +20,16 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 
 **Found along the way:** Articles tab re-queried Firestore and flashed its loader on every category tap (same stream-in-`build` bug as #4) — fixed in its own commit.
 
-## Backlog (not in this batch)
+## Backlog batch
 
-#8 stale auth error on Register (250) · #9 weight sanity + chart dates (160) · #11 vaccine date validation (96) · #12 photo picker camera/permissions (70) · #13 shared-device logout leak (40) · #14 unsaved form warning (36)
+| Order | Item | RICE | Effort | Status | Notes |
+|---|---|---|---|---|---|
+| 10 | **#8** Failed-login error shows on the Register screen | 250 | 0.1 d | ⬜ | |
+| 11 | **#9** Weight entry has no sanity bound; chart spaces points by index; US date labels | 160 | 0.5 d | ⬜ | |
+| 12 | **#11** Vaccine next-due date can precede the date given | 96 | 0.25 d | ⬜ | |
+| 13 | **#12** Photo picker: gallery only, no feedback on denied permission | 70 | 0.5 d | ⬜ | |
+| 14 | **#13** Shared device: previous user's pets flash after logout; listeners keep running | 40 | 0.25 d | ⬜ | |
+| 15 | **#14** Pet form discards unsaved edits on Back without asking | 36 | 0.25 d | ⬜ | |
 
 ## Release checklist carried over
 

@@ -1027,4 +1027,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get cameraStartFailed => 'เปิดกล้องไม่สำเร็จ กรุณาลองอีกครั้ง';
+
+  @override
+  String get filterSymptomChecks => 'ตรวจอาการ';
 }

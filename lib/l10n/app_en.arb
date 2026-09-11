@@ -403,5 +403,6 @@
   "cameraPermissionDenied": "PawHealth can't use your camera. Allow camera access for this site in your browser's address bar or settings, then try again.",
   "cameraNotFound": "No camera was found. Connect a webcam, or choose a photo from your files instead.",
   "cameraInUse": "Your camera is being used by another app, like a video call. Close it and try again.",
-  "cameraStartFailed": "Couldn't start the camera. Please try again."
+  "cameraStartFailed": "Couldn't start the camera. Please try again.",
+  "filterSymptomChecks": "Symptom checks"
 }

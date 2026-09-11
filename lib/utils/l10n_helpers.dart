@@ -11,6 +11,7 @@ import '../data/decision_trees/symptom_catalog.dart';
 import '../data/decision_trees/toxin_tree.dart';
 import '../l10n/app_localizations.dart';
 import '../models/care_log.dart';
+import '../models/symptom_check.dart';
 import '../models/pet.dart';
 
 /// Bridges canonical-English data (decision-tree nodes, provider error
@@ -168,6 +169,21 @@ abstract final class L10nHelpers {
       'lm_result_monitor' => l10n.advLmMonitor,
       _ => node.advice,
     };
+  }
+
+  /// Localized advice for a saved check. Firestore keeps only the canonical
+  /// English advice, so the matching result node is looked up in the
+  /// symptom's tree; unknown or legacy advice falls back to the English.
+  static String savedAdvice(AppLocalizations l10n, SymptomCheck check) {
+    final tree = symptomById(check.symptomId)?.tree;
+    if (tree != null) {
+      for (final node in tree.values) {
+        if (node is ResultNode && node.advice == check.advice) {
+          return advice(l10n, node);
+        }
+      }
+    }
+    return check.advice;
   }
 
   static String triageLabel(AppLocalizations l10n, TriageLevel level) {

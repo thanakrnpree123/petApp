@@ -22,6 +22,19 @@ class SymptomCheckService {
     return _checksRef(userId, petId).add(check.toFirestore());
   }
 
+  /// Newest first — shown in the pet's health timeline.
+  Stream<List<SymptomCheck>> watchChecks(String userId, String petId) {
+    return _checksRef(userId, petId)
+        .orderBy('checked_at', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => [
+            for (final doc in snapshot.docs)
+              SymptomCheck.fromFirestore(doc.id, doc.data()),
+          ],
+        );
+  }
+
   Future<SymptomCheck?> getLatestCheck(String userId, String petId) async {
     final snapshot = await _checksRef(
       userId,

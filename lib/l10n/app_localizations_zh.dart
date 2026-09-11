@@ -954,4 +954,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get cameraStartFailed => '无法启动摄像头，请重试。';
+
+  @override
+  String get filterSymptomChecks => '症状检查';
 }

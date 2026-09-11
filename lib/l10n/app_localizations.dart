@@ -1863,6 +1863,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t start the camera. Please try again.'**
   String get cameraStartFailed;
+
+  /// No description provided for @filterSymptomChecks.
+  ///
+  /// In en, this message translates to:
+  /// **'Symptom checks'**
+  String get filterSymptomChecks;
 }
 
 class _AppLocalizationsDelegate

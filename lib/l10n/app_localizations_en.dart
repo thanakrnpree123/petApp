@@ -1031,4 +1031,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get cameraStartFailed =>
       'Couldn\'t start the camera. Please try again.';
+
+  @override
+  String get filterSymptomChecks => 'Symptom checks';
 }

@@ -1030,4 +1030,23 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get birthdate => 'วันเกิด';
+
+  @override
+  String get articleCatFirstAid => 'ปฐมพยาบาล';
+
+  @override
+  String get articleCatSafety => 'ความปลอดภัย';
+
+  @override
+  String get articleCatPreventiveCare => 'ป้องกันโรค';
+
+  @override
+  String get articleCatNutrition => 'โภชนาการ';
+
+  @override
+  String get articleCatSymptoms => 'อาการป่วย';
+
+  @override
+  String get articleDisclaimer =>
+      'ข้อมูลทั่วไปเท่านั้น ไม่สามารถใช้แทนคำแนะนำจากสัตวแพทย์ได้ หากสัตว์เลี้ยงของคุณดูไม่สบาย โปรดติดต่อสัตวแพทย์';
 }

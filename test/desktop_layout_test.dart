@@ -19,9 +19,9 @@ class _OneArticle implements ArticleService {
   Stream<List<Article>> watchArticles() => Stream.value([
     Article(
       id: 'a1',
-      title: 'Heatstroke first aid',
+      title: const LocalizedText({'en': 'Heatstroke first aid'}),
       category: 'first_aid',
-      content: 'Move your pet somewhere cool.',
+      content: const LocalizedText({'en': 'Move your pet somewhere cool.'}),
       publishedAt: DateTime(2026, 8, 1),
     ),
   ]);

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../models/article.dart';
+import '../../utils/l10n_helpers.dart';
 
 class ArticleCard extends StatelessWidget {
   final Article article;
@@ -10,6 +12,9 @@ class ArticleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final language = Localizations.localeOf(context).languageCode;
+
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -50,7 +55,7 @@ class ArticleCard extends StatelessWidget {
                   // A quiet text label instead of a chip: it isn't
                   // tappable, so it shouldn't look like a button.
                   Text(
-                    article.categoryLabel.toUpperCase(),
+                    L10nHelpers.articleCategory(l10n, article).toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                       letterSpacing: 0.8,
@@ -58,7 +63,7 @@ class ArticleCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    article.title,
+                    article.title.of(language),
                     style: Theme.of(context).textTheme.titleMedium,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,

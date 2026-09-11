@@ -400,5 +400,11 @@
   "cameraInUse": "摄像头正被其他应用（如视频通话）占用。请关闭该应用后重试。",
   "cameraStartFailed": "无法启动摄像头，请重试。",
   "filterSymptomChecks": "症状检查",
-  "birthdate": "出生日期"
+  "birthdate": "出生日期",
+  "articleCatFirstAid": "急救",
+  "articleCatSafety": "安全",
+  "articleCatPreventiveCare": "预防保健",
+  "articleCatNutrition": "营养",
+  "articleCatSymptoms": "症状",
+  "articleDisclaimer": "仅为一般信息，不能替代兽医的建议。如果您的宠物看起来不舒服，请联系兽医。"
 }

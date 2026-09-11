@@ -1034,4 +1034,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get birthdate => 'Birthdate';
+
+  @override
+  String get articleCatFirstAid => 'First aid';
+
+  @override
+  String get articleCatSafety => 'Safety';
+
+  @override
+  String get articleCatPreventiveCare => 'Preventive care';
+
+  @override
+  String get articleCatNutrition => 'Nutrition';
+
+  @override
+  String get articleCatSymptoms => 'Symptoms';
+
+  @override
+  String get articleDisclaimer =>
+      'General information, not a substitute for advice from your vet. If your pet seems unwell, contact a vet.';
 }

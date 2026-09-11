@@ -10,6 +10,7 @@ import '../data/decision_trees/limping_tree.dart';
 import '../data/decision_trees/symptom_catalog.dart';
 import '../data/decision_trees/toxin_tree.dart';
 import '../l10n/app_localizations.dart';
+import '../models/article.dart';
 import '../models/care_log.dart';
 import '../models/symptom_check.dart';
 import '../models/pet.dart';
@@ -195,6 +196,19 @@ abstract final class L10nHelpers {
         'checkups and preventive care.': (l10n) =>
         l10n.advHealthy,
   };
+
+  /// Category ids used by the seeded articles (tool/seed_articles); any
+  /// other id falls back to a title-cased label.
+  static String articleCategory(AppLocalizations l10n, Article article) {
+    return switch (article.category) {
+      'first_aid' => l10n.articleCatFirstAid,
+      'safety' => l10n.articleCatSafety,
+      'preventive_care' => l10n.articleCatPreventiveCare,
+      'nutrition' => l10n.articleCatNutrition,
+      'symptoms' => l10n.articleCatSymptoms,
+      _ => article.categoryLabel,
+    };
+  }
 
   static String triageLabel(AppLocalizations l10n, TriageLevel level) {
     return switch (level) {

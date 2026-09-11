@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/article.dart';
 import '../../services/article_service.dart';
+import '../../utils/l10n_helpers.dart';
 import '../../widgets/articles/article_card.dart';
 import '../../widgets/common/paw_loader.dart';
 import '../../widgets/responsive/content_width.dart';
@@ -77,9 +78,12 @@ class _ArticleListScreenState extends State<ArticleListScreen> {
                           padding: const EdgeInsets.only(right: 8),
                           child: ChoiceChip(
                             label: Text(
-                              articles
-                                  .firstWhere((a) => a.category == category)
-                                  .categoryLabel,
+                              L10nHelpers.articleCategory(
+                                AppLocalizations.of(context)!,
+                                articles.firstWhere(
+                                  (a) => a.category == category,
+                                ),
+                              ),
                             ),
                             selected: _selectedCategory == category,
                             onSelected: (_) =>

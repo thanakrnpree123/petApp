@@ -1869,6 +1869,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Birthdate'**
   String get birthdate;
+
+  /// Health article category
+  ///
+  /// In en, this message translates to:
+  /// **'First aid'**
+  String get articleCatFirstAid;
+
+  /// Health article category: poisons and hazards
+  ///
+  /// In en, this message translates to:
+  /// **'Safety'**
+  String get articleCatSafety;
+
+  /// Health article category: vaccines and parasite prevention
+  ///
+  /// In en, this message translates to:
+  /// **'Preventive care'**
+  String get articleCatPreventiveCare;
+
+  /// Health article category
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition'**
+  String get articleCatNutrition;
+
+  /// Health article category: signs of illness
+  ///
+  /// In en, this message translates to:
+  /// **'Symptoms'**
+  String get articleCatSymptoms;
+
+  /// Footer under every health article
+  ///
+  /// In en, this message translates to:
+  /// **'General information, not a substitute for advice from your vet. If your pet seems unwell, contact a vet.'**
+  String get articleDisclaimer;
 }
 
 class _AppLocalizationsDelegate

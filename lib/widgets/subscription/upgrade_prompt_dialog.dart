@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../screens/subscription/paywall_screen.dart';
+import '../../theme/app_theme.dart';
 
 class UpgradePromptDialog extends StatelessWidget {
   final String message;
@@ -22,7 +23,7 @@ class UpgradePromptDialog extends StatelessWidget {
     return AlertDialog(
       title: Row(
         children: [
-          Icon(Icons.workspace_premium, color: Colors.amber[700]),
+          Icon(Icons.workspace_premium, color: context.statusColors.premium),
           const SizedBox(width: 8),
           Expanded(child: Text(l10n.pawHealthPlus)),
           IconButton(

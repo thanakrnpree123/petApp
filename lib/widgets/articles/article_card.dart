@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../models/article.dart';
+import '../../utils/l10n_helpers.dart';
 
 class ArticleCard extends StatelessWidget {
   final Article article;
@@ -10,6 +12,9 @@ class ArticleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final language = Localizations.localeOf(context).languageCode;
+
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -20,30 +25,45 @@ class ArticleCard extends StatelessWidget {
             AspectRatio(
               aspectRatio: 16 / 9,
               child: article.imageUrl != null
-                  ? Image.network(article.imageUrl!, fit: BoxFit.cover)
+                  ? Image.network(
+                      article.imageUrl!,
+                      // New URL → new <img> element (see PetAvatar).
+                      key: ValueKey(article.imageUrl),
+                      fit: BoxFit.cover,
+                      // Article images may be hosted without CORS headers.
+                      webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
+                      errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                    )
                   : Container(
-                      color: Theme.of(context).colorScheme.secondaryContainer,
-                      child: const Center(
-                        child: Icon(Icons.article_outlined, size: 40),
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      child: Center(
+                        child: Icon(
+                          Icons.article_outlined,
+                          size: 40,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onPrimaryContainer,
+                        ),
                       ),
                     ),
             ),
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Chip(
-                    label: Text(
-                      article.categoryLabel,
-                      style: const TextStyle(fontSize: 11),
-                    ),
-                    visualDensity: VisualDensity.compact,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  const SizedBox(height: 8),
+                  // A quiet text label instead of a chip: it isn't
+                  // tappable, so it shouldn't look like a button.
                   Text(
-                    article.title,
+                    L10nHelpers.articleCategory(l10n, article).toUpperCase(),
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    article.title.of(language),
                     style: Theme.of(context).textTheme.titleMedium,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,

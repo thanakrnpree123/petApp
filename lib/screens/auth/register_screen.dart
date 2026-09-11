@@ -102,7 +102,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           padding: const EdgeInsets.only(bottom: 16),
                           child: Text(
                             L10nHelpers.authError(l10n, auth.errorCode!),
-                            style: const TextStyle(color: Colors.red),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
                           ),
                         ),
                       FilledButton(

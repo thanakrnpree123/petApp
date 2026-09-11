@@ -4,7 +4,10 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../providers/subscription_provider.dart';
+import '../services/reminder_sync_service.dart';
+import '../widgets/common/brand_mark.dart';
 import '../widgets/responsive/breakpoints.dart';
+import '../widgets/responsive/content_width.dart';
 import 'articles/article_list_screen.dart';
 import 'pets/pet_list_screen.dart';
 import 'settings/settings_screen.dart';
@@ -26,6 +29,14 @@ class _MainTabScreenState extends State<MainTabScreen> {
     SettingsScreen(),
   ];
 
+  // Each tab's content column (see the screens), so the desktop title
+  // lines up with it.
+  static const _contentWidths = [
+    ContentWidth.wide,
+    ContentWidth.reading,
+    ContentWidth.reading,
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +44,11 @@ class _MainTabScreenState extends State<MainTabScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<SubscriptionProvider>().init(userId);
     });
+    // Reminders are device-local and cleared on sign-out; rebuild them from
+    // the account. Fire-and-forget — a failure just keeps the old set.
+    ReminderSyncService()
+        .resync(userId)
+        .catchError((Object e) => debugPrint('Reminder sync failed: $e'));
   }
 
   void _openPaywall() {
@@ -48,13 +64,6 @@ class _MainTabScreenState extends State<MainTabScreen> {
     final titles = [l10n.myPets, l10n.healthArticles, l10n.settings];
     final isDesktop = screenSizeOf(context).isDesktop;
 
-    final logo = Image.asset(
-      'assets/images/splash_logo.png',
-      height: isDesktop ? 28 : 32,
-      width: isDesktop ? 28 : 32,
-      fit: BoxFit.contain,
-    );
-
     final content = IndexedStack(index: _currentIndex, children: _screens);
 
     // Desktop: a persistent side rail replaces the bottom navigation bar —
@@ -69,9 +78,9 @@ class _MainTabScreenState extends State<MainTabScreen> {
               onDestinationSelected: (index) =>
                   setState(() => _currentIndex = index),
               labelType: NavigationRailLabelType.all,
-              leading: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: logo,
+              leading: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: BrandMark(size: 36, showWordmark: true),
               ),
               trailing: Expanded(
                 child: Align(
@@ -111,13 +120,9 @@ class _MainTabScreenState extends State<MainTabScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 20, 24, 4),
-                    child: Text(
-                      titles[_currentIndex],
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.w600),
-                    ),
+                  DesktopPageTitle(
+                    title: titles[_currentIndex],
+                    maxWidth: _contentWidths[_currentIndex],
                   ),
                   Expanded(child: SafeArea(top: false, child: content)),
                 ],
@@ -133,7 +138,11 @@ class _MainTabScreenState extends State<MainTabScreen> {
         title: _currentIndex == 0
             ? Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [logo, const SizedBox(width: 8), Text(l10n.myPets)],
+                children: [
+                  const BrandMark(),
+                  const SizedBox(width: 10),
+                  Text(l10n.myPets),
+                ],
               )
             : Text(titles[_currentIndex]),
         actions: [
@@ -146,26 +155,35 @@ class _MainTabScreenState extends State<MainTabScreen> {
         ],
       ),
       body: SafeArea(child: content),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) => setState(() => _currentIndex = index),
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.pets_outlined),
-            selectedIcon: const Icon(Icons.pets),
-            label: l10n.myPets,
+      bottomNavigationBar: DecoratedBox(
+        // A hairline instead of a shadow separates the bar from content.
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Theme.of(context).dividerColor),
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.menu_book_outlined),
-            selectedIcon: const Icon(Icons.menu_book),
-            label: l10n.articlesTab,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.settings_outlined),
-            selectedIcon: const Icon(Icons.settings),
-            label: l10n.settings,
-          ),
-        ],
+        ),
+        child: NavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (index) =>
+              setState(() => _currentIndex = index),
+          destinations: [
+            NavigationDestination(
+              icon: const Icon(Icons.pets_outlined),
+              selectedIcon: const Icon(Icons.pets),
+              label: l10n.myPets,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.menu_book_outlined),
+              selectedIcon: const Icon(Icons.menu_book),
+              label: l10n.articlesTab,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.settings_outlined),
+              selectedIcon: const Icon(Icons.settings),
+              label: l10n.settings,
+            ),
+          ],
+        ),
       ),
     );
   }

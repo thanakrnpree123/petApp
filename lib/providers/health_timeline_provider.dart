@@ -2,7 +2,15 @@ import 'package:flutter/foundation.dart';
 
 import '../models/care_log.dart';
 
-enum TimelineFilter { all, vaccination, medical, grooming, heatCycle, other }
+enum TimelineFilter {
+  all,
+  vaccination,
+  symptomCheck,
+  medical,
+  grooming,
+  heatCycle,
+  other,
+}
 
 /// Maps stored care categories onto the dashboard's filter groups.
 /// Parasite control is preventive medicine. The Heat Cycle chip is only

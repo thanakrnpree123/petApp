@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
+import '../services/account_deletion_service.dart';
 import '../services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -13,8 +14,16 @@ class AuthProvider extends ChangeNotifier {
   /// BuildContext, so they must never hold display strings.
   String? errorCode;
 
-  AuthProvider({AuthService? authService})
-    : _authService = authService ?? AuthService();
+  final AccountDeletionService? _injectedAccountDeletion;
+  late final AccountDeletionService _accountDeletion =
+      _injectedAccountDeletion ??
+      AccountDeletionService(authService: _authService);
+
+  AuthProvider({
+    AuthService? authService,
+    AccountDeletionService? accountDeletionService,
+  }) : _authService = authService ?? AuthService(),
+       _injectedAccountDeletion = accountDeletionService;
 
   Stream<User?> get authStateChanges => _authService.authStateChanges;
 
@@ -31,6 +40,46 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> signOut() => _authService.signOut();
+
+  /// The login and register screens share [errorCode]; clear it when moving
+  /// between them so one form's failure isn't shown on the other.
+  void clearError() {
+    if (errorCode == null) return;
+    errorCode = null;
+    notifyListeners();
+  }
+
+  /// Returns null on success, or an error code for L10nHelpers.authError.
+  ///
+  /// Deliberately doesn't touch [isLoading]/[errorCode]: those drive the
+  /// login form behind the reset dialog, which shouldn't show the reset
+  /// flow's errors.
+  Future<String?> sendPasswordReset({
+    required String email,
+    required String languageCode,
+  }) async {
+    try {
+      await _authService.sendPasswordResetEmail(
+        email: email,
+        languageCode: languageCode,
+      );
+      return null;
+    } on FirebaseAuthException catch (e) {
+      // Treated as sent: telling a stranger which emails have accounts
+      // would let anyone probe for users. The message says "if an account
+      // exists" either way.
+      if (e.code == 'user-not-found') return null;
+      return e.code;
+    } catch (_) {
+      return 'unknown';
+    }
+  }
+
+  Future<bool> deleteAccount({required String password}) {
+    return _runAuthAction(
+      () => _accountDeletion.deleteAccount(password: password),
+    );
+  }
 
   Future<bool> _runAuthAction(Future<void> Function() action) async {
     isLoading = true;

@@ -184,12 +184,6 @@ abstract class AppLocalizations {
   /// **'Unlimited PDF vet reports'**
   String get unlimitedPdfReports;
 
-  /// No description provided for @adFreeExperience.
-  ///
-  /// In en, this message translates to:
-  /// **'Ad-free experience'**
-  String get adFreeExperience;
-
   /// No description provided for @freeTierIncludes.
   ///
   /// In en, this message translates to:
@@ -201,12 +195,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'5 symptom checks / month'**
   String get freeChecksPerMonth;
-
-  /// No description provided for @containsAds.
-  ///
-  /// In en, this message translates to:
-  /// **'Contains ads'**
-  String get containsAds;
 
   /// No description provided for @subscribe.
   ///
@@ -597,24 +585,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back'**
   String get back;
-
-  /// No description provided for @saveShareWithVet.
-  ///
-  /// In en, this message translates to:
-  /// **'Save & Share with Vet'**
-  String get saveShareWithVet;
-
-  /// No description provided for @savedShareAgain.
-  ///
-  /// In en, this message translates to:
-  /// **'Saved — Share Again'**
-  String get savedShareAgain;
-
-  /// No description provided for @savingCheck.
-  ///
-  /// In en, this message translates to:
-  /// **'Saving check…'**
-  String get savingCheck;
 
   /// No description provided for @triageMonitor.
   ///
@@ -1126,17 +1096,815 @@ abstract class AppLocalizations {
   /// **'{months} mo'**
   String ageMonths(int months);
 
-  /// No description provided for @optNoSymptoms.
-  ///
-  /// In en, this message translates to:
-  /// **'No symptoms / General checkup'**
-  String get optNoSymptoms;
-
   /// No description provided for @advHealthy.
   ///
   /// In en, this message translates to:
   /// **'Your pet seems healthy! Keep up the good work — continue regular checkups and preventive care.'**
   String get advHealthy;
+
+  /// No description provided for @shareWithVet.
+  ///
+  /// In en, this message translates to:
+  /// **'Share with Vet'**
+  String get shareWithVet;
+
+  /// No description provided for @checkSavedToHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to {petName}\'s health history'**
+  String checkSavedToHistory(String petName);
+
+  /// No description provided for @checkSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save this check. Tap Share to try again.'**
+  String get checkSaveFailed;
+
+  /// No description provided for @symptomPickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s wrong with {petName}?'**
+  String symptomPickerTitle(String petName);
+
+  /// No description provided for @symptomPickerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the main symptom. We\'ll ask a few quick questions.'**
+  String get symptomPickerHint;
+
+  /// No description provided for @emergencyNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'If your pet has collapsed, isn\'t breathing, or is having a seizure, go to an emergency vet now — don\'t wait.'**
+  String get emergencyNotice;
+
+  /// No description provided for @symptomDiarrhea.
+  ///
+  /// In en, this message translates to:
+  /// **'Diarrhea'**
+  String get symptomDiarrhea;
+
+  /// No description provided for @symptomNotEating.
+  ///
+  /// In en, this message translates to:
+  /// **'Not eating or low energy'**
+  String get symptomNotEating;
+
+  /// No description provided for @symptomUrinary.
+  ///
+  /// In en, this message translates to:
+  /// **'Peeing problems'**
+  String get symptomUrinary;
+
+  /// No description provided for @symptomToxin.
+  ///
+  /// In en, this message translates to:
+  /// **'Ate something harmful'**
+  String get symptomToxin;
+
+  /// No description provided for @symptomBreathing.
+  ///
+  /// In en, this message translates to:
+  /// **'Breathing problems'**
+  String get symptomBreathing;
+
+  /// No description provided for @symptomLimping.
+  ///
+  /// In en, this message translates to:
+  /// **'Limping or injury'**
+  String get symptomLimping;
+
+  /// No description provided for @qDdSystemic.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your dog also vomiting repeatedly, very weak, or collapsing?'**
+  String get qDdSystemic;
+
+  /// No description provided for @qDdBlood.
+  ///
+  /// In en, this message translates to:
+  /// **'Is there a lot of blood in the stool (red and jelly-like), or is it black and tarry?'**
+  String get qDdBlood;
+
+  /// No description provided for @qDdToxin.
+  ///
+  /// In en, this message translates to:
+  /// **'Could your dog have eaten something toxic (such as medication, chocolate, xylitol, or grapes) or a foreign object?'**
+  String get qDdToxin;
+
+  /// No description provided for @qDdVulnerable.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your dog a puppy (under 6 months), a senior (over 8 years), unvaccinated, or living with a chronic health condition?'**
+  String get qDdVulnerable;
+
+  /// No description provided for @qDiarrheaDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'How long has the diarrhea lasted?'**
+  String get qDiarrheaDuration;
+
+  /// No description provided for @qCollapse.
+  ///
+  /// In en, this message translates to:
+  /// **'Has your pet collapsed, or are their gums pale, white, grey, or blue?'**
+  String get qCollapse;
+
+  /// No description provided for @qDnFluids.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your dog also refusing water, or vomiting?'**
+  String get qDnFluids;
+
+  /// No description provided for @qDnDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'How long has your dog been off their food?'**
+  String get qDnDuration;
+
+  /// No description provided for @qCatVomitFrequency.
+  ///
+  /// In en, this message translates to:
+  /// **'How many times has your cat vomited in the last 24 hours?'**
+  String get qCatVomitFrequency;
+
+  /// No description provided for @qCatForeign.
+  ///
+  /// In en, this message translates to:
+  /// **'Could your cat have swallowed string, thread, ribbon, a hair tie, or part of a lily plant?'**
+  String get qCatForeign;
+
+  /// No description provided for @qCatLethargy.
+  ///
+  /// In en, this message translates to:
+  /// **'Has your cat stopped eating, or are they hiding or much less active than usual?'**
+  String get qCatLethargy;
+
+  /// No description provided for @qUrinaryStraining.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your cat straining in the litter box but passing little or no urine?'**
+  String get qUrinaryStraining;
+
+  /// No description provided for @qCnDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'How long has your cat not been eating?'**
+  String get qCnDuration;
+
+  /// No description provided for @qCnSigns.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your cat also vomiting, hiding, or much less active than usual?'**
+  String get qCnSigns;
+
+  /// No description provided for @qCuBlood.
+  ///
+  /// In en, this message translates to:
+  /// **'Is there blood in the urine, or is your cat crying out in the litter box or licking their genitals a lot?'**
+  String get qCuBlood;
+
+  /// No description provided for @qCuFrequency.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your cat peeing more often than usual, or outside the litter box?'**
+  String get qCuFrequency;
+
+  /// No description provided for @qCuThirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your cat also drinking much more water than usual?'**
+  String get qCuThirst;
+
+  /// No description provided for @qTxSigns.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your pet having seizures, trembling, collapsing, or struggling to breathe?'**
+  String get qTxSigns;
+
+  /// No description provided for @qTxWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'What might your pet have eaten or been exposed to?'**
+  String get qTxWhat;
+
+  /// No description provided for @qTxObject.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your pet vomiting repeatedly, unable to keep food down, or does their belly seem painful?'**
+  String get qTxObject;
+
+  /// No description provided for @qTxEvidence.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you find chewed packaging, spilled pills, a chewed plant, or an open container nearby?'**
+  String get qTxEvidence;
+
+  /// No description provided for @qBrHeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Has your pet been in a hot car, out in the sun, or exercising in hot weather — and are they panting heavily or drooling?'**
+  String get qBrHeat;
+
+  /// No description provided for @qBrEffort.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your pet struggling to breathe while resting — breathing fast, with visible effort, or (for cats) with their mouth open?'**
+  String get qBrEffort;
+
+  /// No description provided for @qBrCough.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your pet coughing, sneezing, or does it have a runny nose?'**
+  String get qBrCough;
+
+  /// No description provided for @qBrUnwell.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your pet also eating less or low on energy, or has this lasted more than 3 days?'**
+  String get qBrUnwell;
+
+  /// No description provided for @qLmTrauma.
+  ///
+  /// In en, this message translates to:
+  /// **'Was your pet hit by a car or did it have a bad fall, or is there an obvious broken bone, deep wound, or heavy bleeding?'**
+  String get qLmTrauma;
+
+  /// No description provided for @qLmParalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your pet suddenly unable to use their back legs, dragging them, or crying out in pain?'**
+  String get qLmParalysis;
+
+  /// No description provided for @qLmWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Can your pet put any weight on the leg?'**
+  String get qLmWeight;
+
+  /// No description provided for @qLmDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Has the limp lasted more than 2 days, or is the leg swollen or hot to the touch?'**
+  String get qLmDuration;
+
+  /// No description provided for @optLess24h.
+  ///
+  /// In en, this message translates to:
+  /// **'Less than 24 hours'**
+  String get optLess24h;
+
+  /// No description provided for @optMore24h.
+  ///
+  /// In en, this message translates to:
+  /// **'More than 24 hours'**
+  String get optMore24h;
+
+  /// No description provided for @optHumanMedication.
+  ///
+  /// In en, this message translates to:
+  /// **'Human medication'**
+  String get optHumanMedication;
+
+  /// No description provided for @optToxicFoods.
+  ///
+  /// In en, this message translates to:
+  /// **'Chocolate, xylitol, grapes, raisins, onions, or garlic'**
+  String get optToxicFoods;
+
+  /// No description provided for @optToxicPlant.
+  ///
+  /// In en, this message translates to:
+  /// **'Lilies or another toxic plant'**
+  String get optToxicPlant;
+
+  /// No description provided for @optChemicals.
+  ///
+  /// In en, this message translates to:
+  /// **'Rat poison, antifreeze, or household chemicals'**
+  String get optChemicals;
+
+  /// No description provided for @optObject.
+  ///
+  /// In en, this message translates to:
+  /// **'A toy, sock, bone, or other object'**
+  String get optObject;
+
+  /// No description provided for @optNotSure.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sure'**
+  String get optNotSure;
+
+  /// No description provided for @optLimpingYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, but they\'re limping'**
+  String get optLimpingYes;
+
+  /// No description provided for @optLimpingNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No, they hold the leg up'**
+  String get optLimpingNo;
+
+  /// No description provided for @advDdSystemic.
+  ///
+  /// In en, this message translates to:
+  /// **'Diarrhea with repeated vomiting, weakness, or collapse can quickly cause dangerous dehydration or signal a serious illness. Go to an emergency vet now.'**
+  String get advDdSystemic;
+
+  /// No description provided for @advDdBlood.
+  ///
+  /// In en, this message translates to:
+  /// **'Large amounts of blood, or black, tarry stool, can mean serious bleeding in the gut. Seek emergency veterinary care now.'**
+  String get advDdBlood;
+
+  /// No description provided for @advDdVulnerable.
+  ///
+  /// In en, this message translates to:
+  /// **'Puppies, seniors, unvaccinated dogs, and dogs with health conditions dehydrate quickly — and puppies are at risk of parvovirus. Have your dog seen by a vet today.'**
+  String get advDdVulnerable;
+
+  /// No description provided for @advDdDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Diarrhea lasting more than a day should be checked by a vet within 24 hours. Keep fresh water available, and bring a fresh stool sample if you can.'**
+  String get advDdDuration;
+
+  /// No description provided for @advDdMonitor.
+  ///
+  /// In en, this message translates to:
+  /// **'Mild diarrhea in a dog that is otherwise bright and eating can usually be watched at home. Keep fresh water available, feed small bland meals, and see a vet if it lasts more than 24 hours or new symptoms appear.'**
+  String get advDdMonitor;
+
+  /// No description provided for @advEmergencyCollapse.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse or pale, white, grey, or blue gums can signal shock, blood loss, or a breathing problem. Go to an emergency vet immediately.'**
+  String get advEmergencyCollapse;
+
+  /// No description provided for @advDnVetToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Not eating along with refusing water or vomiting can quickly lead to dehydration. Have your dog seen by a vet today.'**
+  String get advDnVetToday;
+
+  /// No description provided for @advDnDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'A dog that hasn\'t eaten for more than a day should be seen by a vet within 24 hours, even without other symptoms.'**
+  String get advDnDuration;
+
+  /// No description provided for @advDnMonitor.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipping a meal in an otherwise bright, active dog is often caused by heat, stress, or a change in routine. Offer fresh water and their usual food, and see a vet if they still haven\'t eaten after 24 hours or new symptoms appear.'**
+  String get advDnMonitor;
+
+  /// No description provided for @advCvForeign.
+  ///
+  /// In en, this message translates to:
+  /// **'Swallowed string can badly damage a cat\'s intestines, and every part of a lily is highly toxic to cats. Go to an emergency vet now — never pull on string you can see.'**
+  String get advCvForeign;
+
+  /// No description provided for @advCvLethargy.
+  ///
+  /// In en, this message translates to:
+  /// **'Vomiting with loss of appetite, hiding, or low energy needs a vet visit today — cats that stop eating can develop serious liver problems.'**
+  String get advCvLethargy;
+
+  /// No description provided for @advCvRepeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeated vomiting should be checked by a vet within 24 hours. Keep fresh water available, and don\'t withhold food for more than a few hours — cats shouldn\'t go long without eating.'**
+  String get advCvRepeat;
+
+  /// No description provided for @advCvMonitor.
+  ///
+  /// In en, this message translates to:
+  /// **'A single vomit — often a hairball — in a cat that is still eating and acting normally can usually be watched at home. See a vet if it happens again or other symptoms appear.'**
+  String get advCvMonitor;
+
+  /// No description provided for @advEmergencyUrinary.
+  ///
+  /// In en, this message translates to:
+  /// **'Straining to pee with little or nothing coming out can mean a urinary blockage — a life-threatening emergency, especially in male cats. Go to an emergency vet now.'**
+  String get advEmergencyUrinary;
+
+  /// No description provided for @advCnFasting.
+  ///
+  /// In en, this message translates to:
+  /// **'Cats that go without food for more than a day are at risk of fatty liver disease (hepatic lipidosis), which can be life-threatening. Have your cat seen by a vet today.'**
+  String get advCnFasting;
+
+  /// No description provided for @advCnSigns.
+  ///
+  /// In en, this message translates to:
+  /// **'Not eating along with vomiting, hiding, or low energy should be checked by a vet today.'**
+  String get advCnSigns;
+
+  /// No description provided for @advCnMonitor.
+  ///
+  /// In en, this message translates to:
+  /// **'A cat that has skipped a meal but is otherwise acting normally can be watched closely at home. Offer fresh food and water, and contact a vet if they haven\'t eaten within 24 hours.'**
+  String get advCnMonitor;
+
+  /// No description provided for @advCuPain.
+  ///
+  /// In en, this message translates to:
+  /// **'Blood in the urine, pain, or frequent licking can point to cystitis or a urinary infection. Have your cat seen by a vet today — and if they start straining with no urine, treat it as an emergency.'**
+  String get advCuPain;
+
+  /// No description provided for @advCuThirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Drinking and peeing more than usual can be a sign of kidney disease, diabetes, or thyroid problems. Book a vet visit within the next few days.'**
+  String get advCuThirst;
+
+  /// No description provided for @advCuBehavior.
+  ///
+  /// In en, this message translates to:
+  /// **'Peeing more often or outside the box can be caused by a urinary problem or by stress. Book a vet visit within a few days, and keep the litter box clean and easy to reach.'**
+  String get advCuBehavior;
+
+  /// No description provided for @advCuMonitor.
+  ///
+  /// In en, this message translates to:
+  /// **'No urgent urinary warning signs right now. Keep watching the litter box — straining with little or no urine is always an emergency.'**
+  String get advCuMonitor;
+
+  /// No description provided for @advTxSigns.
+  ///
+  /// In en, this message translates to:
+  /// **'These signs need emergency care right now. Go to the nearest emergency vet, and bring the packaging or a sample of what was eaten if it\'s safe to do so.'**
+  String get advTxSigns;
+
+  /// No description provided for @advTxKnown.
+  ///
+  /// In en, this message translates to:
+  /// **'Many of these are poisonous even in small amounts, and symptoms can take hours to appear. Contact an emergency vet or animal poison hotline now — don\'t wait for symptoms, and don\'t make your pet vomit unless a vet tells you to.'**
+  String get advTxKnown;
+
+  /// No description provided for @advTxObstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'These can be signs of a blockage in the gut. Go to an emergency vet now.'**
+  String get advTxObstruction;
+
+  /// No description provided for @advTxObject.
+  ///
+  /// In en, this message translates to:
+  /// **'A swallowed object can cause a blockage hours or even days later. Call your vet today for advice, and watch for vomiting, not eating, or a painful belly.'**
+  String get advTxObject;
+
+  /// No description provided for @advTxUnsure.
+  ///
+  /// In en, this message translates to:
+  /// **'If you suspect poisoning but aren\'t sure, call your vet or an animal poison hotline now — it\'s always safer to check. Watch for vomiting, drooling, trembling, or unusual behavior.'**
+  String get advTxUnsure;
+
+  /// No description provided for @advBrHeat.
+  ///
+  /// In en, this message translates to:
+  /// **'This may be heatstroke, which can be fatal. Move your pet somewhere cool, wet their coat with cool (not ice-cold) water, and go to an emergency vet immediately.'**
+  String get advBrHeat;
+
+  /// No description provided for @advBrBreathing.
+  ///
+  /// In en, this message translates to:
+  /// **'Struggling to breathe at rest is an emergency. Keep your pet calm and cool, and go to an emergency vet now. Cats should never breathe with their mouth open.'**
+  String get advBrBreathing;
+
+  /// No description provided for @advBrVet.
+  ///
+  /// In en, this message translates to:
+  /// **'Coughing or sneezing with low energy or a poor appetite, or that has lasted more than a few days, should be checked by a vet within 1–2 days.'**
+  String get advBrVet;
+
+  /// No description provided for @advBrMonitorCough.
+  ///
+  /// In en, this message translates to:
+  /// **'A mild cough or sneeze in a pet that is eating and active can usually be watched at home. Keep them rested, away from smoke and dust, and see a vet if it gets worse or lasts more than 3 days.'**
+  String get advBrMonitorCough;
+
+  /// No description provided for @advBrMonitor.
+  ///
+  /// In en, this message translates to:
+  /// **'No urgent breathing warning signs right now. Resting breathing should be quiet and easy — if your pet starts breathing fast or with effort while resting, treat it as an emergency.'**
+  String get advBrMonitor;
+
+  /// No description provided for @advLmTrauma.
+  ///
+  /// In en, this message translates to:
+  /// **'Serious injuries need emergency care even if your pet seems okay — internal injuries aren\'t always visible. Keep your pet as still as possible and go to an emergency vet now.'**
+  String get advLmTrauma;
+
+  /// No description provided for @advLmParalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Sudden weakness or paralysis in the back legs can be caused by a spinal injury or, in cats, a blood clot. This is an emergency — go to a vet now.'**
+  String get advLmParalysis;
+
+  /// No description provided for @advLmNonWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Not putting any weight on a leg needs a vet check within 24 hours — it could be a fracture, torn ligament, or painful infection. Keep your pet rested until then.'**
+  String get advLmNonWeight;
+
+  /// No description provided for @advLmPersistent.
+  ///
+  /// In en, this message translates to:
+  /// **'A limp lasting more than a couple of days, or a swollen or hot leg, should be checked by a vet within 1–2 days.'**
+  String get advLmPersistent;
+
+  /// No description provided for @advLmMonitor.
+  ///
+  /// In en, this message translates to:
+  /// **'A mild limp is often a minor strain. Rest your pet for 24–48 hours, check their paw for thorns or cuts, and see a vet if it doesn\'t improve. Never give human painkillers — many are toxic to pets.'**
+  String get advLmMonitor;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your account?'**
+  String get deleteAccountTitle;
+
+  /// No description provided for @deleteAccountMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This permanently deletes your account and everything in it — all pets, health records, vaccinations, symptom checks, and photos. This can\'t be undone.'**
+  String get deleteAccountMessage;
+
+  /// No description provided for @deleteAccountSubscriptionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting your account doesn\'t cancel a subscription bought through the App Store or Google Play. Cancel it in your store settings to stop being charged.'**
+  String get deleteAccountSubscriptionNote;
+
+  /// No description provided for @confirmPasswordToDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password to confirm'**
+  String get confirmPasswordToDelete;
+
+  /// No description provided for @deleteAccountConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Permanently'**
+  String get deleteAccountConfirm;
+
+  /// No description provided for @accountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been deleted.'**
+  String get accountDeleted;
+
+  /// No description provided for @errIncorrectPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect password.'**
+  String get errIncorrectPassword;
+
+  /// No description provided for @deleteAccountFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t finish deleting your account. Check your connection and try again — your account is still active, so you can finish deleting it.'**
+  String get deleteAccountFailed;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPassword;
+
+  /// No description provided for @resetPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset your password'**
+  String get resetPasswordTitle;
+
+  /// No description provided for @resetPasswordMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your account email and we\'ll send you a link to set a new password.'**
+  String get resetPasswordMessage;
+
+  /// No description provided for @sendResetLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Link'**
+  String get sendResetLink;
+
+  /// No description provided for @resetLinkSent.
+  ///
+  /// In en, this message translates to:
+  /// **'If an account exists for {email}, a reset link is on its way. Check your inbox and spam folder.'**
+  String resetLinkSent(String email);
+
+  /// No description provided for @reminderPromptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get vaccine reminders?'**
+  String get reminderPromptTitle;
+
+  /// No description provided for @reminderPromptMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll remind you the day before {petName}\'s vaccine is due. You can change this anytime in your phone\'s settings.'**
+  String reminderPromptMessage(String petName);
+
+  /// No description provided for @turnOnReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn On'**
+  String get turnOnReminders;
+
+  /// No description provided for @paywallMobileOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'PawHealth Plus is available in the PawHealth app for iPhone and Android. Subscriptions can\'t be purchased on the web yet.'**
+  String get paywallMobileOnly;
+
+  /// No description provided for @paywallUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscriptions aren\'t available right now. Please try again later.'**
+  String get paywallUnavailable;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @weightOutOfRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a weight between 0.1 and 150 kg.'**
+  String get weightOutOfRange;
+
+  /// No description provided for @nextDueBeforeGivenError.
+  ///
+  /// In en, this message translates to:
+  /// **'The next due date must be after the date the vaccine was given.'**
+  String get nextDueBeforeGivenError;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseFromLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Library'**
+  String get chooseFromLibrary;
+
+  /// No description provided for @addPetPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo of your pet'**
+  String get addPetPhoto;
+
+  /// No description provided for @changePetPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change your pet\'s photo'**
+  String get changePetPhoto;
+
+  /// No description provided for @photoAccessDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'PawHealth can\'t open your camera or photos. You can allow access in your phone\'s Settings.'**
+  String get photoAccessDenied;
+
+  /// No description provided for @photoPickFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load that photo. Please try another one.'**
+  String get photoPickFailed;
+
+  /// No description provided for @discardChangesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard changes?'**
+  String get discardChangesTitle;
+
+  /// No description provided for @discardChangesMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You have unsaved changes to this pet. If you leave now, they\'ll be lost.'**
+  String get discardChangesMessage;
+
+  /// No description provided for @keepEditing.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Editing'**
+  String get keepEditing;
+
+  /// No description provided for @discard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discard;
+
+  /// No description provided for @retake.
+  ///
+  /// In en, this message translates to:
+  /// **'Retake'**
+  String get retake;
+
+  /// No description provided for @usePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Photo'**
+  String get usePhoto;
+
+  /// No description provided for @switchCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch camera'**
+  String get switchCamera;
+
+  /// No description provided for @cameraPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'PawHealth can\'t use your camera. Allow camera access for this site in your browser\'s address bar or settings, then try again.'**
+  String get cameraPermissionDenied;
+
+  /// No description provided for @cameraNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No camera was found. Connect a webcam, or choose a photo from your files instead.'**
+  String get cameraNotFound;
+
+  /// No description provided for @cameraInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Your camera is being used by another app, like a video call. Close it and try again.'**
+  String get cameraInUse;
+
+  /// No description provided for @cameraStartFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t start the camera. Please try again.'**
+  String get cameraStartFailed;
+
+  /// No description provided for @filterSymptomChecks.
+  ///
+  /// In en, this message translates to:
+  /// **'Symptom checks'**
+  String get filterSymptomChecks;
+
+  /// No description provided for @birthdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthdate'**
+  String get birthdate;
+
+  /// Health article category
+  ///
+  /// In en, this message translates to:
+  /// **'First aid'**
+  String get articleCatFirstAid;
+
+  /// Health article category: poisons and hazards
+  ///
+  /// In en, this message translates to:
+  /// **'Safety'**
+  String get articleCatSafety;
+
+  /// Health article category: vaccines and parasite prevention
+  ///
+  /// In en, this message translates to:
+  /// **'Preventive care'**
+  String get articleCatPreventiveCare;
+
+  /// Health article category
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition'**
+  String get articleCatNutrition;
+
+  /// Health article category: signs of illness
+  ///
+  /// In en, this message translates to:
+  /// **'Symptoms'**
+  String get articleCatSymptoms;
+
+  /// Footer under every health article
+  ///
+  /// In en, this message translates to:
+  /// **'General information, not a substitute for advice from your vet. If your pet seems unwell, contact a vet.'**
+  String get articleDisclaimer;
 }
 
 class _AppLocalizationsDelegate

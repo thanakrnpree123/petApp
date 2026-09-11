@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/decision_trees/decision_tree.dart';
 import '../../l10n/app_localizations.dart';
+import '../../theme/app_theme.dart';
 import '../../utils/l10n_helpers.dart';
 
 class TriageResultCard extends StatelessWidget {
@@ -16,10 +17,10 @@ class TriageResultCard extends StatelessWidget {
     required this.disclaimer,
   });
 
-  Color get _color => switch (level) {
-    TriageLevel.monitor => Colors.green,
-    TriageLevel.vet => Colors.orange,
-    TriageLevel.emergency => Colors.red,
+  Color _colorFor(StatusColors status) => switch (level) {
+    TriageLevel.monitor => status.success,
+    TriageLevel.vet => status.warning,
+    TriageLevel.emergency => status.danger,
   };
 
   IconData get _icon => switch (level) {
@@ -30,31 +31,34 @@ class TriageResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = _colorFor(context.statusColors);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: _color.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: _color, width: 1.5),
+            color: color.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            border: Border.all(color: color.withValues(alpha: 0.5), width: 1.5),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Icon(_icon, color: _color),
-                  const SizedBox(width: 8),
-                  Text(
-                    L10nHelpers.triageLabel(
-                      AppLocalizations.of(context)!,
-                      level,
-                    ),
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: _color,
-                      fontWeight: FontWeight.bold,
+                  Icon(_icon, color: color, size: 28),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      L10nHelpers.triageLabel(
+                        AppLocalizations.of(context)!,
+                        level,
+                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleLarge?.copyWith(color: color),
                     ),
                   ),
                 ],
@@ -67,9 +71,9 @@ class TriageResultCard extends StatelessWidget {
         const SizedBox(height: 16),
         Text(
           disclaimer,
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );

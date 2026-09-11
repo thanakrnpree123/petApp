@@ -17,6 +17,9 @@ service cloud.firestore {
       allow update: if request.auth != null && request.auth.uid == userId
         && !request.resource.data.diff(resource.data).affectedKeys()
             .hasAny(['isPremium']);
+      // In-app account deletion (App Store guideline 5.1.1(v)). Deleting
+      // the doc can't grant Plus, so no isPremium check is needed.
+      allow delete: if request.auth != null && request.auth.uid == userId;
     }
 
     // Pet subcollections (health_logs, vaccinations, symptom_checks, etc.)

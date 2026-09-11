@@ -1,0 +1,107 @@
+{
+  "_readme": "Starter health articles. Edit here, then run seed.js. See README.md.",
+  "articles": [
+    {
+      "id": "heatstroke-first-aid",
+      "category": "first_aid",
+      "published_at": "2026-09-06",
+      "title": {
+        "en": "Heatstroke: signs and first aid",
+        "th": "โรคลมแดด: อาการและการปฐมพยาบาล",
+        "zh": "中暑：症状与急救"
+      },
+      "content": {
+        "en": "Hot, humid weather puts dogs and cats at real risk of heatstroke, and it can become life-threatening within minutes. Pets cool themselves mainly by panting, which works poorly in humid air.\n\nWatch for:\n• Heavy panting or noisy breathing\n• Thick drool, bright red or pale gums\n• Weakness, stumbling, vomiting or diarrhea\n• Collapse or seizures\n\nIf you see these signs:\n• Move your pet into shade or air conditioning right away.\n• Wet their body with cool (not ice-cold) water, especially the belly, paws and neck, and keep air moving with a fan.\n• Don't cover them with a wet towel; it traps heat.\n• Offer small sips of water if they are alert. Never force water.\n• Call and head to a vet immediately, even if your pet seems to recover. Heatstroke can damage internal organs hours later.\n\nFlat-faced breeds (such as Pugs, French Bulldogs, Shih Tzus and Persian cats), overweight or older pets, and pets with heart or breathing problems are at the highest risk.\n\nPrevention: walk dogs in the early morning or evening. Test the pavement with the back of your hand: if you can't hold it there for 7 seconds, it's too hot for paws. Always provide shade and fresh water, and never leave a pet in a parked car, not even for a few minutes.",
+        "th": "อากาศร้อนชื้นทำให้สุนัขและแมวเสี่ยงต่อโรคลมแดด (ฮีทสโตรก) ซึ่งอาจเป็นอันตรายถึงชีวิตได้ภายในไม่กี่นาที สัตว์เลี้ยงระบายความร้อนด้วยการหอบเป็นหลัก ซึ่งได้ผลน้อยเมื่ออากาศชื้น\n\nสังเกตอาการเหล่านี้:\n• หอบหนักหรือหายใจเสียงดัง\n• น้ำลายเหนียวข้น เหงือกแดงจัดหรือซีด\n• อ่อนแรง เดินเซ อาเจียนหรือท้องเสีย\n• ล้มลงหรือชัก\n\nหากพบอาการเหล่านี้:\n• พาสัตว์เลี้ยงเข้าที่ร่มหรือห้องแอร์ทันที\n• ใช้น้ำเย็นธรรมดา (ไม่ใช่น้ำแข็ง) ราดตัว โดยเฉพาะบริเวณท้อง อุ้งเท้า และคอ แล้วเปิดพัดลมให้อากาศถ่ายเท\n• อย่าใช้ผ้าเปียกคลุมตัว เพราะจะเก็บความร้อนไว้\n• ให้จิบน้ำทีละน้อยหากยังรู้สึกตัวดี ห้ามบังคับให้ดื่ม\n• โทรหาและรีบพาไปพบสัตวแพทย์ทันที แม้ดูเหมือนอาการดีขึ้นแล้ว เพราะโรคลมแดดอาจทำให้อวัยวะภายในเสียหายในภายหลังได้\n\nสายพันธุ์หน้าสั้น (เช่น ปั๊ก เฟรนช์บูลด็อก ชิห์สุ และแมวเปอร์เซีย) สัตว์ที่มีน้ำหนักเกิน สัตว์สูงวัย และสัตว์ที่มีโรคหัวใจหรือโรคทางเดินหายใจ มีความเสี่ยงสูงที่สุด\n\nการป้องกัน: พาสุนัขเดินเล่นช่วงเช้าตรู่หรือช่วงเย็น ทดสอบพื้นด้วยหลังมือ ถ้าวางค้างไว้ 7 วินาทีไม่ได้ แสดงว่าร้อนเกินไปสำหรับอุ้งเท้า จัดให้มีที่ร่มและน้ำสะอาดเสมอ และห้ามทิ้งสัตว์เลี้ยงไว้ในรถที่จอดอยู่ แม้เพียงไม่กี่นาที",
+        "zh": "炎热潮湿的天气会让狗和猫面临中暑的风险，严重时几分钟内就可能危及生命。宠物主要靠喘气散热，而在潮湿的空气中这种方式效果很差。\n\n留意以下症状：\n• 剧烈喘气或呼吸声很大\n• 口水黏稠，牙龈鲜红或苍白\n• 虚弱、走路不稳、呕吐或腹泻\n• 倒地或抽搐\n\n如果出现这些症状：\n• 立即把宠物移到阴凉处或有空调的房间。\n• 用凉水（不要用冰水）打湿身体，特别是腹部、脚掌和颈部，并用风扇保持空气流通。\n• 不要用湿毛巾盖住宠物，那样会把热量闷住。\n• 如果宠物意识清醒，可以少量多次给水，切勿强迫饮水。\n• 即使宠物看起来好转，也要立即联系并前往兽医院。中暑可能在数小时后损伤内脏。\n\n短鼻品种（如巴哥犬、法国斗牛犬、西施犬和波斯猫）、超重或年老的宠物，以及患有心脏或呼吸系统疾病的宠物风险最高。\n\n预防：在清晨或傍晚遛狗。用手背测试地面温度：如果无法停留7秒，对脚掌来说就太烫了。始终提供阴凉处和清洁饮水，绝不要把宠物留在停着的车里，哪怕只有几分钟。"
+      },
+      "vet_reviewed": false,
+      "image_url": null
+    },
+    {
+      "id": "foods-and-plants-dangerous-to-pets",
+      "category": "safety",
+      "published_at": "2026-09-05",
+      "title": {
+        "en": "Foods and plants that are dangerous to pets",
+        "th": "อาหารและพืชที่เป็นอันตรายต่อสัตว์เลี้ยง",
+        "zh": "对宠物有危险的食物和植物"
+      },
+      "content": {
+        "en": "Many everyday foods that are safe for people can seriously harm dogs and cats. Keep these out of reach:\n\n• Chocolate and coffee: the darker the chocolate, the more dangerous.\n• Grapes and raisins: can cause kidney failure in dogs, even in small amounts.\n• Xylitol: a sweetener in sugar-free gum, sweets and some peanut butters. In dogs it causes a dangerous drop in blood sugar and liver damage.\n• Onions, garlic, chives and shallots: raw, cooked or powdered, they damage red blood cells. Cats are especially sensitive.\n• Macadamia nuts, alcohol, and very fatty or salty leftovers.\n• Cooked bones: they can splinter and block or tear the gut.\n\nFor cats, every part of a lily, even the pollen or the water from the vase, can cause fatal kidney failure. Many human medicines are also dangerous: never give a pet paracetamol or ibuprofen unless your vet tells you to. Paracetamol can kill a cat.\n\nIf your pet has eaten something harmful:\n• Contact a vet straight away, even if your pet seems fine. Some poisons take hours to show signs, and early treatment works best.\n• Don't make your pet vomit unless a vet tells you to.\n• Keep the packaging or a photo of the plant, and note how much was eaten and when.\n\nPawHealth's symptom checker (\"Ate something harmful\") can also help you judge how urgent it is.",
+        "th": "อาหารหลายอย่างที่คนกินได้อย่างปลอดภัย อาจเป็นอันตรายร้ายแรงต่อสุนัขและแมว ควรเก็บสิ่งเหล่านี้ให้พ้นมือ:\n\n• ช็อกโกแลตและกาแฟ: ยิ่งเป็นช็อกโกแลตเข้มยิ่งอันตราย\n• องุ่นและลูกเกด: อาจทำให้สุนัขไตวายได้ แม้กินเพียงเล็กน้อย\n• ไซลิทอล: สารให้ความหวานในหมากฝรั่งและลูกอมที่ไม่มีน้ำตาล รวมถึงเนยถั่วบางยี่ห้อ ทำให้น้ำตาลในเลือดของสุนัขลดต่ำอย่างอันตรายและทำลายตับ\n• หัวหอม กระเทียม กุยช่าย และหอมแดง: ทั้งดิบ สุก หรือแบบผง ทำลายเม็ดเลือดแดง แมวไวต่อสิ่งเหล่านี้เป็นพิเศษ\n• ถั่วแมคคาเดเมีย แอลกอฮอล์ และเศษอาหารที่มันหรือเค็มจัด\n• กระดูกที่ปรุงสุก: อาจแตกเป็นเสี้ยน ทำให้ลำไส้อุดตันหรือฉีกขาด\n\nสำหรับแมว ดอกลิลลี่ทุกส่วน แม้แต่เกสรหรือน้ำในแจกัน ก็อาจทำให้ไตวายจนเสียชีวิตได้ ยาของคนหลายชนิดก็อันตรายเช่นกัน ห้ามให้พาราเซตามอลหรือไอบูโพรเฟนกับสัตว์เลี้ยง เว้นแต่สัตวแพทย์สั่ง พาราเซตามอลอาจทำให้แมวเสียชีวิตได้\n\nหากสัตว์เลี้ยงกินสิ่งที่เป็นอันตรายเข้าไป:\n• ติดต่อสัตวแพทย์ทันที แม้สัตว์เลี้ยงจะดูปกติ สารพิษบางชนิดใช้เวลาหลายชั่วโมงกว่าจะแสดงอาการ และการรักษาเร็วได้ผลดีที่สุด\n• อย่าทำให้สัตว์เลี้ยงอาเจียนเอง เว้นแต่สัตวแพทย์แนะนำ\n• เก็บบรรจุภัณฑ์หรือถ่ายรูปต้นไม้ไว้ และจดว่ากินไปเท่าไรและเมื่อไร\n\nฟีเจอร์ตรวจอาการของ PawHealth (หัวข้อ \"กินสิ่งที่เป็นอันตราย\") ช่วยประเมินความเร่งด่วนได้เช่นกัน",
+        "zh": "许多人类可以安全食用的日常食物，可能会严重伤害狗和猫。请将以下物品放在宠物够不到的地方：\n\n• 巧克力和咖啡：巧克力颜色越深越危险。\n• 葡萄和葡萄干：即使少量也可能导致狗肾衰竭。\n• 木糖醇：无糖口香糖、糖果和部分花生酱中的甜味剂。会使狗的血糖危险地下降并损伤肝脏。\n• 洋葱、大蒜、韭菜和红葱头：无论生的、熟的还是粉末，都会破坏红细胞。猫尤其敏感。\n• 夏威夷果、酒精，以及过于油腻或过咸的剩饭剩菜。\n• 煮熟的骨头：可能碎裂，堵塞或划伤肠道。\n\n对猫来说，百合的所有部位，甚至花粉或花瓶里的水，都可能导致致命的肾衰竭。许多人用药物也很危险：除非兽医指示，切勿给宠物服用对乙酰氨基酚（扑热息痛）或布洛芬。对乙酰氨基酚可能致猫死亡。\n\n如果宠物吃了有害的东西：\n• 立即联系兽医，即使宠物看起来没事。有些毒素要几个小时后才出现症状，越早治疗效果越好。\n• 除非兽医指示，不要自行催吐。\n• 保留包装或拍下植物的照片，并记下吃了多少、什么时候吃的。\n\nPawHealth 的症状检查（“误食有害物”）也可以帮助您判断紧急程度。"
+      },
+      "vet_reviewed": false,
+      "image_url": null
+    },
+    {
+      "id": "vomiting-diarrhea-when-to-see-a-vet",
+      "category": "symptoms",
+      "published_at": "2026-09-04",
+      "title": {
+        "en": "Vomiting or diarrhea: when to see a vet",
+        "th": "อาเจียนหรือท้องเสีย: เมื่อไรควรพบสัตวแพทย์",
+        "zh": "呕吐或腹泻：什么时候该看兽医"
+      },
+      "content": {
+        "en": "Most pets vomit or have loose stools now and then, often after eating something unusual. Many mild cases settle on their own, but some are signs of a serious problem.\n\nSee a vet right away if your pet:\n• Vomits several times in a day, or can't keep water down\n• Has blood in the vomit (red, or like coffee grounds) or passes black, tar-like stool\n• Retches without bringing anything up, especially with a swollen belly. In large, deep-chested dogs this can be bloat, an emergency.\n• Is weak, very quiet, or has pale gums\n• May have eaten a poison, a toy, string or bones\n• Is a puppy, kitten or senior, or has an ongoing illness, because they dehydrate quickly\n\nBook a vet visit soon if diarrhea lasts more than a day or two, vomiting keeps coming back, or your pet is eating less or losing weight.\n\nFor a single episode in an adult pet that is otherwise bright and alert:\n• Make sure fresh water is always available.\n• Ask your vet whether to rest the stomach for a few hours, then offer small, bland meals.\n• Watch closely and note what happens in PawHealth. The details help your vet.\n\nCats bringing up the occasional hairball is common, but frequent vomiting is not normal and should be checked.\n\nNot sure how urgent it is? PawHealth's symptom checker walks you through the key questions.",
+        "th": "สัตว์เลี้ยงส่วนใหญ่อาจอาเจียนหรือถ่ายเหลวบ้างเป็นครั้งคราว มักเกิดหลังกินอะไรแปลก ๆ หลายกรณีหายได้เอง แต่บางครั้งก็เป็นสัญญาณของปัญหาร้ายแรง\n\nพาไปพบสัตวแพทย์ทันทีหากสัตว์เลี้ยงของคุณ:\n• อาเจียนหลายครั้งในหนึ่งวัน หรือดื่มน้ำแล้วอาเจียนออกมา\n• มีเลือดปนในอาเจียน (สีแดงหรือคล้ายกากกาแฟ) หรือถ่ายอุจจาระสีดำเหนียวคล้ายยางมะตอย\n• ขย้อนแต่ไม่มีอะไรออกมา โดยเฉพาะถ้าท้องบวม ในสุนัขพันธุ์ใหญ่อกลึกอาจเป็นภาวะกระเพาะขยายและบิดตัว ซึ่งเป็นเหตุฉุกเฉิน\n• อ่อนแรง ซึมมาก หรือเหงือกซีด\n• อาจกินสารพิษ ของเล่น เชือก หรือกระดูกเข้าไป\n• เป็นลูกสุนัข ลูกแมว สัตว์สูงวัย หรือมีโรคประจำตัว เพราะขาดน้ำได้เร็ว\n\nควรนัดพบสัตวแพทย์โดยเร็วหากท้องเสียนานเกินหนึ่งถึงสองวัน อาเจียนซ้ำ ๆ หรือกินน้อยลงหรือน้ำหนักลด\n\nหากเกิดขึ้นเพียงครั้งเดียวในสัตว์โตที่ยังร่าเริงและตื่นตัวดี:\n• ให้มีน้ำสะอาดพร้อมดื่มตลอดเวลา\n• ปรึกษาสัตวแพทย์ว่าควรงดอาหารสักสองสามชั่วโมงหรือไม่ แล้วค่อยให้อาหารอ่อนย่อยง่ายทีละน้อย\n• สังเกตอาการอย่างใกล้ชิดและจดไว้ใน PawHealth รายละเอียดเหล่านี้ช่วยสัตวแพทย์ได้มาก\n\nแมวอาเจียนก้อนขนเป็นครั้งคราวถือว่าพบได้ทั่วไป แต่การอาเจียนบ่อยไม่ใช่เรื่องปกติและควรได้รับการตรวจ\n\nไม่แน่ใจว่าเร่งด่วนแค่ไหน? ฟีเจอร์ตรวจอาการของ PawHealth จะพาคุณตอบคำถามสำคัญทีละข้อ",
+        "zh": "大多数宠物偶尔会呕吐或拉稀，通常是吃了不寻常的东西之后。许多轻微的情况会自行好转，但有些是严重问题的信号。\n\n如果您的宠物出现以下情况，请立即就医：\n• 一天内呕吐多次，或喝水后也吐出来\n• 呕吐物带血（红色或像咖啡渣），或排出黑色、柏油状的粪便\n• 干呕却吐不出东西，尤其伴有腹部胀大。对大型深胸犬来说，这可能是胃扩张扭转，属于急症。\n• 虚弱、非常安静或牙龈苍白\n• 可能吃了毒物、玩具、绳子或骨头\n• 是幼犬、幼猫、老年宠物或有慢性病，因为它们脱水很快\n\n如果腹泻持续超过一两天、呕吐反复出现，或宠物食量减少、体重下降，请尽快预约兽医。\n\n如果一只精神良好的成年宠物只发生一次：\n• 确保随时有清洁的饮水。\n• 询问兽医是否需要禁食几个小时，然后少量喂食清淡易消化的食物。\n• 密切观察，并在 PawHealth 中记录情况。这些细节对兽医很有帮助。\n\n猫偶尔吐毛球很常见，但频繁呕吐并不正常，应该检查。\n\n不确定有多紧急？PawHealth 的症状检查会引导您回答关键问题。"
+      },
+      "vet_reviewed": false,
+      "image_url": null
+    },
+    {
+      "id": "puppy-and-kitten-vaccines",
+      "category": "preventive_care",
+      "published_at": "2026-09-03",
+      "title": {
+        "en": "Vaccines for puppies and kittens: the basics",
+        "th": "วัคซีนลูกสุนัขและลูกแมว: ความรู้พื้นฐาน",
+        "zh": "幼犬幼猫疫苗基础知识"
+      },
+      "content": {
+        "en": "Vaccines protect young pets from serious, often fatal diseases. Puppies and kittens get some protection from their mother's milk, but it fades during the first months, so they need a series of shots.\n\nPuppies usually start core vaccines at 6–8 weeks, with boosters every 2–4 weeks until about 16 weeks old. Core vaccines protect against canine distemper, parvovirus and infectious hepatitis (adenovirus). Your vet may also recommend leptospirosis and other vaccines, depending on where you live.\n\nKittens usually start at 6–8 weeks, with boosters every 3–4 weeks until about 16 weeks old. Core vaccines protect against feline panleukopenia (feline distemper), herpesvirus and calicivirus.\n\nRabies is fatal and can spread to people. Vaccinate dogs and cats against rabies as your vet advises. In Thailand, rabies vaccination is required by law.\n\nAfter the first series, a booster is usually given about a year later, then every one to three years depending on the vaccine. Your vet will set a schedule for your pet.\n\nUntil the puppy series is complete, avoid places where unknown dogs gather, such as parks and pet shops.\n\nKeep your pet's vaccine record safe, and add each vaccine in PawHealth. It will remind you when the next one is due.",
+        "th": "วัคซีนช่วยป้องกันสัตว์เลี้ยงวัยเด็กจากโรคร้ายแรงที่มักถึงแก่ชีวิต ลูกสุนัขและลูกแมวได้รับภูมิคุ้มกันบางส่วนจากนมแม่ แต่ภูมินี้จะลดลงในช่วงเดือนแรก ๆ จึงต้องฉีดวัคซีนเป็นชุด\n\nลูกสุนัขมักเริ่มฉีดวัคซีนหลักเมื่ออายุ 6–8 สัปดาห์ และฉีดกระตุ้นทุก 2–4 สัปดาห์จนอายุประมาณ 16 สัปดาห์ วัคซีนหลักป้องกันโรคไข้หัดสุนัข โรคลำไส้อักเสบจากเชื้อพาร์โวไวรัส และโรคตับอักเสบติดต่อ (อะดีโนไวรัส) สัตวแพทย์อาจแนะนำวัคซีนเลปโตสไปโรซิสและวัคซีนอื่น ๆ เพิ่มเติม ขึ้นอยู่กับพื้นที่ที่คุณอาศัยอยู่\n\nลูกแมวมักเริ่มฉีดเมื่ออายุ 6–8 สัปดาห์ และฉีดกระตุ้นทุก 3–4 สัปดาห์จนอายุประมาณ 16 สัปดาห์ วัคซีนหลักป้องกันโรคไข้หัดแมว (แพนลิวโคพีเนีย) และโรคหวัดแมวจากเชื้อเฮอร์ปีส์ไวรัสและคาลิซิไวรัส\n\nโรคพิษสุนัขบ้าเป็นโรคที่ถึงแก่ชีวิตและติดต่อสู่คนได้ ควรฉีดวัคซีนป้องกันโรคพิษสุนัขบ้าให้สุนัขและแมวตามคำแนะนำของสัตวแพทย์ ในประเทศไทย กฎหมายกำหนดให้ต้องฉีดวัคซีนนี้\n\nหลังฉีดชุดแรกครบ มักฉีดกระตุ้นอีกครั้งในอีกประมาณหนึ่งปี จากนั้นทุกหนึ่งถึงสามปีขึ้นอยู่กับชนิดของวัคซีน สัตวแพทย์จะกำหนดตารางที่เหมาะกับสัตว์เลี้ยงของคุณ\n\nระหว่างที่ลูกสุนัขยังฉีดวัคซีนไม่ครบชุด ควรหลีกเลี่ยงสถานที่ที่มีสุนัขแปลกหน้ามารวมกัน เช่น สวนสาธารณะและร้านสัตว์เลี้ยง\n\nเก็บสมุดวัคซีนของสัตว์เลี้ยงไว้ให้ดี และบันทึกวัคซีนแต่ละเข็มใน PawHealth แอปจะเตือนเมื่อถึงกำหนดเข็มถัดไป",
+        "zh": "疫苗能保护幼小的宠物免受严重且往往致命的疾病。幼犬和幼猫能从母乳中获得部分保护，但这种保护会在最初几个月内逐渐消失，所以需要接种一系列疫苗。\n\n幼犬通常在6–8周龄开始接种核心疫苗，之后每2–4周加强一次，直到约16周龄。核心疫苗预防犬瘟热、细小病毒和传染性肝炎（腺病毒）。兽医也可能根据您居住的地区推荐钩端螺旋体等其他疫苗。\n\n幼猫通常在6–8周龄开始接种，之后每3–4周加强一次，直到约16周龄。核心疫苗预防猫泛白细胞减少症（猫瘟）、疱疹病毒和杯状病毒。\n\n狂犬病是致命的，而且可以传染给人。请按兽医建议为狗和猫接种狂犬病疫苗。在泰国，法律要求接种狂犬病疫苗。\n\n完成首轮接种后，通常约一年后加强一次，之后根据疫苗种类每一到三年接种一次。兽医会为您的宠物制定接种计划。\n\n在幼犬完成全部疫苗接种之前，请避免带它去陌生狗聚集的地方，比如公园和宠物店。\n\n妥善保管宠物的疫苗记录，并在 PawHealth 中添加每一针疫苗。下一针到期时应用会提醒您。"
+      },
+      "vet_reviewed": false,
+      "image_url": null
+    },
+    {
+      "id": "ticks-fleas-and-heartworm",
+      "category": "preventive_care",
+      "published_at": "2026-09-02",
+      "title": {
+        "en": "Ticks, fleas and heartworm: year-round prevention",
+        "th": "เห็บ หมัด และพยาธิหนอนหัวใจ: ป้องกันได้ตลอดปี",
+        "zh": "蜱虫、跳蚤和心丝虫：全年预防"
+      },
+      "content": {
+        "en": "In a warm climate, parasites are active all year. They cause more than itching: they can spread serious diseases.\n\nTicks can carry blood parasites that cause \"tick fever\" (such as Ehrlichia and Babesia), which is common in dogs in tropical countries. Signs include tiredness, fever, poor appetite, pale gums, and nosebleeds or easy bruising. See a vet if you notice any of these.\n\nFleas cause itching and skin problems, and can pass on tapeworms. Heavy infestations can make young pets anemic.\n\nHeartworm is spread by mosquitoes and damages the heart and lungs. It is much easier to prevent than to treat.\n\nHow to protect your pet:\n• Use a flea, tick and heartworm prevention product recommended by your vet, and give it on schedule. Many products are given every month.\n• Check your dog for ticks after walks, especially around the ears, neck and between the toes.\n• Keep bedding clean, and protect every pet in the home at the same time.\n\nImportant: never use a dog flea or tick product on a cat. Some contain permethrin, which is highly toxic to cats.",
+        "th": "ในภูมิอากาศร้อน ปรสิตออกหากินได้ตลอดทั้งปี และไม่ได้ทำให้แค่คัน แต่ยังแพร่โรคร้ายแรงได้\n\nเห็บอาจนำเชื้อปรสิตในเลือดที่ทำให้เกิด \"ไข้เห็บ\" (เช่น เชื้อเออร์ลิเชียและบาบีเซีย) ซึ่งพบบ่อยในสุนัขในประเทศเขตร้อน อาการได้แก่ ซึม มีไข้ เบื่ออาหาร เหงือกซีด เลือดกำเดาไหล หรือมีจ้ำเลือดง่าย หากพบอาการเหล่านี้ควรพาไปพบสัตวแพทย์\n\nหมัดทำให้คันและเกิดปัญหาผิวหนัง และสามารถแพร่พยาธิตัวตืดได้ หากมีหมัดจำนวนมาก สัตว์เลี้ยงวัยเด็กอาจเกิดภาวะโลหิตจาง\n\nพยาธิหนอนหัวใจติดต่อผ่านยุง และทำลายหัวใจและปอด การป้องกันทำได้ง่ายกว่าการรักษามาก\n\nวิธีปกป้องสัตว์เลี้ยง:\n• ใช้ผลิตภัณฑ์ป้องกันเห็บ หมัด และพยาธิหนอนหัวใจตามที่สัตวแพทย์แนะนำ และให้ตรงตามกำหนด ผลิตภัณฑ์หลายชนิดต้องให้ทุกเดือน\n• ตรวจหาเห็บหลังพาสุนัขเดินเล่น โดยเฉพาะบริเวณหู คอ และซอกนิ้วเท้า\n• รักษาความสะอาดที่นอน และป้องกันสัตว์เลี้ยงทุกตัวในบ้านไปพร้อมกัน\n\nสำคัญ: ห้ามใช้ผลิตภัณฑ์กำจัดเห็บหมัดสำหรับสุนัขกับแมวเด็ดขาด บางชนิดมีเพอร์เมทริน ซึ่งเป็นพิษร้ายแรงต่อแมว",
+        "zh": "在温暖的气候中，寄生虫全年都很活跃。它们带来的不只是瘙痒，还可能传播严重的疾病。\n\n蜱虫可能携带引起“蜱热”的血液寄生虫（如埃立克体和巴贝斯虫），这在热带国家的狗中很常见。症状包括疲倦、发烧、食欲差、牙龈苍白，以及流鼻血或容易出现瘀青。如果发现这些症状，请带宠物看兽医。\n\n跳蚤会引起瘙痒和皮肤问题，还可能传播绦虫。严重感染会使幼小的宠物贫血。\n\n心丝虫通过蚊子传播，会损害心脏和肺。预防比治疗容易得多。\n\n如何保护您的宠物：\n• 使用兽医推荐的跳蚤、蜱虫和心丝虫预防产品，并按时使用。许多产品需要每月使用一次。\n• 遛狗后检查身上是否有蜱虫，特别是耳朵、脖子和脚趾之间。\n• 保持床铺清洁，家里的每只宠物都要同时预防。\n\n重要提示：切勿把狗用的驱蚤驱蜱产品用在猫身上。有些产品含有氯菊酯，对猫毒性很强。"
+      },
+      "vet_reviewed": false,
+      "image_url": null
+    },
+    {
+      "id": "keeping-a-healthy-weight",
+      "category": "nutrition",
+      "published_at": "2026-09-01",
+      "title": {
+        "en": "Keeping your pet at a healthy weight",
+        "th": "ดูแลน้ำหนักสัตว์เลี้ยงให้อยู่ในเกณฑ์ดี",
+        "zh": "让宠物保持健康体重"
+      },
+      "content": {
+        "en": "Extra weight is one of the most common health problems in pets, and it's easy to miss. Overweight pets are more likely to develop arthritis, diabetes (especially cats), breathing problems and heatstroke, and they tend to live shorter lives.\n\nCheck your pet's body condition:\n• You should be able to feel the ribs easily under a thin layer of fat, without pressing hard.\n• From above, there should be a visible waist behind the ribs.\n• From the side, the belly should tuck up rather than hang down.\n\nSimple habits that help:\n• Measure every meal with a cup or kitchen scale instead of guessing.\n• Count treats and table scraps. Treats should make up no more than about 10% of daily calories.\n• Keep your pet active every day with walks or play, suited to their age and health.\n• Weigh your pet regularly and log it in PawHealth to see the trend on the weight chart.\n\nIf your pet needs to lose weight, ask your vet for a target weight and a safe plan. Weight should come off slowly. Never put a cat on a crash diet: rapid weight loss can cause a serious liver disease (hepatic lipidosis).\n\nSudden weight loss or gain without a change in diet can also be a sign of illness, so mention it to your vet.",
+        "th": "น้ำหนักเกินเป็นปัญหาสุขภาพที่พบบ่อยที่สุดอย่างหนึ่งในสัตว์เลี้ยง และมักถูกมองข้าม สัตว์เลี้ยงที่น้ำหนักเกินมีแนวโน้มเป็นโรคข้ออักเสบ เบาหวาน (โดยเฉพาะแมว) ปัญหาการหายใจ และโรคลมแดดมากขึ้น และมักมีอายุสั้นลง\n\nตรวจรูปร่างของสัตว์เลี้ยง:\n• ควรคลำซี่โครงได้ง่ายใต้ชั้นไขมันบาง ๆ โดยไม่ต้องกดแรง\n• เมื่อมองจากด้านบน ควรเห็นเอวคอดอยู่หลังซี่โครง\n• เมื่อมองจากด้านข้าง ท้องควรคอดขึ้น ไม่ห้อยลง\n\nนิสัยง่าย ๆ ที่ช่วยได้:\n• ตวงอาหารทุกมื้อด้วยถ้วยตวงหรือตาชั่งแทนการกะเอา\n• นับรวมขนมและเศษอาหารจากโต๊ะด้วย ขนมไม่ควรเกินประมาณ 10% ของพลังงานที่ได้รับต่อวัน\n• ให้สัตว์เลี้ยงได้ออกกำลังทุกวันด้วยการเดินเล่นหรือเล่นด้วยกัน ให้เหมาะกับอายุและสุขภาพ\n• ชั่งน้ำหนักสม่ำเสมอและบันทึกใน PawHealth เพื่อดูแนวโน้มในกราฟน้ำหนัก\n\nหากสัตว์เลี้ยงต้องลดน้ำหนัก ให้ปรึกษาสัตวแพทย์เพื่อกำหนดน้ำหนักเป้าหมายและแผนที่ปลอดภัย น้ำหนักควรลดลงอย่างช้า ๆ ห้ามให้แมวอดอาหารหรือลดน้ำหนักอย่างรวดเร็ว เพราะอาจทำให้เกิดโรคตับร้ายแรง (ภาวะไขมันพอกตับ)\n\nน้ำหนักที่ลดหรือเพิ่มขึ้นอย่างกะทันหันโดยไม่ได้เปลี่ยนอาหาร อาจเป็นสัญญาณของความเจ็บป่วย จึงควรแจ้งสัตวแพทย์",
+        "zh": "超重是宠物最常见的健康问题之一，而且很容易被忽视。超重的宠物更容易患关节炎、糖尿病（尤其是猫）、呼吸问题和中暑，寿命也往往更短。\n\n检查宠物的体型：\n• 不用用力按，就能在薄薄一层脂肪下轻松摸到肋骨。\n• 从上往下看，肋骨后方应该能看到明显的腰身。\n• 从侧面看，腹部应该向上收，而不是下垂。\n\n有帮助的简单习惯：\n• 每餐都用量杯或厨房秤称量，不要凭感觉。\n• 把零食和剩饭也算进去。零食不应超过每日热量的约10%。\n• 根据年龄和健康状况，每天让宠物通过散步或玩耍保持活动。\n• 定期称体重并记录在 PawHealth 中，在体重图表上查看变化趋势。\n\n如果宠物需要减重，请向兽医咨询目标体重和安全的计划。体重应该慢慢减。绝不要让猫快速节食：体重骤降可能导致严重的肝病（肝脂质沉积症，俗称脂肪肝）。\n\n在饮食没有变化的情况下体重突然下降或增加，也可能是疾病的信号，请告诉兽医。"
+      },
+      "vet_reviewed": false,
+      "image_url": null
+    }
+  ]
+}

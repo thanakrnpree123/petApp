@@ -6,6 +6,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../data/decision_trees/decision_tree.dart';
+import '../data/decision_trees/symptom_catalog.dart';
 import '../models/care_log.dart';
 import '../models/health_log.dart';
 import '../models/pet.dart';
@@ -492,7 +493,8 @@ class PdfReportService {
           pw.Row(
             children: [
               pw.Text(
-                _humanize(check.symptomId),
+                symptomById(check.symptomId)?.name ??
+                    _humanize(check.symptomId),
                 style: pw.TextStyle(
                   fontSize: 11,
                   fontWeight: pw.FontWeight.bold,

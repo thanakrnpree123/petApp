@@ -16,15 +16,47 @@ class StorageService {
 
   /// Uploads pet photo bytes. Uses putData rather than putFile so the same
   /// call works on web, where `dart:io` File is unavailable.
+  ///
+  /// Every upload gets its own file name. Overwriting one fixed path kept
+  /// the same download URL (Storage reuses the token on overwrite), so the
+  /// pet doc never changed and every image cache — Flutter's and the
+  /// browser's, both keyed by URL — kept showing the old photo.
   Future<String> uploadPetPhoto({
     required String userId,
     required String petId,
     required Uint8List bytes,
   }) async {
-    final ref = _storage.ref().child('users/$userId/pets/$petId/photo.jpg');
+    final fileName = 'photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final ref = _storage.ref().child('users/$userId/pets/$petId/$fileName');
     await ref
         .putData(bytes, SettableMetadata(contentType: 'image/jpeg'))
         .timeout(const Duration(seconds: 45));
     return ref.getDownloadURL().timeout(const Duration(seconds: 15));
+  }
+
+  /// Deletes the file behind a download URL; already gone is fine.
+  Future<void> deleteByUrl(String downloadUrl) async {
+    try {
+      await _storage.refFromURL(downloadUrl).delete();
+    } on FirebaseException catch (e) {
+      if (e.code != 'object-not-found') rethrow;
+    }
+  }
+
+  /// Deletes every file under [path], recursing into sub-folders. Storage
+  /// has no folder delete, so each object is listed and removed.
+  Future<void> deleteFolder(String path) async {
+    final listing = await _storage.ref(path).listAll();
+    for (final item in listing.items) {
+      try {
+        await item.delete();
+      } on FirebaseException catch (e) {
+        // Already gone (e.g. a concurrent delete) is the outcome we want.
+        if (e.code != 'object-not-found') rethrow;
+      }
+    }
+    for (final folder in listing.prefixes) {
+      await deleteFolder(folder.fullPath);
+    }
   }
 }

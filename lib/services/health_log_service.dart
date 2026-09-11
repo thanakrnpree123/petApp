@@ -40,6 +40,17 @@ class HealthLogService {
     return _logsRef(userId, petId).add(log.toFirestore());
   }
 
+  Future<List<Vaccination>> fetchVaccinations(
+    String userId,
+    String petId,
+  ) async {
+    final snapshot = await _vaccinationsRef(userId, petId).get();
+    return [
+      for (final doc in snapshot.docs)
+        Vaccination.fromFirestore(doc.id, doc.data()),
+    ];
+  }
+
   Stream<List<Vaccination>> watchVaccinations(String userId, String petId) {
     return _vaccinationsRef(userId, petId)
         .orderBy('next_due_at')

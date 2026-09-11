@@ -6,6 +6,7 @@ import '../../providers/auth_provider.dart';
 import '../../utils/l10n_helpers.dart';
 import '../../utils/validators.dart';
 import '../../widgets/auth/auth_text_field.dart';
+import '../../widgets/auth/forgot_password_dialog.dart';
 import '../../widgets/common/paw_loader.dart';
 import '../../widgets/responsive/breakpoints.dart';
 import 'register_screen.dart';
@@ -76,15 +77,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         fit: BoxFit.contain,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 12),
                     Text(
                       l10n.appTitle,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineMedium
-                          ?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
+                    // Desktop shows the tagline in the brand panel instead.
+                    if (!isDesktop) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.loginBrandTagline,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 40),
                     AuthTextField(
                       controller: _emailController,
@@ -99,13 +108,25 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: true,
                       validator: (value) => Validators.password(value, l10n),
                     ),
-                    const SizedBox(height: 24),
+                    Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: TextButton(
+                        onPressed: () => ForgotPasswordDialog.show(
+                          context,
+                          initialEmail: _emailController.text,
+                        ),
+                        child: Text(l10n.forgotPassword),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
                     if (auth.errorCode != null)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: Text(
                           L10nHelpers.authError(l10n, auth.errorCode!),
-                          style: const TextStyle(color: Colors.red),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
                         ),
                       ),
                     FilledButton(
@@ -114,12 +135,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 12),
                     TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
+                      onPressed: () async {
+                        // Don't carry a failed login onto the register
+                        // form — or a failed sign-up back to this one.
+                        auth.clearError();
+                        await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => const RegisterScreen(),
                           ),
                         );
+                        if (context.mounted) {
+                          context.read<AuthProvider>().clearError();
+                        }
                       },
                       child: Text(l10n.noAccountRegister),
                     ),
@@ -143,7 +170,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
-      appBar: isDesktop ? null : AppBar(title: Text(l10n.logIn)),
       body: isDesktop
           ? Row(
               children: [
@@ -151,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Expanded(flex: 4, child: Center(child: formColumn)),
               ],
             )
-          : form,
+          : SafeArea(child: form),
     );
   }
 }
@@ -168,14 +194,8 @@ class _LoginBrandPanel extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [colorScheme.primary, colorScheme.primaryContainer],
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 40),
+      color: colorScheme.primary,
+      padding: const EdgeInsets.symmetric(horizontal: 56, vertical: 48),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,9 +211,9 @@ class _LoginBrandPanel extends StatelessWidget {
               const SizedBox(width: 10),
               Text(
                 l10n.appTitle,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: colorScheme.onPrimary,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(color: colorScheme.onPrimary),
               ),
             ],
           ),
@@ -201,10 +221,9 @@ class _LoginBrandPanel extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 380),
             child: Text(
               l10n.loginBrandTagline,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: colorScheme.onPrimary,
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.displaySmall?.copyWith(color: colorScheme.onPrimary),
             ),
           ),
           const SizedBox.shrink(),

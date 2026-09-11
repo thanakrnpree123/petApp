@@ -10,7 +10,7 @@ Competing trackers log data and stop there. PawHealth tells you what to do at 2 
 |---|---|
 | **Authentication** | Firebase Auth (email/password), Provider-based state |
 | **Pet Profiles** | Multi-pet support, 150+ dog / 50+ cat breeds with breed-linked health risks, photo upload |
-| **Symptom Checker** | Pure-Dart decision-tree engine (`lib/services/symptom_checker.dart`) — zero Flutter/Firebase imports, fully unit-tested independent of the UI |
+| **Symptom Checker** | Pure-Dart decision-tree engine (`lib/services/symptom_checker.dart`) — zero Flutter/Firebase imports, fully unit-tested independent of the UI. 9 triage trees in `lib/data/decision_trees/`, listed in `symptom_catalog.dart`: dogs get vomiting, diarrhea, not eating; cats get vomiting, not eating, urinary blockage; both get ate-something-harmful, breathing, limping. A check is saved (and counts toward the free limit) as soon as its result is shown |
 | **Health Log & Vaccines** | Weight history (`fl_chart`), vaccination schedule, local push reminders 1 day before a vaccine is due |
 | **PDF Vet Reports** | Generated natively with `pdf`/`printing` — pet profile, a hand-drawn weight-trend chart (raw canvas primitives, not a rasterized widget), vaccination table, latest symptom check, lined "Vet Notes" section |
 | **Health Articles** | Category-filterable content library (First Aid / Nutrition / Breed Disorders) |
@@ -51,7 +51,7 @@ This project already has `firebase_options.dart` generated via FlutterFire CLI. 
 flutterfire configure --project=<your-project-id> --platforms=android,ios
 ```
 
-**⚠️ Deploy Firestore & Storage security rules before shipping.** No `firestore.rules` / `storage.rules` have been written or deployed yet — reads/writes will fail under default-deny production mode until rules scoping access to `request.auth.uid` are pushed via the Firebase Console or `firebase deploy --only firestore:rules,storage:rules`.
+**⚠️ Deploy Firestore & Storage security rules before shipping.** `firestore.rules` and `storage.rules` scope every read/write to `request.auth.uid` (users may delete their own profile, for in-app account deletion). Push them with `firebase deploy --only firestore:rules,storage:rules`.
 
 ### 3. RevenueCat
 `lib/services/revenuecat_service.dart` has placeholder API keys:
@@ -85,10 +85,11 @@ dart run flutter_native_splash:create
 - **App icon & splash logo** are programmatically-generated placeholders (`assets/images/app_icon.png`, `splash_logo.png`) — see prompts below to replace with real branding.
 - **Article `content` field is plain text**, not Markdown — no markdown-rendering package is included yet.
 - **Article model doesn't yet carry `species`/`related_disorders`** — breed-specific article surfacing isn't wired up.
-- **Localization covers EN/TH/ZH** via `.arb` files (`lib/l10n/`): UI shell, auth, pet form, paywall, overlay/progress messages, provider errors (as codes localized in the UI via `L10nHelpers`), and the symptom-checker Q&A + triage advice (canonical English stays in the tree data and Firestore; presentation is localized). Still English-only: health dashboard section labels/dialogs, vaccine notification text, and the PDF report (service layer has no BuildContext — an explicit locale would need to be passed in). **The TH/ZH medical advice strings are AI-translated and must be reviewed by a veterinary professional before release.** Fonts switch per locale: Fredoka (en), Mali (th), Noto Sans SC (zh).
-- **Firestore/Storage security rules** not yet written — see Setup step 2.
+- **Localization covers EN/TH/ZH** via `.arb` files (`lib/l10n/`): UI shell, auth, pet form, paywall, overlay/progress messages, provider errors (as codes localized in the UI via `L10nHelpers`), and the symptom-checker Q&A + triage advice (canonical English stays in the tree data and Firestore; presentation is localized). Still English-only: health dashboard section labels/dialogs, vaccine notification text, and the PDF report (service layer has no BuildContext — an explicit locale would need to be passed in). **All symptom-checker content — the English decision trees and the AI-translated TH/ZH strings — must be reviewed by a veterinary professional before release.** Fonts switch per locale: Nunito (en), IBM Plex Sans Thai Looped (th), Noto Sans SC (zh) — see `lib/theme/app_theme.dart`.
+- **Firestore/Storage security rules** are written but must be deployed — see Setup step 2.
+- **Pre-release checklist** lives in `TRACKER.md`.
 - **Firebase App Check is disabled** — activation is commented out in `main.dart` (see the `TODO(app-check)` block) after attestation failures during development. Re-enable and verify (debug token registered, providers configured in Firebase Console, enforcement initially off) before production.
-- **Quicksand font loads at runtime** via `google_fonts` (fetched once, then cached on-device). For a fully offline-first production build, bundle the Quicksand `.ttf` files as assets per the google_fonts docs and disable runtime fetching.
+- **Fonts load at runtime** via `google_fonts` (fetched once, then cached on-device). For a fully offline-first production build, bundle the `.ttf` files as assets per the google_fonts docs and disable runtime fetching.
 
 ## Design Assets — AI Image Generation Prompts
 

@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -14,31 +15,103 @@ import '../../providers/subscription_provider.dart';
 import '../../services/health_log_service.dart';
 import '../../utils/l10n_helpers.dart';
 import '../../services/notification_service.dart';
+import '../../theme/app_theme.dart';
 import '../../widgets/health/add_health_record_dialog.dart';
 import '../../widgets/health/add_vaccine_dialog.dart';
 import '../../widgets/health/add_weight_dialog.dart';
+import '../../widgets/health/reminder_permission_prompt.dart';
 import '../../widgets/health/weight_chart.dart';
 import '../../widgets/responsive/breakpoints.dart';
 import '../../widgets/subscription/upgrade_prompt_dialog.dart';
 import 'pdf_preview_screen.dart';
+import '../../utils/app_dates.dart';
+import '../../data/decision_trees/decision_tree.dart';
+import '../../models/symptom_check.dart';
+import '../../services/symptom_check_service.dart';
+import '../../widgets/symptom_checker/symptom_check_detail_dialog.dart';
 
 class PetHealthDashboard extends StatefulWidget {
   final Pet pet;
 
-  const PetHealthDashboard({super.key, required this.pet});
+  /// Overrides for tests; production uses the real service and the
+  /// signed-in user.
+  final HealthLogService? healthLogService;
+  final SymptomCheckService? symptomCheckService;
+  final String? userId;
+
+  const PetHealthDashboard({
+    super.key,
+    required this.pet,
+    this.healthLogService,
+    this.symptomCheckService,
+    this.userId,
+  });
 
   @override
   State<PetHealthDashboard> createState() => _PetHealthDashboardState();
 }
 
 class _PetHealthDashboardState extends State<PetHealthDashboard> {
-  final _service = HealthLogService();
-  late final String _userId;
+  late final HealthLogService _service =
+      widget.healthLogService ?? HealthLogService();
+  late final String _userId =
+      widget.userId ?? FirebaseAuth.instance.currentUser!.uid;
+
+  // Subscribed once for the screen's lifetime. Creating the streams inside
+  // build() re-subscribed on every rebuild (e.g. each filter tap), and a
+  // StreamBuilder handed a new stream resets to "no data" — so the
+  // timeline flashed its empty state and re-read from Firestore each time.
+  // Null means "still loading", which is distinct from "no records".
+  final _subscriptions = <StreamSubscription<Object?>>[];
+  List<CareLog>? _careLogs;
+  List<Vaccination>? _vaccinations;
+  List<HealthLog>? _healthLogs;
+  List<SymptomCheck>? _symptomChecks;
 
   @override
   void initState() {
     super.initState();
-    _userId = FirebaseAuth.instance.currentUser!.uid;
+    final petId = widget.pet.id!;
+    _subscriptions.addAll([
+      _service
+          .watchCareLogs(_userId, petId)
+          .listen(
+            (logs) => setState(() => _careLogs = logs),
+            onError: (Object e) => _onStreamError(e, () => _careLogs = []),
+          ),
+      _service
+          .watchVaccinations(_userId, petId)
+          .listen(
+            (vaccinations) => setState(() => _vaccinations = vaccinations),
+            onError: (Object e) => _onStreamError(e, () => _vaccinations = []),
+          ),
+      (widget.symptomCheckService ?? SymptomCheckService())
+          .watchChecks(_userId, petId)
+          .listen(
+            (checks) => setState(() => _symptomChecks = checks),
+            onError: (Object e) => _onStreamError(e, () => _symptomChecks = []),
+          ),
+      _service
+          .watchLogs(_userId, petId)
+          .listen(
+            (logs) => setState(() => _healthLogs = logs),
+            onError: (Object e) => _onStreamError(e, () => _healthLogs = []),
+          ),
+    ]);
+  }
+
+  /// Stops the loading spinner rather than spinning forever.
+  void _onStreamError(Object error, VoidCallback clear) {
+    debugPrint('Health dashboard stream error: $error');
+    if (mounted) setState(clear);
+  }
+
+  @override
+  void dispose() {
+    for (final subscription in _subscriptions) {
+      subscription.cancel();
+    }
+    super.dispose();
   }
 
   Future<void> _addRecord() async {
@@ -61,7 +134,7 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
 
   Future<void> _editVaccination(Vaccination vaccination) async {
     final result = await AddVaccineDialog.show(context, existing: vaccination);
-    final reminderId = vaccination.id!.hashCode;
+    final reminderId = NotificationService.vaccineReminderId(vaccination.id!);
     switch (result) {
       case VaccineSaved(:final vaccination):
         await _service.updateVaccination(_userId, widget.pet.id!, vaccination);
@@ -96,8 +169,16 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
       result.vaccination,
     );
 
+    // The moment a reminder becomes useful is the moment to ask for it.
+    if (result.vaccination.nextDueDate.isAfter(DateTime.now()) && mounted) {
+      await ReminderPermissionPrompt.maybeAsk(
+        context,
+        petName: widget.pet.name,
+      );
+    }
+
     await NotificationService().scheduleVaccineReminder(
-      id: vaccinationId.hashCode,
+      id: NotificationService.vaccineReminderId(vaccinationId),
       petName: widget.pet.name,
       vaccineName: result.vaccination.name,
       nextDueDate: result.vaccination.nextDueDate,
@@ -119,9 +200,15 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
     );
 
     if (!mounted) return;
-    await context.read<PetProvider>().savePet(
+    final pets = context.read<PetProvider>();
+    // The latest version of the pet, not the snapshot this screen opened
+    // with — saving that would undo any edits made since.
+    final latest = pets.petById(widget.pet.id) ?? widget.pet;
+    await pets.savePet(
       userId: _userId,
-      pet: widget.pet.copyWith(weightKg: weight),
+      pet: latest.copyWith(weightKg: weight),
+      // Already recorded above — even an unchanged weigh-in is a data point.
+      logWeightChange: false,
     );
   }
 
@@ -184,8 +271,8 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
                       child: IgnorePointer(
                         child: Container(
                           padding: const EdgeInsets.all(2),
-                          decoration: const BoxDecoration(
-                            color: Colors.amber,
+                          decoration: BoxDecoration(
+                            color: context.statusColors.premium,
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -231,57 +318,57 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.md),
                   _FilterChipsRow(showHeatCycle: widget.pet.tracksHeatCycle),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.md - 4),
                   Expanded(
                     child: isDesktop
                         ? Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
-                                child: _UnifiedTimeline(
-                                  service: _service,
-                                  userId: _userId,
-                                  pet: widget.pet,
-                                  onEditRecord: _editRecord,
-                                  onEditVaccination: _editVaccination,
+                                child: Card(
+                                  child: _UnifiedTimeline(
+                                    careLogs: _careLogs,
+                                    vaccinations: _vaccinations,
+                                    symptomChecks: _symptomChecks,
+                                    onEditRecord: _editRecord,
+                                    onEditVaccination: _editVaccination,
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 24),
                               SizedBox(
-                                width: 320,
+                                width: 340,
                                 child: SingleChildScrollView(
                                   child: _WeightSection(
-                                    service: _service,
-                                    userId: _userId,
-                                    pet: widget.pet,
+                                    healthLogs: _healthLogs,
                                     onAddWeight: _addWeight,
                                   ),
                                 ),
                               ),
                             ],
                           )
-                        // Below desktop width: today's stacked layout,
-                        // unchanged — timeline scrolls independently while
-                        // the weight section stays pinned at the bottom.
+                        // Below desktop width: stacked — the timeline
+                        // scrolls independently while the weight section
+                        // stays pinned at the bottom.
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Expanded(
-                                child: _UnifiedTimeline(
-                                  service: _service,
-                                  userId: _userId,
-                                  pet: widget.pet,
-                                  onEditRecord: _editRecord,
-                                  onEditVaccination: _editVaccination,
+                                child: Card(
+                                  child: _UnifiedTimeline(
+                                    careLogs: _careLogs,
+                                    vaccinations: _vaccinations,
+                                    symptomChecks: _symptomChecks,
+                                    onEditRecord: _editRecord,
+                                    onEditVaccination: _editVaccination,
+                                  ),
                                 ),
                               ),
-                              const Divider(height: 24),
+                              const SizedBox(height: AppSpacing.md - 4),
                               _WeightSection(
-                                service: _service,
-                                userId: _userId,
-                                pet: widget.pet,
+                                healthLogs: _healthLogs,
                                 onAddWeight: _addWeight,
                               ),
                             ],
@@ -306,6 +393,7 @@ class _FilterChipsRow extends StatelessWidget {
     return switch (filter) {
       TimelineFilter.all => l10n.filterAll,
       TimelineFilter.vaccination => l10n.filterVaccination,
+      TimelineFilter.symptomCheck => l10n.filterSymptomChecks,
       TimelineFilter.medical => l10n.filterMedical,
       TimelineFilter.grooming => l10n.filterGrooming,
       TimelineFilter.heatCycle => l10n.careHeatCycle,
@@ -317,7 +405,6 @@ class _FilterChipsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final provider = context.watch<HealthTimelineProvider>();
-    final colorScheme = Theme.of(context).colorScheme;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -330,12 +417,6 @@ class _FilterChipsRow extends StatelessWidget {
                 child: ChoiceChip(
                   label: Text(_label(l10n, filter)),
                   selected: provider.filter == filter,
-                  selectedColor: colorScheme.primary,
-                  labelStyle: TextStyle(
-                    color: provider.filter == filter
-                        ? colorScheme.onPrimary
-                        : null,
-                  ),
                   onSelected: (_) =>
                       context.read<HealthTimelineProvider>().setFilter(filter),
                 ),
@@ -356,6 +437,10 @@ class _TimelineEntry {
   final IconData icon;
   final CareLog? careLog;
   final Vaccination? vaccination;
+  final SymptomCheck? symptomCheck;
+
+  /// Tints the icon (e.g. red for an emergency check); null = brand color.
+  final Color? accent;
 
   const _TimelineEntry({
     required this.title,
@@ -365,20 +450,23 @@ class _TimelineEntry {
     required this.icon,
     this.careLog,
     this.vaccination,
+    this.symptomCheck,
+    this.accent,
   });
 }
 
 class _UnifiedTimeline extends StatelessWidget {
-  final HealthLogService service;
-  final String userId;
-  final Pet pet;
+  /// Null while still loading.
+  final List<CareLog>? careLogs;
+  final List<Vaccination>? vaccinations;
+  final List<SymptomCheck>? symptomChecks;
   final ValueChanged<CareLog> onEditRecord;
   final ValueChanged<Vaccination> onEditVaccination;
 
   const _UnifiedTimeline({
-    required this.service,
-    required this.userId,
-    required this.pet,
+    required this.careLogs,
+    required this.vaccinations,
+    required this.symptomChecks,
     required this.onEditRecord,
     required this.onEditVaccination,
   });
@@ -391,11 +479,26 @@ class _UnifiedTimeline extends StatelessWidget {
     CareCategory.other => Icons.event_note_outlined,
   };
 
+  static IconData _triageIcon(TriageLevel level) => switch (level) {
+    TriageLevel.monitor => Icons.home_outlined,
+    TriageLevel.vet => Icons.medical_services_outlined,
+    TriageLevel.emergency => Icons.warning_amber_rounded,
+  };
+
+  static Color? _triageAccent(BuildContext context, TriageLevel level) =>
+      switch (level) {
+        TriageLevel.monitor => null,
+        TriageLevel.vet => context.statusColors.warning,
+        TriageLevel.emergency => context.statusColors.danger,
+      };
+
   List<_TimelineEntry> _buildEntries(
+    BuildContext context,
     AppLocalizations l10n,
-    DateFormat dateFormat,
+    AppDateFormat dateFormat,
     List<CareLog> careLogs,
     List<Vaccination> vaccinations,
+    List<SymptomCheck> symptomChecks,
   ) {
     final entries = <_TimelineEntry>[
       for (final log in careLogs)
@@ -421,6 +524,18 @@ class _UnifiedTimeline extends StatelessWidget {
           icon: Icons.vaccines_outlined,
           vaccination: vaccination,
         ),
+      for (final check in symptomChecks)
+        _TimelineEntry(
+          title: L10nHelpers.symptomName(l10n, check.symptomId),
+          subtitle:
+              '${L10nHelpers.triageLabel(l10n, check.triageLevel)}'
+              ' · ${dateFormat.format(check.checkedAt)}',
+          date: check.checkedAt,
+          kind: TimelineFilter.symptomCheck,
+          icon: _triageIcon(check.triageLevel),
+          accent: _triageAccent(context, check.triageLevel),
+          symptomCheck: check,
+        ),
     ]..sort((a, b) => b.date.compareTo(a.date));
     return entries;
   }
@@ -428,76 +543,94 @@ class _UnifiedTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final dateFormat = DateFormat.yMMMd();
+    final dateFormat = AppDates.medium(context);
     final provider = context.watch<HealthTimelineProvider>();
+    final careLogs = this.careLogs;
+    final vaccinations = this.vaccinations;
+    final symptomChecks = this.symptomChecks;
 
-    return StreamBuilder<List<CareLog>>(
-      stream: service.watchCareLogs(userId, pet.id!),
-      builder: (context, careSnapshot) {
-        return StreamBuilder<List<Vaccination>>(
-          stream: service.watchVaccinations(userId, pet.id!),
-          builder: (context, vaccinationSnapshot) {
-            final entries = _buildEntries(
-              l10n,
-              dateFormat,
-              careSnapshot.data ?? [],
-              vaccinationSnapshot.data ?? [],
-            ).where((entry) => provider.matches(entry.kind)).toList();
+    if (careLogs == null || vaccinations == null || symptomChecks == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-            if (entries.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24),
-                child: Center(
-                  child: Text(
-                    l10n.timelineEmpty,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
+    final entries = _buildEntries(
+      context,
+      l10n,
+      dateFormat,
+      careLogs,
+      vaccinations,
+      symptomChecks,
+    ).where((entry) => provider.matches(entry.kind)).toList();
+
+    final colorScheme = Theme.of(context).colorScheme;
+
+    if (entries.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.event_note_outlined,
+                size: 40,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                l10n.timelineEmpty,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
-              );
-            }
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
-            return ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: entries.length,
-              itemBuilder: (context, index) {
-                final entry = entries[index];
-                return ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: CircleAvatar(
-                    backgroundColor: Theme.of(
-                      context,
-                    ).colorScheme.secondaryContainer,
-                    child: Icon(
-                      entry.icon,
-                      size: 20,
-                      color: Theme.of(context).colorScheme.onSecondaryContainer,
-                    ),
-                  ),
-                  title: Text(
-                    entry.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Text(
-                    entry.subtitle,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: const Icon(Icons.chevron_right, size: 20),
-                  onTap: () {
-                    final careLog = entry.careLog;
-                    final vaccination = entry.vaccination;
-                    if (careLog != null) {
-                      onEditRecord(careLog);
-                    } else if (vaccination != null) {
-                      onEditVaccination(vaccination);
-                    }
-                  },
-                );
-              },
-            );
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      itemCount: entries.length,
+      separatorBuilder: (_, _) => const Divider(indent: 72, endIndent: 16),
+      itemBuilder: (context, index) {
+        final entry = entries[index];
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+          leading: CircleAvatar(
+            radius: 22,
+            backgroundColor:
+                entry.accent?.withValues(alpha: 0.12) ??
+                colorScheme.primaryContainer,
+            child: Icon(
+              entry.icon,
+              size: 22,
+              color: entry.accent ?? colorScheme.onPrimaryContainer,
+            ),
+          ),
+          title: Text(
+            entry.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(
+            entry.subtitle,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          trailing: const Icon(Icons.chevron_right, size: 20),
+          onTap: () {
+            final careLog = entry.careLog;
+            final vaccination = entry.vaccination;
+            final symptomCheck = entry.symptomCheck;
+            if (careLog != null) {
+              onEditRecord(careLog);
+            } else if (vaccination != null) {
+              onEditVaccination(vaccination);
+            } else if (symptomCheck != null) {
+              SymptomCheckDetailDialog.show(context, symptomCheck);
+            }
           },
         );
       },
@@ -506,50 +639,53 @@ class _UnifiedTimeline extends StatelessWidget {
 }
 
 class _WeightSection extends StatelessWidget {
-  final HealthLogService service;
-  final String userId;
-  final Pet pet;
+  /// Null while still loading.
+  final List<HealthLog>? healthLogs;
   final VoidCallback onAddWeight;
 
-  const _WeightSection({
-    required this.service,
-    required this.userId,
-    required this.pet,
-    required this.onAddWeight,
-  });
+  const _WeightSection({required this.healthLogs, required this.onAddWeight});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 8, 8, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(l10n.weight, style: Theme.of(context).textTheme.titleLarge),
-            IconButton(
-              icon: const Icon(Icons.add_circle_outline),
-              tooltip: l10n.logWeight,
-              onPressed: onAddWeight,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  l10n.weight,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                IconButton.filledTonal(
+                  icon: const Icon(Icons.add),
+                  tooltip: l10n.logWeight,
+                  onPressed: onAddWeight,
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8, right: 8),
+              child: healthLogs == null
+                  ? const SizedBox(
+                      height: 160,
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  : WeightChart(
+                      weightLogs: [
+                        for (final log in healthLogs!)
+                          if (log.type == HealthLogType.weight) log,
+                      ],
+                    ),
             ),
           ],
         ),
-        StreamBuilder<List<HealthLog>>(
-          stream: service.watchLogs(userId, pet.id!),
-          builder: (context, snapshot) {
-            final logs = snapshot.data ?? [];
-            final weightLogs = logs
-                .where((l) => l.type == HealthLogType.weight)
-                .toList();
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: WeightChart(weightLogs: weightLogs),
-            );
-          },
-        ),
-      ],
+      ),
     );
   }
 }

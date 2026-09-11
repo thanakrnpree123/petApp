@@ -20,6 +20,13 @@ class PetService {
         );
   }
 
+  Future<List<Pet>> fetchPets(String userId) async {
+    final snapshot = await _petsRef(userId).get();
+    return [
+      for (final doc in snapshot.docs) Pet.fromFirestore(doc.id, doc.data()),
+    ];
+  }
+
   String newPetId(String userId) => _petsRef(userId).doc().id;
 
   Future<void> createPet(String userId, String petId, Pet pet) {

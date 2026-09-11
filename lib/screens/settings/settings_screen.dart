@@ -6,6 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/pet_provider.dart';
+import '../../providers/session.dart';
 import '../../providers/subscription_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/settings/delete_account_dialog.dart';
@@ -25,9 +26,19 @@ class SettingsScreen extends StatelessWidget {
 
     if (!await DeleteAccountDialog.show(context)) return;
 
-    petProvider.stopWatching();
-    await subscription.reset();
+    await endUserSession(pets: petProvider, subscription: subscription);
     messenger.showSnackBar(SnackBar(content: Text(deletedMessage)));
+  }
+
+  Future<void> _signOut(BuildContext context) async {
+    final auth = context.read<AuthProvider>();
+    // Before signOut: the pets listener must stop while it still has
+    // permission to read, and the next user mustn't inherit any state.
+    await endUserSession(
+      pets: context.read<PetProvider>(),
+      subscription: context.read<SubscriptionProvider>(),
+    );
+    await auth.signOut();
   }
 
   @override
@@ -108,7 +119,7 @@ class SettingsScreen extends StatelessWidget {
               style: OutlinedButton.styleFrom(
                 foregroundColor: colorScheme.error,
               ),
-              onPressed: () => context.read<AuthProvider>().signOut(),
+              onPressed: () => _signOut(context),
               icon: const Icon(Icons.logout),
               label: Text(l10n.logOut),
             ),

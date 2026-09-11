@@ -35,6 +35,12 @@ class PetProvider extends ChangeNotifier {
     if (_watchingUserId == userId) return;
     _watchingUserId = userId;
     _petsSubscription?.cancel();
+    // Never show the previous user's pets while this user's first
+    // snapshot is on its way (a shared family device).
+    if (pets.isNotEmpty) {
+      pets = [];
+      notifyListeners();
+    }
     _petsSubscription = _petService
         .watchPets(userId)
         .listen(
@@ -57,6 +63,7 @@ class PetProvider extends ChangeNotifier {
     _petsSubscription = null;
     _watchingUserId = null;
     pets = [];
+    notifyListeners();
   }
 
   Future<bool> savePet({

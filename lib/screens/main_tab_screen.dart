@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../providers/subscription_provider.dart';
 import '../services/reminder_sync_service.dart';
 import '../widgets/responsive/breakpoints.dart';
+import '../widgets/responsive/content_width.dart';
 import 'articles/article_list_screen.dart';
 import 'pets/pet_list_screen.dart';
 import 'settings/settings_screen.dart';
@@ -25,6 +26,14 @@ class _MainTabScreenState extends State<MainTabScreen> {
     PetListScreen(),
     ArticleListScreen(),
     SettingsScreen(),
+  ];
+
+  // Each tab's content column (see the screens), so the desktop title
+  // lines up with it.
+  static const _contentWidths = [
+    ContentWidth.wide,
+    ContentWidth.reading,
+    ContentWidth.reading,
   ];
 
   @override
@@ -117,12 +126,9 @@ class _MainTabScreenState extends State<MainTabScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 28, 24, 4),
-                    child: Text(
-                      titles[_currentIndex],
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
+                  DesktopPageTitle(
+                    title: titles[_currentIndex],
+                    maxWidth: _contentWidths[_currentIndex],
                   ),
                   Expanded(child: SafeArea(top: false, child: content)),
                 ],

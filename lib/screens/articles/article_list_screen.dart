@@ -5,6 +5,7 @@ import '../../models/article.dart';
 import '../../services/article_service.dart';
 import '../../widgets/articles/article_card.dart';
 import '../../widgets/common/paw_loader.dart';
+import '../../widgets/responsive/content_width.dart';
 import 'article_detail_screen.dart';
 
 class ArticleListScreen extends StatefulWidget {
@@ -50,65 +51,70 @@ class _ArticleListScreenState extends State<ArticleListScreen> {
             ? articles
             : articles.where((a) => a.category == _selectedCategory).toList();
 
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: ChoiceChip(
-                        label: Text(AppLocalizations.of(context)!.filterAll),
-                        selected: _selectedCategory == null,
-                        onSelected: (_) =>
-                            setState(() => _selectedCategory = null),
-                      ),
-                    ),
-                    for (final category in categories)
+        final gutter = pageGutter(context);
+
+        return CenteredContent(
+          maxWidth: ContentWidth.reading,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(gutter, 8, gutter, 12),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
                       Padding(
                         padding: const EdgeInsets.only(right: 8),
                         child: ChoiceChip(
-                          label: Text(
-                            articles
-                                .firstWhere((a) => a.category == category)
-                                .categoryLabel,
-                          ),
-                          selected: _selectedCategory == category,
+                          label: Text(AppLocalizations.of(context)!.filterAll),
+                          selected: _selectedCategory == null,
                           onSelected: (_) =>
-                              setState(() => _selectedCategory = category),
+                              setState(() => _selectedCategory = null),
                         ),
                       ),
-                  ],
+                      for (final category in categories)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: ChoiceChip(
+                            label: Text(
+                              articles
+                                  .firstWhere((a) => a.category == category)
+                                  .categoryLabel,
+                            ),
+                            selected: _selectedCategory == category,
+                            onSelected: (_) =>
+                                setState(() => _selectedCategory = category),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                itemCount: filtered.length,
-                itemBuilder: (context, index) {
-                  final article = filtered[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: ArticleCard(
-                      article: article,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                ArticleDetailScreen(article: article),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
+              Expanded(
+                child: ListView.builder(
+                  padding: EdgeInsets.fromLTRB(gutter, 0, gutter, 24),
+                  itemCount: filtered.length,
+                  itemBuilder: (context, index) {
+                    final article = filtered[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: ArticleCard(
+                        article: article,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  ArticleDetailScreen(article: article),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );

@@ -12,6 +12,7 @@ import '../../utils/l10n_helpers.dart';
 import '../../widgets/common/confirm_delete_dialog.dart';
 import '../../widgets/pets/pet_avatar.dart';
 import '../../widgets/responsive/breakpoints.dart';
+import '../../widgets/responsive/content_width.dart';
 import '../../widgets/subscription/upgrade_prompt_dialog.dart';
 import '../health/pet_health_dashboard.dart';
 import '../symptom_checker/symptom_checker_screen.dart';
@@ -104,26 +105,24 @@ class _PetListScreenState extends State<PetListScreen> {
       // A single narrow list column reads as empty on a wide window, so
       // desktop wraps the same PetCard into a grid instead — same data,
       // same tap targets, just laid out to use the width.
-      body = Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1120),
-          child: GridView.builder(
-            padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 380,
-              // Name + breed + age lines, growing with the user's text-size
-              // setting so large system fonts never clip the card (about
-              // 110px at the default scale).
-              mainAxisExtent: MediaQuery.textScalerOf(context).scale(74) + 36,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-            ),
-            itemCount: pets.length,
-            itemBuilder: (context, index) => PetCard(
-              pet: pets[index],
-              onCheckSymptoms: _openSymptomChecker,
-              onDelete: _deletePet,
-            ),
+      body = CenteredContent(
+        maxWidth: ContentWidth.wide,
+        child: GridView.builder(
+          padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 380,
+            // Name + breed + age lines, growing with the user's text-size
+            // setting so large system fonts never clip the card (about
+            // 110px at the default scale).
+            mainAxisExtent: MediaQuery.textScalerOf(context).scale(74) + 36,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+          ),
+          itemCount: pets.length,
+          itemBuilder: (context, index) => PetCard(
+            pet: pets[index],
+            onCheckSymptoms: _openSymptomChecker,
+            onDelete: _deletePet,
           ),
         ),
       );

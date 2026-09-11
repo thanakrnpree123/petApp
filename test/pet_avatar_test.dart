@@ -76,4 +76,26 @@ void main() {
 
     expect(find.byKey(const Key('placeholder')), findsOneWidget);
   });
+
+  testWidgets('a changed photo URL creates a new image, not a reused one', (
+    tester,
+  ) async {
+    // Regression: with the <img> fallback, Flutter reuses the platform view
+    // on rebuild and never updates its src, so a replaced photo kept
+    // showing the old picture. Keying by URL forces a new element.
+    Future<State> stateFor(String url) async {
+      await _pump(
+        tester,
+        PetAvatar(radius: 30, placeholder: _paw, photoUrl: url),
+      );
+      return tester.state(find.byType(Image));
+    }
+
+    final first = await stateFor('https://example.com/photo_1.jpg');
+    final sameUrl = await stateFor('https://example.com/photo_1.jpg');
+    final newUrl = await stateFor('https://example.com/photo_2.jpg');
+
+    expect(sameUrl, same(first), reason: 'unchanged photo keeps its image');
+    expect(newUrl, isNot(same(first)), reason: 'new photo gets a new image');
+  });
 }

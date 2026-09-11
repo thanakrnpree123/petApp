@@ -45,9 +45,14 @@ class PetAvatar extends StatelessWidget {
           child: image == null
               ? Center(child: placeholder)
               : Image(
+                  // Keyed by the photo: when the <img> fallback is in use
+                  // (no CORS headers), Flutter passes the URL to the
+                  // platform view only when the view is created, and reuses
+                  // the view on rebuild — so a changed photo kept showing the
+                  // old <img> until reload. A new key means a new element.
+                  key: ValueKey<Object>(photoBytes ?? photoUrl!),
                   image: image,
                   fit: BoxFit.cover,
-                  gaplessPlayback: true,
                   errorBuilder: (_, _, _) => Center(child: placeholder),
                 ),
         ),

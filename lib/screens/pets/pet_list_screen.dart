@@ -102,7 +102,7 @@ class _PetListScreenState extends State<PetListScreen> {
       body = const _EmptyPets();
     } else if (isDesktop) {
       // A single narrow list column reads as empty on a wide window, so
-      // desktop wraps the same _PetCard into a grid instead — same data,
+      // desktop wraps the same PetCard into a grid instead — same data,
       // same tap targets, just laid out to use the width.
       body = Center(
         child: ConstrainedBox(
@@ -111,14 +111,15 @@ class _PetListScreenState extends State<PetListScreen> {
             padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 380,
-              // Grows with the user's text-size setting so large system
-              // fonts never clip the card (104px at the default scale).
-              mainAxisExtent: MediaQuery.textScalerOf(context).scale(52) + 52,
+              // Name + breed + age lines, growing with the user's text-size
+              // setting so large system fonts never clip the card (about
+              // 110px at the default scale).
+              mainAxisExtent: MediaQuery.textScalerOf(context).scale(74) + 36,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
             ),
             itemCount: pets.length,
-            itemBuilder: (context, index) => _PetCard(
+            itemBuilder: (context, index) => PetCard(
               pet: pets[index],
               onCheckSymptoms: _openSymptomChecker,
               onDelete: _deletePet,
@@ -131,7 +132,7 @@ class _PetListScreenState extends State<PetListScreen> {
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 104),
         itemCount: pets.length,
         separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md - 4),
-        itemBuilder: (context, index) => _PetCard(
+        itemBuilder: (context, index) => PetCard(
           pet: pets[index],
           onCheckSymptoms: _openSymptomChecker,
           onDelete: _deletePet,
@@ -156,12 +157,15 @@ class _PetListScreenState extends State<PetListScreen> {
   }
 }
 
-class _PetCard extends StatelessWidget {
+/// One pet in the list or desktop grid.
+@visibleForTesting
+class PetCard extends StatelessWidget {
   final Pet pet;
   final Future<void> Function(Pet) onCheckSymptoms;
   final Future<void> Function(Pet) onDelete;
 
-  const _PetCard({
+  const PetCard({
+    super.key,
     required this.pet,
     required this.onCheckSymptoms,
     required this.onDelete,
@@ -207,15 +211,26 @@ class _PetCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      '${pet.breed.isEmpty ? L10nHelpers.species(AppLocalizations.of(context)!, pet.species) : pet.breed}'
-                      ' · ${L10nHelpers.petAge(AppLocalizations.of(context)!, pet)}',
-                      style: textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                    // Breed and age on their own lines: together on one
+                    // line they were cut off in the narrower desktop grid
+                    // cards ("Shiba Inu · 1 ปี 0 เ…").
+                    for (final line in [
+                      pet.breed.isEmpty
+                          ? L10nHelpers.species(
+                              AppLocalizations.of(context)!,
+                              pet.species,
+                            )
+                          : pet.breed,
+                      L10nHelpers.petAge(AppLocalizations.of(context)!, pet),
+                    ])
+                      Text(
+                        line,
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
                   ],
                 ),
               ),
@@ -224,24 +239,24 @@ class _PetCard extends StatelessWidget {
                 tooltip: AppLocalizations.of(context)!.checkSymptoms,
                 onPressed: () => onCheckSymptoms(pet),
               ),
-              PopupMenuButton<_PetCardAction>(
+              PopupMenuButton<_PetMenuAction>(
                 icon: const Icon(Icons.more_vert),
                 tooltip: MaterialLocalizations.of(context).showMenuTooltip,
                 onSelected: (action) {
                   switch (action) {
-                    case _PetCardAction.edit:
+                    case _PetMenuAction.edit:
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => PetFormScreen(existingPet: pet),
                         ),
                       );
-                    case _PetCardAction.delete:
+                    case _PetMenuAction.delete:
                       onDelete(pet);
                   }
                 },
                 itemBuilder: (context) => [
                   PopupMenuItem(
-                    value: _PetCardAction.edit,
+                    value: _PetMenuAction.edit,
                     child: ListTile(
                       leading: const Icon(Icons.edit_outlined),
                       title: Text(AppLocalizations.of(context)!.editProfile),
@@ -249,7 +264,7 @@ class _PetCard extends StatelessWidget {
                     ),
                   ),
                   PopupMenuItem(
-                    value: _PetCardAction.delete,
+                    value: _PetMenuAction.delete,
                     child: ListTile(
                       leading: Icon(
                         Icons.delete_outline,
@@ -274,7 +289,7 @@ class _PetCard extends StatelessWidget {
   }
 }
 
-enum _PetCardAction { edit, delete }
+enum _PetMenuAction { edit, delete }
 
 class _EmptyPets extends StatelessWidget {
   const _EmptyPets();

@@ -75,17 +75,20 @@ class PetProvider extends ChangeNotifier {
     errorCode = null;
     notifyListeners();
 
+    String? uploadedUrl;
+    var saved = false;
     try {
       final isNew = pet.id == null;
       final petId = pet.id ?? _petService.newPetId(userId);
 
       String? photoUrl = pet.photoUrl;
       if (photoBytes != null) {
-        photoUrl = await _storageService.uploadPetPhoto(
+        uploadedUrl = await _storageService.uploadPetPhoto(
           userId: userId,
           petId: petId,
           bytes: photoBytes,
         );
+        photoUrl = uploadedUrl;
       }
 
       final finalPet = pet.copyWith(photoUrl: photoUrl);
@@ -95,7 +98,13 @@ class PetProvider extends ChangeNotifier {
       } else {
         await _petService.updatePet(userId, finalPet);
       }
+      saved = true;
 
+      // The new photo has its own file now; drop the one it replaced.
+      final replaced = pet.photoUrl;
+      if (uploadedUrl != null && replaced != null && replaced != uploadedUrl) {
+        await _deletePhotoQuietly(replaced);
+      }
       return true;
     } on TimeoutException {
       errorCode = 'timeout';
@@ -109,8 +118,20 @@ class PetProvider extends ChangeNotifier {
       errorCode = 'unknown';
       return false;
     } finally {
+      // Uploaded but never saved to the pet: don't leave it orphaned.
+      final orphan = uploadedUrl;
+      if (!saved && orphan != null) await _deletePhotoQuietly(orphan);
       isLoading = false;
       notifyListeners();
+    }
+  }
+
+  /// Photo cleanup is best-effort — it must never fail a save that worked.
+  Future<void> _deletePhotoQuietly(String url) async {
+    try {
+      await _storageService.deleteByUrl(url);
+    } catch (e) {
+      debugPrint('Could not delete old pet photo: $e');
     }
   }
 

@@ -67,6 +67,9 @@ class _BreedDropdownState extends State<BreedDropdown> {
           initialSelection: initial,
           label: Text(AppLocalizations.of(context)!.breed),
           expandedInsets: EdgeInsets.zero,
+          // ~150 breeds: keep the list a scrollable panel rather than a
+          // sheet that covers the whole form.
+          menuHeight: 320,
           enableFilter: true,
           enableSearch: true,
           requestFocusOnTap: true,

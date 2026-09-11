@@ -10,6 +10,7 @@ import '../../services/symptom_check_service.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/l10n_helpers.dart';
 import '../../widgets/common/confirm_delete_dialog.dart';
+import '../../widgets/pets/pet_avatar.dart';
 import '../../widgets/responsive/breakpoints.dart';
 import '../../widgets/subscription/upgrade_prompt_dialog.dart';
 import '../health/pet_health_dashboard.dart';
@@ -182,21 +183,16 @@ class _PetCard extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 16, 4, 16),
           child: Row(
             children: [
-              CircleAvatar(
+              PetAvatar(
                 radius: 30,
-                backgroundColor: colorScheme.primaryContainer,
-                backgroundImage: pet.photoUrl != null
-                    ? NetworkImage(pet.photoUrl!)
-                    : null,
-                child: pet.photoUrl == null
-                    ? Icon(
-                        pet.species == PetSpecies.dog
-                            ? Icons.pets
-                            : Icons.pets_outlined,
-                        size: 28,
-                        color: colorScheme.onPrimaryContainer,
-                      )
-                    : null,
+                photoUrl: pet.photoUrl,
+                placeholder: Icon(
+                  pet.species == PetSpecies.dog
+                      ? Icons.pets
+                      : Icons.pets_outlined,
+                  size: 28,
+                  color: colorScheme.onPrimaryContainer,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(

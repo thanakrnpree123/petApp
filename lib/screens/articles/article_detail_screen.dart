@@ -28,7 +28,13 @@ class ArticleDetailScreen extends StatelessWidget {
               if (article.imageUrl != null) ...[
                 ClipRRect(
                   borderRadius: BorderRadius.circular(AppRadius.lg),
-                  child: Image.network(article.imageUrl!, fit: BoxFit.cover),
+                  child: Image.network(
+                    article.imageUrl!,
+                    fit: BoxFit.cover,
+                    // Article images may be hosted without CORS headers.
+                    webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
+                    errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                  ),
                 ),
                 const SizedBox(height: 20),
               ],

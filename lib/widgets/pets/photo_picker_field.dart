@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../l10n/app_localizations.dart';
+import 'pet_avatar.dart';
 import 'webcam_capture_screen.dart';
 
 /// Picks raw image bytes from [source]; null when the user cancels.
@@ -118,37 +119,30 @@ class PhotoPickerField extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
-    ImageProvider? backgroundImage;
-    if (selectedBytes != null) {
-      backgroundImage = MemoryImage(selectedBytes!);
-    } else if (existingPhotoUrl != null) {
-      backgroundImage = NetworkImage(existingPhotoUrl!);
-    }
+    final hasPhoto = selectedBytes != null || existingPhotoUrl != null;
 
     return Center(
       child: Semantics(
         button: true,
-        label: backgroundImage == null ? l10n.addPetPhoto : l10n.changePetPhoto,
+        label: hasPhoto ? l10n.changePetPhoto : l10n.addPetPhoto,
         excludeSemantics: true,
         child: InkWell(
           onTap: () => _choose(context),
           customBorder: const CircleBorder(),
           child: Stack(
             children: [
-              CircleAvatar(
+              PetAvatar(
                 radius: 56,
-                backgroundColor: colorScheme.primaryContainer,
-                backgroundImage: backgroundImage,
-                child: backgroundImage == null
-                    ? Icon(
-                        Icons.add_a_photo_outlined,
-                        size: 32,
-                        color: colorScheme.onPrimaryContainer,
-                      )
-                    : null,
+                photoBytes: selectedBytes,
+                photoUrl: existingPhotoUrl,
+                placeholder: Icon(
+                  Icons.add_a_photo_outlined,
+                  size: 32,
+                  color: colorScheme.onPrimaryContainer,
+                ),
               ),
               // Makes "tap to change" discoverable once a photo is set.
-              if (backgroundImage != null)
+              if (hasPhoto)
                 Positioned(
                   right: 0,
                   bottom: 0,

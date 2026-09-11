@@ -29,4 +29,16 @@ void main() {
     expect(style.elevation?.resolve({}), greaterThan(0));
     expect(theme.menuTheme.style, same(style));
   });
+
+  test('the dropdown field is filled like every other field', () {
+    // Regression: DropdownMenu ignores the global inputDecorationTheme, so
+    // the breed field rendered unfilled — plain text on the page.
+    final field = theme.dropdownMenuTheme.inputDecorationTheme;
+
+    expect(field, isNotNull);
+    expect(field!.filled, isTrue);
+    expect(field.fillColor, AppColors.fieldFill);
+    expect(field.fillColor, theme.inputDecorationTheme.fillColor);
+    expect(field.focusedBorder, theme.inputDecorationTheme.focusedBorder);
+  });
 }

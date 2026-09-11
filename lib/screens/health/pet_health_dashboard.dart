@@ -25,6 +25,11 @@ import '../../widgets/health/weight_chart.dart';
 import '../../widgets/responsive/breakpoints.dart';
 import '../../widgets/subscription/upgrade_prompt_dialog.dart';
 import 'pdf_preview_screen.dart';
+import '../../utils/app_dates.dart';
+import '../../data/decision_trees/decision_tree.dart';
+import '../../models/symptom_check.dart';
+import '../../services/symptom_check_service.dart';
+import '../../widgets/symptom_checker/symptom_check_detail_dialog.dart';
 
 class PetHealthDashboard extends StatefulWidget {
   final Pet pet;
@@ -32,12 +37,14 @@ class PetHealthDashboard extends StatefulWidget {
   /// Overrides for tests; production uses the real service and the
   /// signed-in user.
   final HealthLogService? healthLogService;
+  final SymptomCheckService? symptomCheckService;
   final String? userId;
 
   const PetHealthDashboard({
     super.key,
     required this.pet,
     this.healthLogService,
+    this.symptomCheckService,
     this.userId,
   });
 
@@ -60,6 +67,7 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
   List<CareLog>? _careLogs;
   List<Vaccination>? _vaccinations;
   List<HealthLog>? _healthLogs;
+  List<SymptomCheck>? _symptomChecks;
 
   @override
   void initState() {
@@ -77,6 +85,12 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
           .listen(
             (vaccinations) => setState(() => _vaccinations = vaccinations),
             onError: (Object e) => _onStreamError(e, () => _vaccinations = []),
+          ),
+      (widget.symptomCheckService ?? SymptomCheckService())
+          .watchChecks(_userId, petId)
+          .listen(
+            (checks) => setState(() => _symptomChecks = checks),
+            onError: (Object e) => _onStreamError(e, () => _symptomChecks = []),
           ),
       _service
           .watchLogs(_userId, petId)
@@ -187,9 +201,15 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
     );
 
     if (!mounted) return;
-    await context.read<PetProvider>().savePet(
+    final pets = context.read<PetProvider>();
+    // The latest version of the pet, not the snapshot this screen opened
+    // with — saving that would undo any edits made since.
+    final latest = pets.petById(widget.pet.id) ?? widget.pet;
+    await pets.savePet(
       userId: _userId,
-      pet: widget.pet.copyWith(weightKg: weight),
+      pet: latest.copyWith(weightKg: weight),
+      // Already recorded above — even an unchanged weigh-in is a data point.
+      logWeightChange: false,
     );
   }
 
@@ -312,6 +332,7 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
                                   child: _UnifiedTimeline(
                                     careLogs: _careLogs,
                                     vaccinations: _vaccinations,
+                                    symptomChecks: _symptomChecks,
                                     onEditRecord: _editRecord,
                                     onEditVaccination: _editVaccination,
                                   ),
@@ -340,6 +361,7 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
                                   child: _UnifiedTimeline(
                                     careLogs: _careLogs,
                                     vaccinations: _vaccinations,
+                                    symptomChecks: _symptomChecks,
                                     onEditRecord: _editRecord,
                                     onEditVaccination: _editVaccination,
                                   ),
@@ -372,6 +394,7 @@ class _FilterChipsRow extends StatelessWidget {
     return switch (filter) {
       TimelineFilter.all => l10n.filterAll,
       TimelineFilter.vaccination => l10n.filterVaccination,
+      TimelineFilter.symptomCheck => l10n.filterSymptomChecks,
       TimelineFilter.medical => l10n.filterMedical,
       TimelineFilter.grooming => l10n.filterGrooming,
       TimelineFilter.heatCycle => l10n.careHeatCycle,
@@ -415,6 +438,10 @@ class _TimelineEntry {
   final IconData icon;
   final CareLog? careLog;
   final Vaccination? vaccination;
+  final SymptomCheck? symptomCheck;
+
+  /// Tints the icon (e.g. red for an emergency check); null = brand color.
+  final Color? accent;
 
   const _TimelineEntry({
     required this.title,
@@ -424,6 +451,8 @@ class _TimelineEntry {
     required this.icon,
     this.careLog,
     this.vaccination,
+    this.symptomCheck,
+    this.accent,
   });
 }
 
@@ -431,12 +460,14 @@ class _UnifiedTimeline extends StatelessWidget {
   /// Null while still loading.
   final List<CareLog>? careLogs;
   final List<Vaccination>? vaccinations;
+  final List<SymptomCheck>? symptomChecks;
   final ValueChanged<CareLog> onEditRecord;
   final ValueChanged<Vaccination> onEditVaccination;
 
   const _UnifiedTimeline({
     required this.careLogs,
     required this.vaccinations,
+    required this.symptomChecks,
     required this.onEditRecord,
     required this.onEditVaccination,
   });
@@ -449,11 +480,26 @@ class _UnifiedTimeline extends StatelessWidget {
     CareCategory.other => Icons.event_note_outlined,
   };
 
+  static IconData _triageIcon(TriageLevel level) => switch (level) {
+    TriageLevel.monitor => Icons.home_outlined,
+    TriageLevel.vet => Icons.medical_services_outlined,
+    TriageLevel.emergency => Icons.warning_amber_rounded,
+  };
+
+  static Color? _triageAccent(BuildContext context, TriageLevel level) =>
+      switch (level) {
+        TriageLevel.monitor => null,
+        TriageLevel.vet => context.statusColors.warning,
+        TriageLevel.emergency => context.statusColors.danger,
+      };
+
   List<_TimelineEntry> _buildEntries(
+    BuildContext context,
     AppLocalizations l10n,
     DateFormat dateFormat,
     List<CareLog> careLogs,
     List<Vaccination> vaccinations,
+    List<SymptomCheck> symptomChecks,
   ) {
     final entries = <_TimelineEntry>[
       for (final log in careLogs)
@@ -479,6 +525,18 @@ class _UnifiedTimeline extends StatelessWidget {
           icon: Icons.vaccines_outlined,
           vaccination: vaccination,
         ),
+      for (final check in symptomChecks)
+        _TimelineEntry(
+          title: L10nHelpers.symptomName(l10n, check.symptomId),
+          subtitle:
+              '${L10nHelpers.triageLabel(l10n, check.triageLevel)}'
+              ' · ${dateFormat.format(check.checkedAt)}',
+          date: check.checkedAt,
+          kind: TimelineFilter.symptomCheck,
+          icon: _triageIcon(check.triageLevel),
+          accent: _triageAccent(context, check.triageLevel),
+          symptomCheck: check,
+        ),
     ]..sort((a, b) => b.date.compareTo(a.date));
     return entries;
   }
@@ -486,20 +544,23 @@ class _UnifiedTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final dateFormat = DateFormat.yMMMd();
+    final dateFormat = AppDates.medium(context);
     final provider = context.watch<HealthTimelineProvider>();
     final careLogs = this.careLogs;
     final vaccinations = this.vaccinations;
+    final symptomChecks = this.symptomChecks;
 
-    if (careLogs == null || vaccinations == null) {
+    if (careLogs == null || vaccinations == null || symptomChecks == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
     final entries = _buildEntries(
+      context,
       l10n,
       dateFormat,
       careLogs,
       vaccinations,
+      symptomChecks,
     ).where((entry) => provider.matches(entry.kind)).toList();
 
     final colorScheme = Theme.of(context).colorScheme;
@@ -540,11 +601,13 @@ class _UnifiedTimeline extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
           leading: CircleAvatar(
             radius: 22,
-            backgroundColor: colorScheme.primaryContainer,
+            backgroundColor:
+                entry.accent?.withValues(alpha: 0.12) ??
+                colorScheme.primaryContainer,
             child: Icon(
               entry.icon,
               size: 22,
-              color: colorScheme.onPrimaryContainer,
+              color: entry.accent ?? colorScheme.onPrimaryContainer,
             ),
           ),
           title: Text(
@@ -561,10 +624,13 @@ class _UnifiedTimeline extends StatelessWidget {
           onTap: () {
             final careLog = entry.careLog;
             final vaccination = entry.vaccination;
+            final symptomCheck = entry.symptomCheck;
             if (careLog != null) {
               onEditRecord(careLog);
             } else if (vaccination != null) {
               onEditVaccination(vaccination);
+            } else if (symptomCheck != null) {
+              SymptomCheckDetailDialog.show(context, symptomCheck);
             }
           },
         );

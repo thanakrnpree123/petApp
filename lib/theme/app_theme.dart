@@ -204,11 +204,50 @@ abstract final class AppTheme {
       borderSide: BorderSide(color: color, width: width),
     );
 
+    final inputTheme = InputDecorationTheme(
+      filled: true,
+      fillColor: AppColors.fieldFill,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      labelStyle: textTheme.bodyMedium?.copyWith(color: AppColors.inkMuted),
+      floatingLabelStyle: textTheme.bodyMedium?.copyWith(
+        color: colorScheme.primary,
+        fontWeight: FontWeight.w700,
+      ),
+      hintStyle: textTheme.bodyMedium?.copyWith(color: AppColors.inkMuted),
+      errorStyle: textTheme.bodySmall?.copyWith(color: colorScheme.error),
+      border: fieldBorder(),
+      enabledBorder: fieldBorder(),
+      disabledBorder: fieldBorder(),
+      focusedBorder: fieldBorder(colorScheme.primary, 2),
+      errorBorder: fieldBorder(colorScheme.error, 1.5),
+      focusedErrorBorder: fieldBorder(colorScheme.error, 2),
+    );
+
+    final menuStyle = MenuStyle(
+      backgroundColor: const WidgetStatePropertyAll(AppColors.surface),
+      surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
+      elevation: const WidgetStatePropertyAll(4),
+      shadowColor: WidgetStatePropertyAll(
+        AppColors.ink.withValues(alpha: 0.18),
+      ),
+      padding: const WidgetStatePropertyAll(
+        EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      ),
+      shape: WidgetStatePropertyAll(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          side: const BorderSide(color: AppColors.hairline),
+        ),
+      ),
+    );
+
     return ThemeData(
       colorScheme: colorScheme,
       textTheme: textTheme,
       scaffoldBackgroundColor: AppColors.background,
-      canvasColor: AppColors.background,
+      // Popup menus (e.g. DropdownButtonFormField's list) paint on the
+      // canvas color; matching the page background made them invisible.
+      canvasColor: AppColors.surface,
       dividerColor: AppColors.hairline,
       splashFactory: InkSparkle.splashFactory,
       visualDensity: VisualDensity.standard,
@@ -298,27 +337,7 @@ abstract final class AppTheme {
         ),
       ),
 
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: AppColors.fieldFill,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
-        ),
-        labelStyle: textTheme.bodyMedium?.copyWith(color: AppColors.inkMuted),
-        floatingLabelStyle: textTheme.bodyMedium?.copyWith(
-          color: colorScheme.primary,
-          fontWeight: FontWeight.w700,
-        ),
-        hintStyle: textTheme.bodyMedium?.copyWith(color: AppColors.inkMuted),
-        errorStyle: textTheme.bodySmall?.copyWith(color: colorScheme.error),
-        border: fieldBorder(),
-        enabledBorder: fieldBorder(),
-        disabledBorder: fieldBorder(),
-        focusedBorder: fieldBorder(colorScheme.primary, 2),
-        errorBorder: fieldBorder(colorScheme.error, 1.5),
-        focusedErrorBorder: fieldBorder(colorScheme.error, 2),
-      ),
+      inputDecorationTheme: inputTheme,
 
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.surface,
@@ -428,6 +447,19 @@ abstract final class AppTheme {
           ),
         ),
       ),
+
+      // DropdownMenu (the searchable breed picker) paints its list with the
+      // menu style, which defaults to surfaceContainer — our field-fill
+      // color, nearly identical to the page. Menus get a white card with a
+      // hairline border and a soft shadow so they read as a layer on top.
+      // DropdownMenu does NOT inherit the global inputDecorationTheme — it
+      // reads only this one, else falls back to an unfilled outline, which
+      // made the breed field look like plain text on the page.
+      dropdownMenuTheme: DropdownMenuThemeData(
+        inputDecorationTheme: inputTheme,
+        menuStyle: menuStyle,
+      ),
+      menuTheme: MenuThemeData(style: menuStyle),
 
       popupMenuTheme: PopupMenuThemeData(
         color: AppColors.surface,

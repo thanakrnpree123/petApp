@@ -6,12 +6,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pawhealth/l10n/app_localizations.dart';
 import 'package:pawhealth/models/care_log.dart';
 import 'package:pawhealth/models/health_log.dart';
+import 'package:pawhealth/data/decision_trees/decision_tree.dart';
 import 'package:pawhealth/models/pet.dart';
+import 'package:pawhealth/models/symptom_check.dart';
 import 'package:pawhealth/models/vaccination.dart';
 import 'package:pawhealth/providers/subscription_provider.dart';
 import 'package:pawhealth/screens/health/pet_health_dashboard.dart';
 import 'package:pawhealth/services/health_log_service.dart';
 import 'package:pawhealth/services/revenuecat_service.dart';
+import 'package:pawhealth/services/symptom_check_service.dart';
 import 'package:pawhealth/theme/app_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -46,6 +49,20 @@ class _FakeHealthLogService implements HealthLogService {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
+class _FakeSymptomCheckService implements SymptomCheckService {
+  final checks = StreamController<List<SymptomCheck>>();
+  int watchCalls = 0;
+
+  @override
+  Stream<List<SymptomCheck>> watchChecks(String userId, String petId) {
+    watchCalls++;
+    return checks.stream;
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
 class _FakeRevenueCat implements RevenueCatService {
   @override
   void addCustomerInfoListener(CustomerInfoUpdateListener listener) {}
@@ -74,8 +91,10 @@ final _pet = Pet(
 
 Future<void> _pumpDashboard(
   WidgetTester tester,
-  _FakeHealthLogService service,
-) async {
+  _FakeHealthLogService service, [
+  _FakeSymptomCheckService? symptomChecks,
+]) async {
+  final checks = symptomChecks ?? (_FakeSymptomCheckService()..checks.add([]));
   await tester.pumpWidget(
     ChangeNotifierProvider(
       create: (_) => SubscriptionProvider(
@@ -89,6 +108,7 @@ Future<void> _pumpDashboard(
         home: PetHealthDashboard(
           pet: _pet,
           healthLogService: service,
+          symptomCheckService: checks,
           userId: 'u1',
         ),
       ),
@@ -168,5 +188,47 @@ void main() {
     await tester.pump();
 
     expect(find.text('No health records yet.'), findsOneWidget);
+  });
+
+  testWidgets('saved symptom checks appear in the timeline and open', (
+    tester,
+  ) async {
+    final service = _FakeHealthLogService();
+    final symptomChecks = _FakeSymptomCheckService();
+    await _pumpDashboard(tester, service, symptomChecks);
+
+    service.careLogs.add([]);
+    service.vaccinations.add([]);
+    service.healthLogs.add([]);
+    symptomChecks.checks.add([
+      SymptomCheck(
+        symptomId: 'vomiting_dog',
+        answers: const [],
+        triageLevel: TriageLevel.emergency,
+        advice:
+            'Vomiting 4+ times in 24 hours risks serious dehydration. '
+            'Contact an emergency vet immediately.',
+        checkedAt: DateTime(2026, 9, 11),
+      ),
+    ]);
+    await tester.pump();
+
+    // Regression: the result screen said "saved to health history", but
+    // saved checks were shown nowhere.
+    expect(find.text('Vomiting'), findsOneWidget);
+    expect(find.textContaining('Emergency — Act Now'), findsOneWidget);
+
+    await tester.tap(find.text('Symptom checks'));
+    await tester.pump();
+    expect(find.text('Vomiting'), findsOneWidget);
+
+    await tester.tap(find.text('Vomiting'));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('risks serious dehydration'),
+      findsOneWidget,
+      reason: 'tapping a check opens its saved advice',
+    );
+    expect(symptomChecks.watchCalls, 1);
   });
 }

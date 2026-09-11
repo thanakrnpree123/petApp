@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/care_log.dart';
 import '../common/confirm_delete_dialog.dart';
+import '../../utils/app_dates.dart';
 
 sealed class HealthRecordDialogResult {
   const HealthRecordDialogResult();
@@ -152,7 +152,7 @@ class _AddHealthRecordDialogState extends State<AddHealthRecordDialog> {
               OutlinedButton.icon(
                 onPressed: _pickDate,
                 icon: const Icon(Icons.event),
-                label: Text(DateFormat.yMMMd().format(_date)),
+                label: Text(AppDates.medium(context).format(_date)),
               ),
             ],
           ),

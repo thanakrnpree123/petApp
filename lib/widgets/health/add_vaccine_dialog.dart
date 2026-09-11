@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/vaccination.dart';
+import '../../utils/app_dates.dart';
 import '../common/confirm_delete_dialog.dart';
 
 sealed class VaccineDialogResult {
@@ -161,7 +161,7 @@ class _AddVaccineDialogState extends State<AddVaccineDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final dateFormat = DateFormat.yMMMd();
+    final dateFormat = AppDates.medium(context);
 
     return AlertDialog(
       title: Row(

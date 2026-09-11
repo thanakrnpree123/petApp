@@ -53,16 +53,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unlimitedPdfReports => 'Unlimited PDF vet reports';
 
   @override
-  String get adFreeExperience => 'Ad-free experience';
-
-  @override
   String get freeTierIncludes => 'Free tier includes';
 
   @override
   String get freeChecksPerMonth => '5 symptom checks / month';
-
-  @override
-  String get containsAds => 'Contains ads';
 
   @override
   String get subscribe => 'Subscribe';
@@ -1012,4 +1006,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discard => 'Discard';
+
+  @override
+  String get retake => 'Retake';
+
+  @override
+  String get usePhoto => 'Use Photo';
+
+  @override
+  String get switchCamera => 'Switch camera';
+
+  @override
+  String get cameraPermissionDenied =>
+      'PawHealth can\'t use your camera. Allow camera access for this site in your browser\'s address bar or settings, then try again.';
+
+  @override
+  String get cameraNotFound =>
+      'No camera was found. Connect a webcam, or choose a photo from your files instead.';
+
+  @override
+  String get cameraInUse =>
+      'Your camera is being used by another app, like a video call. Close it and try again.';
+
+  @override
+  String get cameraStartFailed =>
+      'Couldn\'t start the camera. Please try again.';
+
+  @override
+  String get filterSymptomChecks => 'Symptom checks';
+
+  @override
+  String get birthdate => 'Birthdate';
 }

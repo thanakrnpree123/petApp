@@ -184,12 +184,6 @@ abstract class AppLocalizations {
   /// **'Unlimited PDF vet reports'**
   String get unlimitedPdfReports;
 
-  /// No description provided for @adFreeExperience.
-  ///
-  /// In en, this message translates to:
-  /// **'Ad-free experience'**
-  String get adFreeExperience;
-
   /// No description provided for @freeTierIncludes.
   ///
   /// In en, this message translates to:
@@ -201,12 +195,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'5 symptom checks / month'**
   String get freeChecksPerMonth;
-
-  /// No description provided for @containsAds.
-  ///
-  /// In en, this message translates to:
-  /// **'Contains ads'**
-  String get containsAds;
 
   /// No description provided for @subscribe.
   ///
@@ -1833,6 +1821,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discard'**
   String get discard;
+
+  /// No description provided for @retake.
+  ///
+  /// In en, this message translates to:
+  /// **'Retake'**
+  String get retake;
+
+  /// No description provided for @usePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Photo'**
+  String get usePhoto;
+
+  /// No description provided for @switchCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch camera'**
+  String get switchCamera;
+
+  /// No description provided for @cameraPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'PawHealth can\'t use your camera. Allow camera access for this site in your browser\'s address bar or settings, then try again.'**
+  String get cameraPermissionDenied;
+
+  /// No description provided for @cameraNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No camera was found. Connect a webcam, or choose a photo from your files instead.'**
+  String get cameraNotFound;
+
+  /// No description provided for @cameraInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Your camera is being used by another app, like a video call. Close it and try again.'**
+  String get cameraInUse;
+
+  /// No description provided for @cameraStartFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t start the camera. Please try again.'**
+  String get cameraStartFailed;
+
+  /// No description provided for @filterSymptomChecks.
+  ///
+  /// In en, this message translates to:
+  /// **'Symptom checks'**
+  String get filterSymptomChecks;
+
+  /// No description provided for @birthdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthdate'**
+  String get birthdate;
 }
 
 class _AppLocalizationsDelegate

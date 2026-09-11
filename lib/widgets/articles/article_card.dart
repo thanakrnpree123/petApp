@@ -20,7 +20,15 @@ class ArticleCard extends StatelessWidget {
             AspectRatio(
               aspectRatio: 16 / 9,
               child: article.imageUrl != null
-                  ? Image.network(article.imageUrl!, fit: BoxFit.cover)
+                  ? Image.network(
+                      article.imageUrl!,
+                      // New URL → new <img> element (see PetAvatar).
+                      key: ValueKey(article.imageUrl),
+                      fit: BoxFit.cover,
+                      // Article images may be hosted without CORS headers.
+                      webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
+                      errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                    )
                   : Container(
                       color: Theme.of(context).colorScheme.primaryContainer,
                       child: Center(

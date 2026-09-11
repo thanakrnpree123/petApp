@@ -53,16 +53,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unlimitedPdfReports => '无限份兽医 PDF 报告';
 
   @override
-  String get adFreeExperience => '无广告体验';
-
-  @override
   String get freeTierIncludes => '免费版包含';
 
   @override
   String get freeChecksPerMonth => '每月 5 次症状检查';
-
-  @override
-  String get containsAds => '含广告';
 
   @override
   String get subscribe => '订阅';
@@ -938,4 +932,32 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get discard => '放弃';
+
+  @override
+  String get retake => '重拍';
+
+  @override
+  String get usePhoto => '使用照片';
+
+  @override
+  String get switchCamera => '切换摄像头';
+
+  @override
+  String get cameraPermissionDenied =>
+      'PawHealth 无法使用您的摄像头。请在浏览器地址栏或设置中允许此网站访问摄像头，然后重试。';
+
+  @override
+  String get cameraNotFound => '未找到摄像头。请连接网络摄像头，或改为从文件中选择照片。';
+
+  @override
+  String get cameraInUse => '摄像头正被其他应用（如视频通话）占用。请关闭该应用后重试。';
+
+  @override
+  String get cameraStartFailed => '无法启动摄像头，请重试。';
+
+  @override
+  String get filterSymptomChecks => '症状检查';
+
+  @override
+  String get birthdate => '出生日期';
 }

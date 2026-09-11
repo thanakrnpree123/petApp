@@ -97,5 +97,10 @@ void main() {
     );
     expect(find.text('Subscribe'), findsNothing);
     expect(find.textContaining(r'$2.99'), findsNothing);
+    // The app shows no ads, so neither tier may mention them.
+    expect(
+      find.textContaining(RegExp(r'\bads?\b', caseSensitive: false)),
+      findsNothing,
+    );
   });
 }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../models/health_log.dart';
 import '../models/pet.dart';
 
 class PetService {
@@ -29,11 +30,25 @@ class PetService {
 
   String newPetId(String userId) => _petsRef(userId).doc().id;
 
+  /// Creates the pet and records the weight entered in the form as its
+  /// first weight entry — in one batch, so a pet never exists without it
+  /// and a retry can't create a duplicate pet.
   Future<void> createPet(String userId, String petId, Pet pet) {
-    return _petsRef(userId).doc(petId).set({
-      ...pet.toFirestore(),
-      'created_at': FieldValue.serverTimestamp(),
-    });
+    final petDoc = _petsRef(userId).doc(petId);
+    final batch = _firestore.batch()
+      ..set(petDoc, {
+        ...pet.toFirestore(),
+        'created_at': FieldValue.serverTimestamp(),
+      })
+      ..set(
+        petDoc.collection('health_logs').doc(),
+        HealthLog(
+          type: HealthLogType.weight,
+          value: pet.weightKg,
+          loggedAt: DateTime.now(),
+        ).toFirestore(),
+      );
+    return batch.commit();
   }
 
   Future<void> updatePet(String userId, Pet pet) {

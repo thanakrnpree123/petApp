@@ -3,6 +3,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../l10n/app_localizations.dart';
+
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
   factory NotificationService() => _instance;
@@ -120,11 +122,15 @@ class NotificationService {
     return null;
   }
 
+  /// The notification's text is fixed when it's scheduled, so it's
+  /// written in [l10n]'s language; ReminderSyncService reschedules
+  /// everything when the app language changes.
   Future<void> scheduleVaccineReminder({
     required int id,
     required String petName,
     required String vaccineName,
     required DateTime nextDueDate,
+    required AppLocalizations l10n,
   }) async {
     if (!isSupported) return;
     await init();
@@ -138,18 +144,19 @@ class NotificationService {
     // the device's clock without detecting the zone name.
     final scheduledDate = tz.TZDateTime.from(schedule.at, tz.local);
 
+    final text = reminderText(l10n, petName, vaccineName, schedule.dueToday);
     await _plugin.zonedSchedule(
       id: id,
-      title: 'Vaccine reminder for $petName',
-      body: schedule.dueToday
-          ? '$vaccineName is due today.'
-          : '$vaccineName is due tomorrow.',
+      title: text.title,
+      body: text.body,
       scheduledDate: scheduledDate,
-      notificationDetails: const NotificationDetails(
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           'vaccine_reminders',
-          'Vaccine Reminders',
-          channelDescription: 'Reminders for upcoming pet vaccinations',
+          // Android shows these in the app's notification settings; the
+          // latest schedule call renames the category to the app language.
+          l10n.reminderChannelName,
+          channelDescription: l10n.reminderChannelDescription,
           importance: Importance.high,
           priority: Priority.high,
         ),
@@ -157,6 +164,18 @@ class NotificationService {
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
   }
+
+  static ({String title, String body}) reminderText(
+    AppLocalizations l10n,
+    String petName,
+    String vaccineName,
+    bool dueToday,
+  ) => (
+    title: l10n.reminderTitle(petName),
+    body: dueToday
+        ? l10n.reminderDueToday(vaccineName)
+        : l10n.reminderDueTomorrow(vaccineName),
+  );
 
   Future<void> cancelReminder(int id) async {
     if (!isSupported) return;

@@ -94,6 +94,9 @@ flutter:
     - assets/animations/paw_loader.json
     - assets/fonts/NotoSansThai-Regular.ttf
     - assets/fonts/NotoSansThai-Bold.ttf
+    # Chinese for PDF reports only (built by tool/fonts/subset_noto_sans_sc.py).
+    - assets/fonts/NotoSansSC-Subset.ttf
+    - assets/fonts/OFL-notosanssc.txt
     # Bundled app fonts (see AppTheme.useBundledFonts).
     - assets/google_fonts/
   # - images/a_dot_burr.jpeg

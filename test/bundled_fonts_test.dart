@@ -55,6 +55,9 @@ void main() {
     final packages = <String>{
       await for (final entry in LicenseRegistry.licenses) ...entry.packages,
     };
-    expect(packages, containsAll(['Nunito', 'IBM Plex Sans Thai Looped']));
+    expect(
+      packages,
+      containsAll(['Nunito', 'IBM Plex Sans Thai Looped', 'Noto Sans SC']),
+    );
   });
 }

@@ -1,27 +1,30 @@
 import 'dart:typed_data';
 
+import 'dart:ui' show Locale;
+
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../data/decision_trees/decision_tree.dart';
-import '../data/decision_trees/symptom_catalog.dart';
+import '../l10n/app_localizations.dart';
 import '../models/care_log.dart';
 import '../models/health_log.dart';
 import '../models/pet.dart';
 import '../models/symptom_check.dart';
 import '../models/vaccination.dart';
+import '../utils/app_dates.dart';
+import '../utils/l10n_helpers.dart';
 import 'health_log_service.dart';
 import 'symptom_check_service.dart';
 
-/// Builds the A4 vet report.
+/// Builds the A4 vet report in the app language.
 ///
-/// Section labels are canonical English (the report is a medical document
-/// handed to vets; the service layer has no BuildContext). User-entered
-/// content (names, notes, breeds) renders in any script covered by the
-/// bundled Noto Sans Thai fallback fonts — without them the default
-/// Helvetica would draw Thai text as empty boxes.
+/// The PDF can't use system fonts: Helvetica draws Latin, and Thai and
+/// Chinese (labels or user-entered names and notes) fall back to the
+/// bundled Noto Sans Thai and a Noto Sans SC subset (tool/fonts). Without
+/// them those scripts render as empty boxes.
 class PdfReportService {
   // Lazily created so buildReport (pure layout, used in tests) never
   // touches Firebase; only generateReport's data fetch needs them.
@@ -36,13 +39,12 @@ class PdfReportService {
     _symptomCheckService = symptomCheckService;
   }
 
-  static final _dateFormat = DateFormat.yMMMd();
   static const _recentWeightLogLimit = 10;
-  static const _accent = PdfColors.teal800;
 
   Future<Uint8List> generateReport({
     required String userId,
     required Pet pet,
+    required AppLocalizations l10n,
   }) async {
     final healthLogService = _healthLogService ??= HealthLogService();
     final symptomCheckService = _symptomCheckService ??= SymptomCheckService();
@@ -68,6 +70,7 @@ class PdfReportService {
 
     return buildReport(
       pet: pet,
+      l10n: l10n,
       recentWeightLogs: recentWeightLogs,
       vaccinations: vaccinations,
       careLogs: careLogs,
@@ -79,16 +82,23 @@ class PdfReportService {
   /// (including Thai text rendering) without a backend.
   Future<Uint8List> buildReport({
     required Pet pet,
+    required AppLocalizations l10n,
     List<HealthLog> recentWeightLogs = const [],
     List<Vaccination> vaccinations = const [],
     List<CareLog> careLogs = const [],
     SymptomCheck? latestCheck,
+    @visibleForTesting bool compress = true,
   }) async {
     final thaiRegular = pw.Font.ttf(
       await rootBundle.load('assets/fonts/NotoSansThai-Regular.ttf'),
     );
     final thaiBold = pw.Font.ttf(
       await rootBundle.load('assets/fonts/NotoSansThai-Bold.ttf'),
+    );
+    // Regular only: Chinese in bold headings renders at regular weight,
+    // which beats a second multi-megabyte font.
+    final chinese = pw.Font.ttf(
+      await rootBundle.load('assets/fonts/NotoSansSC-Subset.ttf'),
     );
     final logo = pw.MemoryImage(
       (await rootBundle.load(
@@ -101,12 +111,14 @@ class PdfReportService {
     final careTimeline = [...careLogs]
       ..sort((a, b) => b.loggedAt.compareTo(a.loggedAt));
 
+    final writer = _ReportWriter(l10n);
     final doc = pw.Document(
-      title: 'PawHealth Report — ${pet.name}',
+      compress: compress,
+      title: l10n.pdfDocumentTitle(pet.name),
       theme: pw.ThemeData.withFont(
-        // Helvetica stays the Latin base; Thai glyphs fall back to the
-        // bundled Noto Sans Thai so user-entered Thai renders correctly.
-        fontFallback: [thaiRegular, thaiBold],
+        // Helvetica stays the Latin base; other scripts fall back glyph by
+        // glyph to the bundled fonts.
+        fontFallback: [thaiRegular, thaiBold, chinese],
       ),
     );
 
@@ -114,37 +126,57 @@ class PdfReportService {
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
         margin: const pw.EdgeInsets.all(36),
-        header: (context) => _buildHeader(logo),
-        footer: (context) => _buildFooter(context),
+        header: (context) => writer.header(logo),
+        footer: writer.footer,
         build: (context) => [
           pw.SizedBox(height: 14),
-          _buildPetSummary(pet),
+          writer.petSummary(pet),
           pw.SizedBox(height: 22),
-          _buildSectionTitle('Weight Trend'),
+          writer.sectionTitle(l10n.pdfWeightTrend),
           pw.SizedBox(height: 8),
-          _buildWeightChart(recentWeightLogs),
+          writer.weightChart(recentWeightLogs),
           pw.SizedBox(height: 22),
-          _buildSectionTitle('Vaccination History'),
+          writer.sectionTitle(l10n.pdfVaccinationHistory),
           pw.SizedBox(height: 8),
-          _buildVaccinationTable(vaccinationHistory),
+          writer.vaccinationTable(vaccinationHistory),
           pw.SizedBox(height: 22),
-          _buildSectionTitle('Health Care Log'),
+          writer.sectionTitle(l10n.pdfCareLog),
           pw.SizedBox(height: 8),
-          _buildCareLogTable(careTimeline),
+          writer.careLogTable(careTimeline),
           pw.SizedBox(height: 22),
-          _buildSectionTitle('Latest Symptom Check'),
-          pw.SizedBox(height: 8),
-          _buildSymptomCheckSection(latestCheck),
+          // Kept whole: split across pages, the heading and the answers
+          // ended up apart (taller Thai text made that common).
+          pw.Inseparable(
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                writer.sectionTitle(l10n.pdfLatestSymptomCheck),
+                pw.SizedBox(height: 8),
+                writer.symptomCheckSection(latestCheck),
+              ],
+            ),
+          ),
           pw.SizedBox(height: 26),
-          _buildVetNotesSection(),
+          writer.vetNotesSection(),
         ],
       ),
     );
 
     return doc.save();
   }
+}
 
-  pw.Widget _buildHeader(pw.MemoryImage logo) {
+/// The report's widgets, written in one language.
+class _ReportWriter {
+  final AppLocalizations l10n;
+  final AppDateFormat _date;
+
+  _ReportWriter(this.l10n)
+    : _date = AppDates.mediumFor(Locale(l10n.localeName));
+
+  static const _accent = PdfColors.teal800;
+
+  pw.Widget header(pw.MemoryImage logo) {
     return pw.Container(
       padding: const pw.EdgeInsets.only(bottom: 8),
       decoration: const pw.BoxDecoration(
@@ -170,7 +202,7 @@ class PdfReportService {
               ),
               pw.SizedBox(width: 8),
               pw.Text(
-                'Pet Medical Report',
+                l10n.pdfReportSubtitle,
                 style: const pw.TextStyle(
                   fontSize: 10,
                   color: PdfColors.grey600,
@@ -179,7 +211,7 @@ class PdfReportService {
             ],
           ),
           pw.Text(
-            'Generated ${_dateFormat.format(DateTime.now())}',
+            l10n.pdfGeneratedOn(_date.format(DateTime.now())),
             style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey600),
           ),
         ],
@@ -187,18 +219,18 @@ class PdfReportService {
     );
   }
 
-  pw.Widget _buildFooter(pw.Context context) {
+  pw.Widget footer(pw.Context context) {
     return pw.Container(
       alignment: pw.Alignment.centerRight,
       padding: const pw.EdgeInsets.only(top: 6),
       child: pw.Text(
-        'Page ${context.pageNumber} of ${context.pagesCount}',
+        l10n.pdfPageOf(context.pageNumber, context.pagesCount),
         style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey500),
       ),
     );
   }
 
-  pw.Widget _buildSectionTitle(String title) {
+  pw.Widget sectionTitle(String title) {
     return pw.Row(
       children: [
         pw.Container(width: 3, height: 12, color: _accent),
@@ -215,8 +247,13 @@ class PdfReportService {
     );
   }
 
-  pw.Widget _buildPetSummary(Pet pet) {
-    final age = _formatAge(pet.birthdate);
+  pw.Widget petSummary(Pet pet) {
+    final age = L10nHelpers.petAge(l10n, pet);
+    final species = L10nHelpers.species(l10n, pet.species);
+    final sex = pet.gender == PetGender.female
+        ? l10n.genderFemale
+        : l10n.genderMale;
+    final none = l10n.pdfNoneOnFile;
 
     return pw.Container(
       padding: const pw.EdgeInsets.all(14),
@@ -233,41 +270,32 @@ class PdfReportService {
           ),
           pw.SizedBox(height: 3),
           pw.Text(
-            pet.breed.isEmpty
-                ? _speciesLabel(pet.species)
-                : '${_speciesLabel(pet.species)} · ${pet.breed}',
+            pet.breed.isEmpty ? species : '$species · ${pet.breed}',
             style: const pw.TextStyle(fontSize: 11, color: PdfColors.grey700),
           ),
           pw.SizedBox(height: 10),
           pw.Row(
             children: [
-              _buildSummaryStat('Age', age),
-              _buildSummaryStat(
-                'Weight',
-                '${pet.weightKg.toStringAsFixed(1)} kg',
+              _summaryStat(l10n.pdfAge, age),
+              _summaryStat(
+                l10n.weight,
+                l10n.pdfWeightKg(pet.weightKg.toStringAsFixed(1)),
               ),
-              _buildSummaryStat(
-                'Sex',
-                '${pet.gender == PetGender.female ? 'Female' : 'Male'}'
-                    '${pet.isNeutered ? ' (neutered)' : ''}',
+              _summaryStat(
+                l10n.pdfSex,
+                pet.isNeutered ? l10n.pdfNeutered(sex) : sex,
               ),
             ],
           ),
           pw.SizedBox(height: 8),
           pw.Row(
             children: [
-              _buildSummaryStat(
-                'Microchip ID',
-                pet.microchipId ?? 'None on file',
-              ),
-              _buildSummaryStat(
-                'Known Allergies',
-                pet.allergies ?? 'None on file',
-              ),
-              _buildSummaryStat(
-                'Breed Risks',
+              _summaryStat(l10n.microchipId, pet.microchipId ?? none),
+              _summaryStat(l10n.pdfAllergies, pet.allergies ?? none),
+              _summaryStat(
+                l10n.pdfBreedRisks,
                 pet.breedDisorders.isEmpty
-                    ? 'None on file'
+                    ? none
                     : pet.breedDisorders.map(_humanize).join(', '),
               ),
             ],
@@ -277,7 +305,7 @@ class PdfReportService {
     );
   }
 
-  pw.Widget _buildSummaryStat(String label, String value) {
+  pw.Widget _summaryStat(String label, String value) {
     return pw.Expanded(
       child: pw.Padding(
         padding: const pw.EdgeInsets.only(right: 12),
@@ -310,19 +338,19 @@ class PdfReportService {
     );
   }
 
-  pw.Widget _buildVaccinationTable(List<Vaccination> vaccinations) {
+  pw.Widget vaccinationTable(List<Vaccination> vaccinations) {
     if (vaccinations.isEmpty) {
-      return _emptyNote('No vaccinations on file.');
+      return _emptyNote(l10n.pdfNoVaccinations);
     }
 
     return pw.TableHelper.fromTextArray(
-      headers: ['Vaccine', 'Administered', 'Next Due'],
+      headers: [l10n.pdfVaccine, l10n.pdfAdministered, l10n.pdfNextDue],
       data: [
         for (final v in vaccinations)
           [
             v.name,
-            _dateFormat.format(v.dateAdministered),
-            _dateFormat.format(v.nextDueDate),
+            _date.format(v.dateAdministered),
+            _date.format(v.nextDueDate),
           ],
       ],
       headerStyle: pw.TextStyle(
@@ -343,18 +371,18 @@ class PdfReportService {
     );
   }
 
-  pw.Widget _buildCareLogTable(List<CareLog> careLogs) {
+  pw.Widget careLogTable(List<CareLog> careLogs) {
     if (careLogs.isEmpty) {
-      return _emptyNote('No health care records on file.');
+      return _emptyNote(l10n.pdfNoCareLogs);
     }
 
     return pw.TableHelper.fromTextArray(
-      headers: ['Date', 'Category', 'Title', 'Details'],
+      headers: [l10n.pdfDate, l10n.pdfCategory, l10n.pdfEntry, l10n.pdfDetails],
       data: [
         for (final log in careLogs)
           [
-            _dateFormat.format(log.loggedAt),
-            _capitalize(_humanize(log.category.value)),
+            _date.format(log.loggedAt),
+            L10nHelpers.careCategory(l10n, log.category),
             log.title,
             log.note == log.title ? '' : log.note,
           ],
@@ -378,17 +406,9 @@ class PdfReportService {
     );
   }
 
-  String _speciesLabel(PetSpecies species) => switch (species) {
-    PetSpecies.dog => 'Dog',
-    PetSpecies.cat => 'Cat',
-    PetSpecies.rabbit => 'Rabbit',
-    PetSpecies.bird => 'Bird',
-    PetSpecies.exotic => 'Exotic / Other',
-  };
-
-  pw.Widget _buildWeightChart(List<HealthLog> sortedWeightLogs) {
+  pw.Widget weightChart(List<HealthLog> sortedWeightLogs) {
     if (sortedWeightLogs.length < 2) {
-      return _emptyNote('Not enough weight entries yet for a trend chart.');
+      return _emptyNote(l10n.pdfNotEnoughWeights);
     }
 
     final values = sortedWeightLogs.map((l) => l.value ?? 0).toList();
@@ -406,12 +426,14 @@ class PdfReportService {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text(
-          // A plain hyphen-minus is used instead of an en-dash: the en-dash
-          // glyph is missing from the bundled font fallback chain and was
-          // rendering as zero-width, concatenating the two numbers with no
-          // visible separator (e.g. "17.060.0 kg").
-          'Range: ${minValue.toStringAsFixed(1)} - ${maxValue.toStringAsFixed(1)} kg '
-          'over ${sortedWeightLogs.length} entries',
+          // The ARB strings keep a plain hyphen-minus, not an en dash: the en
+          // dash glyph is missing from the PDF fonts and rendered as nothing
+          // ("17.060.0 kg").
+          l10n.pdfWeightRange(
+            minValue.toStringAsFixed(1),
+            maxValue.toStringAsFixed(1),
+            sortedWeightLogs.length,
+          ),
           style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey700),
         ),
         pw.SizedBox(height: 6),
@@ -470,9 +492,9 @@ class PdfReportService {
     );
   }
 
-  pw.Widget _buildSymptomCheckSection(SymptomCheck? check) {
+  pw.Widget symptomCheckSection(SymptomCheck? check) {
     if (check == null) {
-      return _emptyNote('No symptom checks have been run for this pet yet.');
+      return _emptyNote(l10n.pdfNoSymptomChecks);
     }
 
     final triageColor = switch (check.triageLevel) {
@@ -493,8 +515,7 @@ class PdfReportService {
           pw.Row(
             children: [
               pw.Text(
-                symptomById(check.symptomId)?.name ??
-                    _humanize(check.symptomId),
+                L10nHelpers.symptomName(l10n, check.symptomId),
                 style: pw.TextStyle(
                   fontSize: 11,
                   fontWeight: pw.FontWeight.bold,
@@ -502,7 +523,7 @@ class PdfReportService {
               ),
               pw.Spacer(),
               pw.Text(
-                check.triageLevel.name.toUpperCase(),
+                L10nHelpers.triageLabel(l10n, check.triageLevel),
                 style: pw.TextStyle(
                   fontSize: 10,
                   fontWeight: pw.FontWeight.bold,
@@ -513,33 +534,36 @@ class PdfReportService {
           ),
           pw.SizedBox(height: 4),
           pw.Text(
-            'Checked ${_dateFormat.format(check.checkedAt)}',
+            l10n.pdfCheckedOn(_date.format(check.checkedAt)),
             style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey600),
           ),
           pw.SizedBox(height: 6),
-          pw.Text(check.advice, style: const pw.TextStyle(fontSize: 10)),
+          pw.Text(
+            L10nHelpers.savedAdvice(l10n, check),
+            style: const pw.TextStyle(fontSize: 10),
+          ),
           if (check.answers.isNotEmpty) ...[
             pw.SizedBox(height: 8),
             pw.Text(
-              'Answers',
+              l10n.pdfAnswers,
               style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
             ),
-            for (final answer in check.answers)
-              pw.Text(
-                '• ${answer.questionText} ${answer.answer}',
-                style: const pw.TextStyle(fontSize: 9),
-              ),
+            for (final saved in check.answers)
+              pw.Text(() {
+                final a = L10nHelpers.savedAnswer(l10n, check, saved);
+                return '• ${a.question} ${a.answer}';
+              }(), style: const pw.TextStyle(fontSize: 9)),
           ],
         ],
       ),
     );
   }
 
-  pw.Widget _buildVetNotesSection() {
+  pw.Widget vetNotesSection() {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Vet Notes'),
+        sectionTitle(l10n.pdfVetNotes),
         pw.SizedBox(height: 10),
         for (var i = 0; i < 5; i++)
           pw.Container(
@@ -554,21 +578,7 @@ class PdfReportService {
     );
   }
 
-  String _formatAge(DateTime birthdate) {
-    final now = DateTime.now();
-    var years = now.year - birthdate.year;
-    var months = now.month - birthdate.month;
-    if (now.day < birthdate.day) months -= 1;
-    if (months < 0) {
-      years -= 1;
-      months += 12;
-    }
-    if (years <= 0) return '$months mo';
-    return '$years yr $months mo';
-  }
-
+  // Breed conditions are canonical English ids from the breed data, e.g.
+  // hip_dysplasia; they stay English (medical terms a vet reads).
   String _humanize(String raw) => raw.replaceAll('_', ' ');
-
-  String _capitalize(String text) =>
-      text.isEmpty ? text : '${text[0].toUpperCase()}${text.substring(1)}';
 }

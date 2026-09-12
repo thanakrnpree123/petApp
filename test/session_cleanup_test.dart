@@ -83,6 +83,12 @@ class _FakeNotifications implements NotificationService {
 
 class _FakeRevenueCat implements RevenueCatService {
   @override
+  bool get canSell => false;
+
+  @override
+  Future<void> logOut() async {}
+
+  @override
   void addCustomerInfoListener(CustomerInfoUpdateListener listener) {}
 
   @override

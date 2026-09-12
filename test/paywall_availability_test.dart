@@ -7,18 +7,6 @@ import 'package:pawhealth/screens/subscription/paywall_screen.dart';
 import 'package:pawhealth/services/revenuecat_service.dart';
 import 'package:pawhealth/theme/app_theme.dart';
 import 'package:provider/provider.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
-
-class _FakeRevenueCat implements RevenueCatService {
-  @override
-  void addCustomerInfoListener(CustomerInfoUpdateListener listener) {}
-
-  @override
-  void removeCustomerInfoListener(CustomerInfoUpdateListener listener) {}
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
 
 class _FakeFirestore implements FirebaseFirestore {
   @override
@@ -27,13 +15,13 @@ class _FakeFirestore implements FirebaseFirestore {
 
 PurchaseAvailability _availability({
   bool isWeb = false,
-  bool hasPlaceholderKeys = false,
+  bool canSell = true,
   bool isLoading = false,
   bool loadFailed = false,
   bool hasPackage = false,
 }) => SubscriptionProvider.availabilityFor(
   isWeb: isWeb,
-  hasPlaceholderKeys: hasPlaceholderKeys,
+  canSell: canSell,
   isLoading: isLoading,
   loadFailed: loadFailed,
   hasPackage: hasPackage,
@@ -48,11 +36,8 @@ void main() {
       );
     });
 
-    test('placeholder RevenueCat keys mean nothing to sell', () {
-      expect(
-        _availability(hasPlaceholderKeys: true),
-        PurchaseAvailability.unavailable,
-      );
+    test('no RevenueCat key (and no mock) means nothing to sell', () {
+      expect(_availability(canSell: false), PurchaseAvailability.unavailable);
     });
 
     test('a loaded package can be bought, even mid-purchase', () {
@@ -72,23 +57,19 @@ void main() {
 
   testWidgets('with nothing to sell, the paywall explains instead of '
       'showing a dead Subscribe button', (tester) async {
-    await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (_) => SubscriptionProvider(
-          service: _FakeRevenueCat(),
-          firestore: _FakeFirestore(),
-        ),
-        child: MaterialApp(
-          theme: ThemeData(extensions: const [StatusColors.light]),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: const PaywallScreen(),
-        ),
+    final subscription = SubscriptionProvider(
+      // No keys and no mock: the state before RevenueCat is set up.
+      service: RevenueCatService(
+        appleApiKey: '',
+        googleApiKey: '',
+        useMockOfferings: false,
       ),
+      firestore: _FakeFirestore(),
     );
+    await _pumpPaywall(tester, subscription);
+    await subscription.init('u1', email: 'someone@example.com');
+    await tester.pump();
 
-    // This repo still has placeholder RevenueCat keys, so no product loads.
-    expect(RevenueCatService.hasPlaceholderKeys, isTrue);
     expect(
       find.text(
         "Subscriptions aren't available right now. Please try again later.",
@@ -103,4 +84,60 @@ void main() {
       findsNothing,
     );
   });
+
+  testWidgets('the debug mock offering can be bought end to end', (
+    tester,
+  ) async {
+    final subscription = SubscriptionProvider(
+      service: RevenueCatService(
+        appleApiKey: '',
+        googleApiKey: '',
+        useMockOfferings: true,
+      ),
+      firestore: _FakeFirestore(),
+    );
+    await _pumpPaywall(tester, subscription);
+    await subscription.init('u1', email: 'someone@example.com');
+    await tester.pumpAndSettle();
+
+    expect(subscription.isMockOffering, isTrue);
+    expect(find.textContaining(r'$2.99 (mock)'), findsOneWidget);
+
+    await tester.tap(find.text('Subscribe'));
+    await tester.pumpAndSettle();
+
+    expect(subscription.isPlusMember, isTrue);
+    expect(
+      find.byType(PaywallScreen),
+      findsNothing,
+      reason: 'closes on success',
+    );
+  });
+}
+
+/// The paywall pushed over a home screen, as in the app.
+Future<void> _pumpPaywall(
+  WidgetTester tester,
+  SubscriptionProvider subscription,
+) async {
+  await tester.pumpWidget(
+    ChangeNotifierProvider.value(
+      value: subscription,
+      child: MaterialApp(
+        theme: ThemeData(extensions: const [StatusColors.light]),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Builder(
+          builder: (context) => TextButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const PaywallScreen()),
+            ),
+            child: const Text('open'),
+          ),
+        ),
+      ),
+    ),
+  );
+  await tester.tap(find.text('open'));
+  await tester.pumpAndSettle();
 }

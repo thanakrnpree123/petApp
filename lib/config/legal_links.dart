@@ -2,9 +2,8 @@
 /// working links to them on the paywall, and Google Play also requires the
 /// privacy policy inside the app (it's in Settings).
 ///
-/// PLACEHOLDERS: these paths on the app's own web host don't exist yet.
-/// Publish the documents at exactly these URLs (e.g. web/legal/*.html) and
-/// the links start working in already-shipped builds, with no app update.
+/// The pages are web/legal/*.html, deployed with the web app. Shipped app
+/// builds link to these exact URLs, so never move or rename the files.
 abstract final class LegalLinks {
   static final termsOfUse = Uri.parse(
     'https://thanakrnpree123.github.io/petApp/legal/terms.html',
@@ -12,5 +11,11 @@ abstract final class LegalLinks {
 
   static final privacyPolicy = Uri.parse(
     'https://thanakrnpree123.github.io/petApp/legal/privacy.html',
+  );
+
+  /// Not linked in the app (deletion is in Settings), but Google Play's
+  /// Data safety form requires this web page.
+  static final accountDeletion = Uri.parse(
+    'https://thanakrnpree123.github.io/petApp/legal/delete-account.html',
   );
 }

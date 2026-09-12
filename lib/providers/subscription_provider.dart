@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
+import '../services/admin_access.dart';
 import '../services/revenuecat_service.dart';
 
 /// Whether the paywall can sell a subscription right now — and if not, why,
@@ -21,8 +22,8 @@ enum PurchaseAvailability {
   /// Offerings failed to load (e.g. offline) — worth a retry.
   loadFailed,
 
-  /// No product to sell: RevenueCat not configured (placeholder keys) or
-  /// no current offering.
+  /// No product to sell: no RevenueCat key, or the stores / dashboard
+  /// aren't set up (no current offering).
   unavailable,
 }
 
@@ -31,12 +32,20 @@ class SubscriptionProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore;
 
   bool isPlusMember = false;
+
+  /// Plus via [AdminAccess], not a subscription.
+  bool isAdmin = false;
+
   bool isLoading = false;
   String? errorCode;
   Offerings? offerings;
 
+  /// The offering is the debug-only sample, not a real product.
+  bool isMockOffering = false;
+
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? _premiumSub;
   String? _userId;
+  String? _email;
 
   /// The package the paywall sells, if one is loaded.
   Package? get currentPackage {
@@ -46,7 +55,7 @@ class SubscriptionProvider extends ChangeNotifier {
 
   PurchaseAvailability get availability => availabilityFor(
     isWeb: kIsWeb,
-    hasPlaceholderKeys: RevenueCatService.hasPlaceholderKeys,
+    canSell: _service.canSell,
     isLoading: isLoading,
     loadFailed: errorCode == 'load-failed',
     hasPackage: currentPackage != null,
@@ -55,13 +64,13 @@ class SubscriptionProvider extends ChangeNotifier {
   @visibleForTesting
   static PurchaseAvailability availabilityFor({
     required bool isWeb,
-    required bool hasPlaceholderKeys,
+    required bool canSell,
     required bool isLoading,
     required bool loadFailed,
     required bool hasPackage,
   }) {
     if (isWeb) return PurchaseAvailability.mobileOnly;
-    if (hasPlaceholderKeys) return PurchaseAvailability.unavailable;
+    if (!canSell) return PurchaseAvailability.unavailable;
     // A loaded package stays "available" during a purchase/restore — the
     // paywall disables its buttons while isLoading instead.
     if (hasPackage) return PurchaseAvailability.available;
@@ -76,17 +85,36 @@ class SubscriptionProvider extends ChangeNotifier {
     final userId = _userId;
     if (userId == null) return;
     errorCode = null;
-    await init(userId);
+    await init(userId, email: _email);
   }
 
-  SubscriptionProvider({RevenueCatService? service, FirebaseFirestore? firestore})
-    : _service = service ?? RevenueCatService(),
-      _firestore = firestore ?? FirebaseFirestore.instance {
+  SubscriptionProvider({
+    RevenueCatService? service,
+    FirebaseFirestore? firestore,
+  }) : _service = service ?? RevenueCatService(),
+       _firestore = firestore ?? FirebaseFirestore.instance {
     _service.addCustomerInfoListener(_onCustomerInfoUpdate);
   }
 
-  Future<void> init(String userId) async {
+  /// Loads Plus status and offerings for the signed-in user. Never
+  /// throws: every failure ends in an [availability] the paywall explains.
+  Future<void> init(String userId, {String? email}) async {
     _userId = userId;
+    _email = email;
+
+    // Admin accounts get Plus without RevenueCat or Firestore.
+    if (AdminAccess.isAdminEmail(email)) {
+      await _premiumSub?.cancel();
+      _premiumSub = null;
+      isAdmin = true;
+      isPlusMember = true;
+      isLoading = false;
+      errorCode = null;
+      notifyListeners();
+      return;
+    }
+    isAdmin = false;
+
     // App Store / Play Store in-app purchase doesn't exist on the web, so
     // Plus access there is granted by flipping `isPremium` on the user's
     // own Firestore document instead (see users/{uid}.isPremium — set via
@@ -117,11 +145,11 @@ class SubscriptionProvider extends ChangeNotifier {
       return;
     }
 
-    if (RevenueCatService.hasPlaceholderKeys) {
+    if (!_service.canSell) {
       debugPrint(
-        'RevenueCat: skipping init — placeholder API keys in '
-        'revenuecat_service.dart. Purchases stay disabled until real keys '
-        'are added.',
+        'RevenueCat: no API key for this platform — purchases disabled. '
+        'Add it to .env (see .env.example) and run with '
+        '--dart-define-from-file=.env.',
       );
       return;
     }
@@ -129,11 +157,19 @@ class SubscriptionProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    try {
-      await _service.init(appUserId: userId);
-      offerings = await _service.fetchOfferings();
-    } catch (e) {
-      errorCode = 'load-failed';
+    // Both calls report failures instead of throwing; a missing store
+    // setup just leaves nothing to sell (or the debug mock).
+    await _service.init(appUserId: userId);
+    switch (await _service.fetchOfferings()) {
+      case OfferingsLoaded(:final offerings, :final isMock):
+        this.offerings = offerings;
+        isMockOffering = isMock;
+      case OfferingsUnavailable(:final reason):
+        offerings = null;
+        isMockOffering = false;
+        errorCode = reason == OfferingsFailure.notSetUp
+            ? 'not-set-up'
+            : 'load-failed';
     }
 
     isLoading = false;
@@ -141,6 +177,7 @@ class SubscriptionProvider extends ChangeNotifier {
   }
 
   void _onCustomerInfoUpdate(CustomerInfo info) {
+    if (isAdmin) return;
     // Web never configures RevenueCat, so this listener simply never fires
     // there — isPlusMember stays driven by the Firestore stream above.
     isPlusMember = info.entitlements.active.containsKey(
@@ -149,22 +186,19 @@ class SubscriptionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Returns whether Plus is now active. A cancelled purchase is not an
+  /// error.
   Future<bool> purchase(Package package) async {
     isLoading = true;
     errorCode = null;
     notifyListeners();
 
-    try {
-      await _service.purchasePackage(package);
-      isLoading = false;
-      notifyListeners();
-      return true;
-    } catch (e) {
-      isLoading = false;
-      errorCode = 'purchase-failed';
-      notifyListeners();
-      return false;
-    }
+    final outcome = await _service.purchase(package);
+    if (outcome == PurchaseOutcome.purchased) isPlusMember = true;
+    if (outcome == PurchaseOutcome.failed) errorCode = 'purchase-failed';
+    isLoading = false;
+    notifyListeners();
+    return outcome == PurchaseOutcome.purchased;
   }
 
   Future<bool> restore() async {
@@ -172,17 +206,15 @@ class SubscriptionProvider extends ChangeNotifier {
     errorCode = null;
     notifyListeners();
 
-    try {
-      await _service.restorePurchases();
-      isLoading = false;
-      notifyListeners();
-      return true;
-    } catch (e) {
-      isLoading = false;
+    final active = await _service.restorePurchases();
+    if (active == null) {
       errorCode = 'restore-failed';
-      notifyListeners();
-      return false;
+    } else if (active) {
+      isPlusMember = true;
     }
+    isLoading = false;
+    notifyListeners();
+    return active != null;
   }
 
   /// Drops all state tied to the current user (e.g. after their account
@@ -190,11 +222,15 @@ class SubscriptionProvider extends ChangeNotifier {
   Future<void> reset() async {
     await _premiumSub?.cancel();
     _premiumSub = null;
+    await _service.logOut();
     _userId = null;
+    _email = null;
     isPlusMember = false;
+    isAdmin = false;
     isLoading = false;
     errorCode = null;
     offerings = null;
+    isMockOffering = false;
     notifyListeners();
   }
 

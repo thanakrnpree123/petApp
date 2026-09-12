@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -90,21 +91,47 @@ extension AppThemeContext on BuildContext {
 abstract final class AppTheme {
   /// Font per script. Nunito (rounded, open counters) has no Thai or CJK
   /// glyphs, so Thai gets IBM Plex Sans Thai Looped — the looped letterforms
-  /// Thai readers of all ages learn first — and Simplified Chinese gets
-  /// Noto Sans SC for full character coverage.
+  /// Thai readers of all ages learn first. Simplified Chinese uses the
+  /// system font (PingFang SC on iOS, Noto Sans CJK on Android): a bundled
+  /// CJK font would add ~10 MB per weight, and the system one already
+  /// covers every character and weight, offline.
   static TextStyle fontFor(Locale locale, [TextStyle? style]) =>
       switch (locale.languageCode) {
         'th' => GoogleFonts.ibmPlexSansThaiLooped(textStyle: style),
-        'zh' => GoogleFonts.notoSansSc(textStyle: style),
+        'zh' => style ?? const TextStyle(),
         _ => GoogleFonts.nunito(textStyle: style),
       };
 
   static TextTheme _textThemeFor(Locale locale, TextTheme base) =>
       switch (locale.languageCode) {
         'th' => GoogleFonts.ibmPlexSansThaiLoopedTextTheme(base),
-        'zh' => GoogleFonts.notoSansScTextTheme(base),
+        'zh' => base,
         _ => GoogleFonts.nunitoTextTheme(base),
       };
+
+  /// Nunito and IBM Plex Sans Thai Looped ship in assets/google_fonts/
+  /// (only the weights the theme uses), so text renders on first launch
+  /// without a network, and the app never contacts Google Fonts. Call once
+  /// at startup.
+  static void useBundledFonts() {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    // The fonts' SIL Open Font License must travel with them; this shows
+    // it on the app's licenses page.
+    LicenseRegistry.addLicense(() async* {
+      for (final (package, file) in [
+        ('Nunito', 'google_fonts/OFL-nunito.txt'),
+        (
+          'IBM Plex Sans Thai Looped',
+          'google_fonts/OFL-ibmplexsansthailooped.txt',
+        ),
+        ('Noto Sans SC', 'fonts/OFL-notosanssc.txt'),
+      ]) {
+        yield LicenseEntryWithLineBreaks([
+          package,
+        ], await rootBundle.loadString('assets/$file'));
+      }
+    });
+  }
 
   static ThemeData forLocale(Locale locale) {
     final colorScheme = ColorScheme.fromSeed(

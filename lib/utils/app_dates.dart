@@ -13,8 +13,11 @@ abstract final class AppDates {
   ///
   /// Thai readers expect the Buddhist Era year (พ.ศ. = C.E. + 543), which
   /// Intl doesn't offer.
-  static AppDateFormat medium(BuildContext context) {
-    final locale = Localizations.localeOf(context);
+  static AppDateFormat medium(BuildContext context) =>
+      mediumFor(Localizations.localeOf(context));
+
+  /// [medium] where there's no BuildContext (e.g. the PDF report).
+  static AppDateFormat mediumFor(Locale locale) {
     if (locale.languageCode == 'th') return const _ThaiMediumDate();
     return _IntlDate(DateFormat.yMMMd(locale.toString()));
   }

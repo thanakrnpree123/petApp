@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/legal_links.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/locale_provider.dart';
@@ -9,6 +10,7 @@ import '../../providers/pet_provider.dart';
 import '../../providers/session.dart';
 import '../../providers/subscription_provider.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/common/legal_link.dart';
 import '../../widgets/responsive/content_width.dart';
 import '../../widgets/settings/delete_account_dialog.dart';
 import '../../widgets/settings/language_dialog.dart';
@@ -111,6 +113,28 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => LanguageDialog.show(context),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Google Play requires the privacy policy inside the app, not
+          // only on the store listing.
+          Card(
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.privacy_tip_outlined),
+                  title: Text(l10n.privacyPolicy),
+                  trailing: const Icon(Icons.open_in_new, size: 20),
+                  onTap: () => openLegalLink(context, LegalLinks.privacyPolicy),
+                ),
+                const Divider(indent: 56),
+                ListTile(
+                  leading: const Icon(Icons.description_outlined),
+                  title: Text(l10n.termsOfUse),
+                  trailing: const Icon(Icons.open_in_new, size: 20),
+                  onTap: () => openLegalLink(context, LegalLinks.termsOfUse),
                 ),
               ],
             ),

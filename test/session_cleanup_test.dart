@@ -14,6 +14,10 @@ import 'package:pawhealth/services/reminder_sync_service.dart';
 import 'package:pawhealth/services/revenuecat_service.dart';
 import 'package:pawhealth/services/storage_service.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:pawhealth/l10n/app_localizations.dart';
+import 'package:pawhealth/l10n/app_localizations_en.dart';
+import 'package:pawhealth/l10n/app_localizations_th.dart';
+import 'package:pawhealth/l10n/app_localizations_zh.dart';
 
 Pet _pet(String id, String name) => Pet(
   id: id,
@@ -75,13 +79,20 @@ class _FakeNotifications implements NotificationService {
     required String petName,
     required String vaccineName,
     required DateTime nextDueDate,
-  }) async => calls.add('schedule:$petName:$id');
+    required AppLocalizations l10n,
+  }) async => calls.add('schedule:$petName:$id:${l10n.localeName}');
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 class _FakeRevenueCat implements RevenueCatService {
+  @override
+  bool get canSell => false;
+
+  @override
+  Future<void> logOut() async {}
+
   @override
   void addCustomerInfoListener(CustomerInfoUpdateListener listener) {}
 
@@ -159,13 +170,32 @@ void main() {
         petService: petService,
         healthLogService: _FakeHealthLogService(),
         notificationService: notifications,
-      ).resync('alice');
+      ).resync('alice', l10n: AppLocalizationsTh());
 
+      // Written in the app language (here Thai).
       expect(notifications.calls, [
         'cancelAll',
-        'schedule:Mochi:${NotificationService.vaccineReminderId('vax-p1')}',
-        'schedule:Taro:${NotificationService.vaccineReminderId('vax-p2')}',
+        'schedule:Mochi:${NotificationService.vaccineReminderId('vax-p1')}:th',
+        'schedule:Taro:${NotificationService.vaccineReminderId('vax-p2')}:th',
       ]);
+    });
+
+    test('reminder text is in the app language', () {
+      final th = NotificationService.reminderText(
+        AppLocalizationsTh(),
+        'โมจิ',
+        'พิษสุนัขบ้า',
+        false,
+      );
+      expect(th.title, 'เตือนฉีดวัคซีนของ โมจิ');
+      expect(th.body, 'ถึงกำหนดฉีด พิษสุนัขบ้า พรุ่งนี้');
+      final zh = NotificationService.reminderText(
+        AppLocalizationsZh(),
+        'Mochi',
+        'Rabies',
+        true,
+      );
+      expect(zh.body, 'Rabies 今天到期。');
     });
 
     test('keeps existing reminders when the account can\'t be read', () async {
@@ -177,7 +207,7 @@ void main() {
           petService: petService,
           healthLogService: _FakeHealthLogService(),
           notificationService: notifications,
-        ).resync('alice'),
+        ).resync('alice', l10n: AppLocalizationsEn()),
         throwsA(isA<FirebaseException>()),
       );
       expect(notifications.calls, isEmpty);

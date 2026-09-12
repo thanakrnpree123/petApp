@@ -133,6 +133,7 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
   }
 
   Future<void> _editVaccination(Vaccination vaccination) async {
+    final l10n = AppLocalizations.of(context)!;
     final result = await AddVaccineDialog.show(context, existing: vaccination);
     final reminderId = NotificationService.vaccineReminderId(vaccination.id!);
     switch (result) {
@@ -146,6 +147,7 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
           petName: widget.pet.name,
           vaccineName: vaccination.name,
           nextDueDate: vaccination.nextDueDate,
+          l10n: l10n,
         );
       case VaccineDeleted():
         await _service.deleteVaccination(
@@ -160,6 +162,7 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
   }
 
   Future<void> _addVaccine() async {
+    final l10n = AppLocalizations.of(context)!;
     final result = await AddVaccineDialog.show(context);
     if (result is! VaccineSaved) return;
 
@@ -182,6 +185,7 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
       petName: widget.pet.name,
       vaccineName: result.vaccination.name,
       nextDueDate: result.vaccination.nextDueDate,
+      l10n: l10n,
     );
   }
 

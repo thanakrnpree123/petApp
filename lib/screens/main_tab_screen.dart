@@ -40,14 +40,31 @@ class _MainTabScreenState extends State<MainTabScreen> {
   @override
   void initState() {
     super.initState();
-    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final user = FirebaseAuth.instance.currentUser!;
+    final userId = user.uid;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SubscriptionProvider>().init(userId);
+      context.read<SubscriptionProvider>().init(userId, email: user.email);
     });
-    // Reminders are device-local and cleared on sign-out; rebuild them from
-    // the account. Fire-and-forget — a failure just keeps the old set.
+  }
+
+  /// The language the device's reminders were last written in.
+  Locale? _remindersLocale;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reminders are device-local and cleared on sign-out, and their text is
+    // fixed when scheduled: rebuild them from the account on sign-in and
+    // whenever the app language changes. Fire-and-forget — a failure just
+    // keeps the old set.
+    final locale = Localizations.localeOf(context);
+    if (locale == _remindersLocale) return;
+    _remindersLocale = locale;
     ReminderSyncService()
-        .resync(userId)
+        .resync(
+          FirebaseAuth.instance.currentUser!.uid,
+          l10n: AppLocalizations.of(context)!,
+        )
         .catchError((Object e) => debugPrint('Reminder sync failed: $e'));
   }
 

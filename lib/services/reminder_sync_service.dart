@@ -1,3 +1,4 @@
+import '../l10n/app_localizations.dart';
 import '../models/pet.dart';
 import '../models/vaccination.dart';
 import 'health_log_service.dart';
@@ -23,7 +24,9 @@ class ReminderSyncService {
        _healthLogs = healthLogService ?? HealthLogService(),
        _notifications = notificationService ?? NotificationService();
 
-  Future<void> resync(String userId) async {
+  /// Reminders are written in [l10n]'s language, so this also runs when
+  /// the app language changes.
+  Future<void> resync(String userId, {required AppLocalizations l10n}) async {
     if (!NotificationService.isSupported) return;
 
     // Read everything BEFORE touching the schedule: if the fetch fails
@@ -46,6 +49,7 @@ class ReminderSyncService {
         petName: pet.name,
         vaccineName: vaccination.name,
         nextDueDate: vaccination.nextDueDate,
+        l10n: l10n,
       );
     }
   }

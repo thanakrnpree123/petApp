@@ -47,14 +47,14 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 ## Pre-release checklist
 
 ### Must do before submitting to the stores
-- [ ] **Deploy security rules** — `firebase deploy --only firestore:rules,storage:rules`. Account deletion fails at the profile step without the new `delete` rule.
-- [ ] **Veterinary review** of all symptom-checker content: 9 trees in `lib/data/decision_trees/`, English canonical text plus the AI-translated TH/ZH strings.
-- [ ] **Veterinary review of the 6 starter articles** — `node tool/seed_articles/seed.js --review > review.md`. Then set `vet_reviewed`/`reviewed_by` and seed: `node seed.js --apply --project pawhealth-app-2026`. Until then, the Articles tab shows "No articles available".
-- [ ] **RevenueCat** — real API keys in `revenuecat_service.dart`; the $2.99/mo product in App Store Connect and Play Console; an offering with the `plus` entitlement.
-- [ ] **Re-enable App Check** (`TODO(app-check)` in `main.dart`): register debug tokens, configure providers, start with enforcement off, then turn it on.
+- [x] **Deploy security rules** — deployed to `pawhealth-app-2026` on 2026-09-11 (Firestore rules incl. the account-deletion `delete` rule; Storage rules).
+- [ ] **Veterinary review** of the symptom checker (9 flows) and the 6 starter articles, in one packet: `flutter test tool/vet_review/generate_test.dart` writes `tool/vet_review/out/pawhealth-vet-review-<date>.html` (print to PDF). After approval: apply corrections, set `vet_reviewed`/`reviewed_by` in `tool/seed_articles/articles.json`, and seed with `node tool/seed_articles/seed.js --apply --project pawhealth-app-2026`. Until then, the Articles tab shows "No articles available".
+- [ ] **RevenueCat** — follow `docs/revenuecat-setup.md`: stores, dashboard, public SDK keys in `.env`, and publish the Terms/Privacy pages at the URLs in `lib/config/legal_links.dart`. The app side (crash-proof service, debug mock, admin override, paywall renewal terms and legal links) is done.
+- [ ] **App Check** — code done (`AppCheckSetup`: debug providers in debug builds; Play Integrity / App Attest + DeviceCheck / reCAPTCHA Enterprise in release; never blocks startup). Remaining console steps in `docs/app-check-setup.md`: register the apps, App Attest capability in Xcode, debug tokens; enforce only after the metrics show verified traffic.
 - [ ] **Final app icon and splash** — replace the placeholders, add a small-size logo to `BrandMark`, then `dart run flutter_launcher_icons` and `dart run flutter_native_splash:create`.
-- [ ] **Store privacy disclosures** — privacy policy URL; App Store privacy labels and Play Data safety form (email, pet health data, photos).
-- [ ] **Google Play account-deletion web link** — Play requires a web page or form for deletion requests in addition to the in-app option.
+- [x] **Legal pages** — finalized by the owner and committed to `web/legal/` (2026-09-12): Privacy Policy, Terms of Use and account deletion, effective 12 September 2026. Published on the next deploy to `main`.
+- [ ] **Store privacy disclosures** — App Store privacy labels and Play Data safety form. The data inventory in `web/legal/privacy.html` covers them: email, user ID, pet data and photos, purchases; no tracking, ads or analytics.
+- [ ] **Google Play account-deletion web link** — the page is drafted at `legal/delete-account.html` (see Legal pages); enter its URL in Play Console → Data safety once published.
 - [ ] **Medical-app review notes** — App Store guideline 1.4.1: keep the disclaimer visible and be ready to explain where the triage content comes from.
 - [ ] **Device QA pass** on iOS and Android 13+: reminder explainer, 9 AM delivery, camera picker, logout/login reminder rebuild, account deletion.
 
@@ -62,5 +62,5 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 - [ ] Enforce the free symptom-check limit on the server (Cloud Function). The client check can be bypassed and deliberately fails open when offline.
 - [ ] Sync Plus across platforms — a RevenueCat webhook that sets `users/{uid}.isPremium`. Today a mobile subscriber doesn't get Plus on web.
 - [ ] Add the Firebase "Delete User Data" extension as a server-side backstop for account deletion, and delete the RevenueCat subscriber record.
-- [ ] Localize the remaining English-only text: notification messages, PDF report, and some health-dashboard dialogs.
-- [ ] Bundle fonts as assets so the first launch works offline (`google_fonts` currently downloads them at runtime).
+- [x] Localize the remaining English-only text — vaccine reminders (rebuilt when the language changes) and the vet PDF report (labels, Buddhist-era dates in Thai, saved symptom answers; Chinese via a bundled Noto Sans SC subset) now follow the app language. The health-dashboard dialogs were already localized.
+- [x] Bundle fonts as assets so the first launch works offline — Nunito and IBM Plex Sans Thai Looped ship in `assets/google_fonts/` with runtime fetching off; Chinese uses the system font; the paw loader animation is bundled too (no more lottie.host).

@@ -1053,4 +1053,162 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get articleDisclaimer =>
       'General information, not a substitute for advice from your vet. If your pet seems unwell, contact a vet.';
+
+  @override
+  String get termsOfUse => 'Terms of Use';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get linkOpenFailed => 'Couldn\'t open the link. Please try again.';
+
+  @override
+  String autoRenewDisclosureApple(String price) {
+    return 'PawHealth Plus renews automatically at $price/month until cancelled. Payment is charged to your Apple ID when you confirm the purchase. Cancel anytime in your App Store account settings, at least 24 hours before the current period ends.';
+  }
+
+  @override
+  String autoRenewDisclosureGoogle(String price) {
+    return 'PawHealth Plus renews automatically at $price/month until cancelled. Cancel anytime in Google Play › Subscriptions.';
+  }
+
+  @override
+  String pdfDocumentTitle(String petName) {
+    return 'PawHealth report: $petName';
+  }
+
+  @override
+  String get pdfReportSubtitle => 'Pet medical report';
+
+  @override
+  String pdfGeneratedOn(String date) {
+    return 'Generated $date';
+  }
+
+  @override
+  String pdfPageOf(int page, int total) {
+    return 'Page $page of $total';
+  }
+
+  @override
+  String get pdfWeightTrend => 'Weight trend';
+
+  @override
+  String get pdfVaccinationHistory => 'Vaccination history';
+
+  @override
+  String get pdfCareLog => 'Health care log';
+
+  @override
+  String get pdfLatestSymptomCheck => 'Latest symptom check';
+
+  @override
+  String get pdfVetNotes => 'Vet notes';
+
+  @override
+  String get pdfAge => 'Age';
+
+  @override
+  String get pdfSex => 'Sex';
+
+  @override
+  String pdfNeutered(String sex) {
+    return '$sex (neutered)';
+  }
+
+  @override
+  String get pdfAllergies => 'Known allergies';
+
+  @override
+  String get pdfBreedRisks => 'Breed risks';
+
+  @override
+  String get pdfNoneOnFile => 'None on file';
+
+  @override
+  String get pdfNoVaccinations => 'No vaccinations on file.';
+
+  @override
+  String get pdfNoCareLogs => 'No health care records on file.';
+
+  @override
+  String get pdfNotEnoughWeights =>
+      'Not enough weight entries yet for a trend chart.';
+
+  @override
+  String get pdfNoSymptomChecks =>
+      'No symptom checks have been run for this pet yet.';
+
+  @override
+  String get pdfVaccine => 'Vaccine';
+
+  @override
+  String get pdfAdministered => 'Administered';
+
+  @override
+  String get pdfNextDue => 'Next due';
+
+  @override
+  String get pdfDate => 'Date';
+
+  @override
+  String get pdfCategory => 'Category';
+
+  @override
+  String get pdfEntry => 'Title';
+
+  @override
+  String get pdfDetails => 'Details';
+
+  @override
+  String pdfWeightKg(String value) {
+    return '$value kg';
+  }
+
+  @override
+  String pdfWeightRange(String min, String max, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count entries',
+      one: '1 entry',
+    );
+    return 'Range: $min - $max kg over $_temp0';
+  }
+
+  @override
+  String pdfCheckedOn(String date) {
+    return 'Checked $date';
+  }
+
+  @override
+  String get pdfAnswers => 'Answers';
+
+  @override
+  String pdfPreviewTitle(String petName) {
+    return '$petName · Vet report';
+  }
+
+  @override
+  String reminderTitle(String petName) {
+    return 'Vaccine reminder for $petName';
+  }
+
+  @override
+  String reminderDueToday(String vaccineName) {
+    return '$vaccineName is due today.';
+  }
+
+  @override
+  String reminderDueTomorrow(String vaccineName) {
+    return '$vaccineName is due tomorrow.';
+  }
+
+  @override
+  String get reminderChannelName => 'Vaccine reminders';
+
+  @override
+  String get reminderChannelDescription =>
+      'Reminders for upcoming pet vaccinations';
 }

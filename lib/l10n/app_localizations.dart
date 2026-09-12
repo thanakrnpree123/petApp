@@ -1935,6 +1935,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'PawHealth Plus renews automatically at {price}/month until cancelled. Cancel anytime in Google Play › Subscriptions.'**
   String autoRenewDisclosureGoogle(String price);
+
+  /// PDF document title (metadata)
+  ///
+  /// In en, this message translates to:
+  /// **'PawHealth report: {petName}'**
+  String pdfDocumentTitle(String petName);
+
+  /// PDF header, next to the PawHealth name
+  ///
+  /// In en, this message translates to:
+  /// **'Pet medical report'**
+  String get pdfReportSubtitle;
+
+  /// No description provided for @pdfGeneratedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated {date}'**
+  String pdfGeneratedOn(String date);
+
+  /// No description provided for @pdfPageOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {page} of {total}'**
+  String pdfPageOf(int page, int total);
+
+  /// No description provided for @pdfWeightTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight trend'**
+  String get pdfWeightTrend;
+
+  /// No description provided for @pdfVaccinationHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccination history'**
+  String get pdfVaccinationHistory;
+
+  /// No description provided for @pdfCareLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Health care log'**
+  String get pdfCareLog;
+
+  /// No description provided for @pdfLatestSymptomCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest symptom check'**
+  String get pdfLatestSymptomCheck;
+
+  /// Blank lines at the end of the PDF for the vet to write on
+  ///
+  /// In en, this message translates to:
+  /// **'Vet notes'**
+  String get pdfVetNotes;
+
+  /// No description provided for @pdfAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get pdfAge;
+
+  /// No description provided for @pdfSex.
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get pdfSex;
+
+  /// No description provided for @pdfNeutered.
+  ///
+  /// In en, this message translates to:
+  /// **'{sex} (neutered)'**
+  String pdfNeutered(String sex);
+
+  /// No description provided for @pdfAllergies.
+  ///
+  /// In en, this message translates to:
+  /// **'Known allergies'**
+  String get pdfAllergies;
+
+  /// Conditions the breed is prone to
+  ///
+  /// In en, this message translates to:
+  /// **'Breed risks'**
+  String get pdfBreedRisks;
+
+  /// No description provided for @pdfNoneOnFile.
+  ///
+  /// In en, this message translates to:
+  /// **'None on file'**
+  String get pdfNoneOnFile;
+
+  /// No description provided for @pdfNoVaccinations.
+  ///
+  /// In en, this message translates to:
+  /// **'No vaccinations on file.'**
+  String get pdfNoVaccinations;
+
+  /// No description provided for @pdfNoCareLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'No health care records on file.'**
+  String get pdfNoCareLogs;
+
+  /// No description provided for @pdfNotEnoughWeights.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough weight entries yet for a trend chart.'**
+  String get pdfNotEnoughWeights;
+
+  /// No description provided for @pdfNoSymptomChecks.
+  ///
+  /// In en, this message translates to:
+  /// **'No symptom checks have been run for this pet yet.'**
+  String get pdfNoSymptomChecks;
+
+  /// No description provided for @pdfVaccine.
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccine'**
+  String get pdfVaccine;
+
+  /// No description provided for @pdfAdministered.
+  ///
+  /// In en, this message translates to:
+  /// **'Administered'**
+  String get pdfAdministered;
+
+  /// No description provided for @pdfNextDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Next due'**
+  String get pdfNextDue;
+
+  /// No description provided for @pdfDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get pdfDate;
+
+  /// No description provided for @pdfCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get pdfCategory;
+
+  /// Care log table column: the entry's title
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get pdfEntry;
+
+  /// No description provided for @pdfDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get pdfDetails;
+
+  /// No description provided for @pdfWeightKg.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} kg'**
+  String pdfWeightKg(String value);
+
+  /// Keep the plain hyphen: the PDF fonts lack an en dash
+  ///
+  /// In en, this message translates to:
+  /// **'Range: {min} - {max} kg over {count, plural, =1{1 entry} other{{count} entries}}'**
+  String pdfWeightRange(String min, String max, int count);
+
+  /// No description provided for @pdfCheckedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked {date}'**
+  String pdfCheckedOn(String date);
+
+  /// No description provided for @pdfAnswers.
+  ///
+  /// In en, this message translates to:
+  /// **'Answers'**
+  String get pdfAnswers;
+
+  /// No description provided for @pdfPreviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{petName} · Vet report'**
+  String pdfPreviewTitle(String petName);
+
+  /// Notification title
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccine reminder for {petName}'**
+  String reminderTitle(String petName);
+
+  /// Notification body
+  ///
+  /// In en, this message translates to:
+  /// **'{vaccineName} is due today.'**
+  String reminderDueToday(String vaccineName);
+
+  /// Notification body
+  ///
+  /// In en, this message translates to:
+  /// **'{vaccineName} is due tomorrow.'**
+  String reminderDueTomorrow(String vaccineName);
+
+  /// Android notification category name, shown in system settings
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccine reminders'**
+  String get reminderChannelName;
+
+  /// Android notification category description
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders for upcoming pet vaccinations'**
+  String get reminderChannelDescription;
 }
 
 class _AppLocalizationsDelegate

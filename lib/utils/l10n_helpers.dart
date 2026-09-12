@@ -185,6 +185,25 @@ abstract final class L10nHelpers {
     return _retiredAdvice[check.advice]?.call(l10n) ?? check.advice;
   }
 
+  /// A saved answer's question and answer in the app language. Firestore
+  /// keeps the canonical English text, so both are looked up in the
+  /// symptom's tree; anything no longer in it stays as saved.
+  static ({String question, String answer}) savedAnswer(
+    AppLocalizations l10n,
+    SymptomCheck check,
+    SymptomAnswer saved,
+  ) {
+    final node = symptomById(check.symptomId)?.tree[saved.questionId];
+    if (node is! QuestionNode) {
+      return (question: saved.questionText, answer: saved.answer);
+    }
+    final matching = node.options.where((o) => o.label == saved.answer);
+    return (
+      question: question(l10n, node),
+      answer: matching.isEmpty ? saved.answer : option(l10n, matching.first),
+    );
+  }
+
   /// Advice of results since removed from the trees, keyed by the English
   /// text stored with older saved checks, so their history still shows in
   /// the user's language.

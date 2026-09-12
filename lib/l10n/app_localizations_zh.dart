@@ -994,4 +994,139 @@ class AppLocalizationsZh extends AppLocalizations {
   String autoRenewDisclosureGoogle(String price) {
     return 'PawHealth Plus 将以每月 $price 的价格自动续订，直至取消。可随时在 Google Play › 订阅中取消。';
   }
+
+  @override
+  String pdfDocumentTitle(String petName) {
+    return 'PawHealth 报告：$petName';
+  }
+
+  @override
+  String get pdfReportSubtitle => '宠物健康报告';
+
+  @override
+  String pdfGeneratedOn(String date) {
+    return '生成于 $date';
+  }
+
+  @override
+  String pdfPageOf(int page, int total) {
+    return '第 $page 页，共 $total 页';
+  }
+
+  @override
+  String get pdfWeightTrend => '体重趋势';
+
+  @override
+  String get pdfVaccinationHistory => '疫苗接种记录';
+
+  @override
+  String get pdfCareLog => '健康护理记录';
+
+  @override
+  String get pdfLatestSymptomCheck => '最近一次症状检查';
+
+  @override
+  String get pdfVetNotes => '兽医备注';
+
+  @override
+  String get pdfAge => '年龄';
+
+  @override
+  String get pdfSex => '性别';
+
+  @override
+  String pdfNeutered(String sex) {
+    return '$sex（已绝育）';
+  }
+
+  @override
+  String get pdfAllergies => '已知过敏';
+
+  @override
+  String get pdfBreedRisks => '品种易患疾病';
+
+  @override
+  String get pdfNoneOnFile => '无记录';
+
+  @override
+  String get pdfNoVaccinations => '暂无疫苗接种记录。';
+
+  @override
+  String get pdfNoCareLogs => '暂无健康护理记录。';
+
+  @override
+  String get pdfNotEnoughWeights => '体重记录不足，暂无法生成趋势图。';
+
+  @override
+  String get pdfNoSymptomChecks => '尚未为这只宠物进行过症状检查。';
+
+  @override
+  String get pdfVaccine => '疫苗';
+
+  @override
+  String get pdfAdministered => '接种日期';
+
+  @override
+  String get pdfNextDue => '下次接种';
+
+  @override
+  String get pdfDate => '日期';
+
+  @override
+  String get pdfCategory => '类别';
+
+  @override
+  String get pdfEntry => '标题';
+
+  @override
+  String get pdfDetails => '详情';
+
+  @override
+  String pdfWeightKg(String value) {
+    return '$value 公斤';
+  }
+
+  @override
+  String pdfWeightRange(String min, String max, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 条记录',
+    );
+    return '范围：$min - $max 公斤，共 $_temp0';
+  }
+
+  @override
+  String pdfCheckedOn(String date) {
+    return '检查于 $date';
+  }
+
+  @override
+  String get pdfAnswers => '回答';
+
+  @override
+  String pdfPreviewTitle(String petName) {
+    return '$petName · 兽医报告';
+  }
+
+  @override
+  String reminderTitle(String petName) {
+    return '$petName 的疫苗提醒';
+  }
+
+  @override
+  String reminderDueToday(String vaccineName) {
+    return '$vaccineName 今天到期。';
+  }
+
+  @override
+  String reminderDueTomorrow(String vaccineName) {
+    return '$vaccineName 明天到期。';
+  }
+
+  @override
+  String get reminderChannelName => '疫苗提醒';
+
+  @override
+  String get reminderChannelDescription => '宠物疫苗接种到期提醒';
 }

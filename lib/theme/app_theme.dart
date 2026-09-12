@@ -119,12 +119,16 @@ abstract final class AppTheme {
     // it on the app's licenses page.
     LicenseRegistry.addLicense(() async* {
       for (final (package, file) in [
-        ('Nunito', 'OFL-nunito.txt'),
-        ('IBM Plex Sans Thai Looped', 'OFL-ibmplexsansthailooped.txt'),
+        ('Nunito', 'google_fonts/OFL-nunito.txt'),
+        (
+          'IBM Plex Sans Thai Looped',
+          'google_fonts/OFL-ibmplexsansthailooped.txt',
+        ),
+        ('Noto Sans SC', 'fonts/OFL-notosanssc.txt'),
       ]) {
         yield LicenseEntryWithLineBreaks([
           package,
-        ], await rootBundle.loadString('assets/google_fonts/$file'));
+        ], await rootBundle.loadString('assets/$file'));
       }
     });
   }

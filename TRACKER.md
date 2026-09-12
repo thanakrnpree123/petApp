@@ -52,7 +52,7 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 - [ ] **RevenueCat** — follow `docs/revenuecat-setup.md`: stores, dashboard, public SDK keys in `.env`, and publish the Terms/Privacy pages at the URLs in `lib/config/legal_links.dart`. The app side (crash-proof service, debug mock, admin override, paywall renewal terms and legal links) is done.
 - [ ] **Re-enable App Check** (`TODO(app-check)` in `main.dart`): register debug tokens, configure providers, start with enforcement off, then turn it on.
 - [ ] **Final app icon and splash** — replace the placeholders, add a small-size logo to `BrandMark`, then `dart run flutter_launcher_icons` and `dart run flutter_native_splash:create`.
-- [ ] **Legal pages** — drafts of the Privacy Policy, Terms of Use and account-deletion page are in `web/legal/`. Fill in the highlighted placeholders (legal name, address, contact email, date, data region, minimum age), get a lawyer's review, remove the Draft banners, and deploy. A Thai version is advisable for PDPA notices.
+- [x] **Legal pages** — content filled in and confirmed by the owner (2026-09-12). ⚠️ The copies in `web/legal/` are still the drafts (highlighted placeholders, Draft banners): commit the final versions there before the next deploy to `main`, which publishes them.
 - [ ] **Store privacy disclosures** — App Store privacy labels and Play Data safety form. The data inventory in `web/legal/privacy.html` covers them: email, user ID, pet data and photos, purchases; no tracking, ads or analytics.
 - [ ] **Google Play account-deletion web link** — the page is drafted at `legal/delete-account.html` (see Legal pages); enter its URL in Play Console → Data safety once published.
 - [ ] **Medical-app review notes** — App Store guideline 1.4.1: keep the disclaimer visible and be ready to explain where the triage content comes from.
@@ -62,5 +62,5 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 - [ ] Enforce the free symptom-check limit on the server (Cloud Function). The client check can be bypassed and deliberately fails open when offline.
 - [ ] Sync Plus across platforms — a RevenueCat webhook that sets `users/{uid}.isPremium`. Today a mobile subscriber doesn't get Plus on web.
 - [ ] Add the Firebase "Delete User Data" extension as a server-side backstop for account deletion, and delete the RevenueCat subscriber record.
-- [ ] Localize the remaining English-only text: notification messages, PDF report, and some health-dashboard dialogs.
+- [x] Localize the remaining English-only text — vaccine reminders (rebuilt when the language changes) and the vet PDF report (labels, Buddhist-era dates in Thai, saved symptom answers; Chinese via a bundled Noto Sans SC subset) now follow the app language. The health-dashboard dialogs were already localized.
 - [x] Bundle fonts as assets so the first launch works offline — Nunito and IBM Plex Sans Thai Looped ship in `assets/google_fonts/` with runtime fetching off; Chinese uses the system font; the paw loader animation is bundled too (no more lottie.host).

@@ -98,8 +98,16 @@ already uses them:
 - [ ] Before a release build, check the paywall shows:
   - [ ] the store price and period
   - [ ] a **Restore Purchases** button (already there)
-  - [ ] links to the **Terms of Use** and **Privacy Policy** (not yet added;
-        both stores require them)
+  - [x] the auto-renewal terms for each store, and links to the **Terms of
+        Use** and **Privacy Policy** (also in Settings)
+- [ ] **Publish the legal pages** at the URLs in `lib/config/legal_links.dart`
+      (currently placeholders that 404), e.g. as `web/legal/terms.html` and
+      `web/legal/privacy.html`. The links in shipped builds start working as
+      soon as the pages exist. For iOS you may instead link Apple's standard
+      EULA as the Terms of Use.
+- [ ] Enter the same two URLs in the store listings: App Store Connect (the
+      Privacy Policy URL, plus the EULA in the app description or the
+      custom EULA field) and Play Console (App content → Privacy policy).
 - [ ] **iOS test:** use a real device signed in with the sandbox tester.
       Simulators need a StoreKit configuration file instead.
 - [ ] **Android test:** use a device with a license-tester account, with the

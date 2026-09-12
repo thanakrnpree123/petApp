@@ -9,12 +9,12 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('paw_loader.json is a valid Lottie composition', () async {
-    final data = await rootBundle.load('assets/animations/paw_loader.json');
+    final data = await rootBundle.load(PawLoader.animationAsset);
     final composition = await LottieComposition.fromByteData(data);
 
     expect(composition.duration.inMilliseconds, greaterThan(0));
-    expect(composition.bounds.width, 160);
-    expect(composition.bounds.height, 80);
+    // Square, as PawLoader lays it out.
+    expect(composition.bounds.width, composition.bounds.height);
   });
 
   testWidgets('PawLoader renders with an optional message', (tester) async {

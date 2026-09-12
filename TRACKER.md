@@ -63,4 +63,4 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 - [ ] Sync Plus across platforms — a RevenueCat webhook that sets `users/{uid}.isPremium`. Today a mobile subscriber doesn't get Plus on web.
 - [ ] Add the Firebase "Delete User Data" extension as a server-side backstop for account deletion, and delete the RevenueCat subscriber record.
 - [ ] Localize the remaining English-only text: notification messages, PDF report, and some health-dashboard dialogs.
-- [ ] Bundle fonts as assets so the first launch works offline (`google_fonts` currently downloads them at runtime).
+- [x] Bundle fonts as assets so the first launch works offline — Nunito and IBM Plex Sans Thai Looped ship in `assets/google_fonts/` with runtime fetching off; Chinese uses the system font; the paw loader animation is bundled too (no more lottie.host).

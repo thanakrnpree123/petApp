@@ -3,13 +3,10 @@ import 'package:lottie/lottie.dart';
 
 /// The app-wide loading indicator.
 ///
-/// Streams the animation from LottieFiles' CDN; if the device is offline or
-/// the CDN is unreachable, falls back to the bundled
-/// assets/animations/paw_loader.json so the loader itself can never fail to
-/// appear.
+/// The animation ships with the app (it used to stream from LottieFiles'
+/// CDN), so it shows offline and no third party is contacted.
 class PawLoader extends StatelessWidget {
-  static const String animationUrl =
-      'https://lottie.host/e6b4bfbf-cd48-4814-abed-c1947c3dcd73/OViUj87HO9.json';
+  static const String animationAsset = 'assets/animations/paw_loader.json';
 
   final double size;
   final String? message;
@@ -22,17 +19,11 @@ class PawLoader extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Lottie.network(
-            animationUrl,
+          Lottie.asset(
+            animationAsset,
             width: size,
             height: size,
             fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) => Lottie.asset(
-              'assets/animations/paw_loader.json',
-              width: size,
-              height: size / 2,
-              fit: BoxFit.contain,
-            ),
           ),
           if (message != null) ...[
             const SizedBox(height: 8),

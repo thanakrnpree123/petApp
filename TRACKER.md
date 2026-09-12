@@ -52,7 +52,7 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 - [ ] **RevenueCat** — follow `docs/revenuecat-setup.md`: stores, dashboard, public SDK keys in `.env`, and publish the Terms/Privacy pages at the URLs in `lib/config/legal_links.dart`. The app side (crash-proof service, debug mock, admin override, paywall renewal terms and legal links) is done.
 - [ ] **Re-enable App Check** (`TODO(app-check)` in `main.dart`): register debug tokens, configure providers, start with enforcement off, then turn it on.
 - [ ] **Final app icon and splash** — replace the placeholders, add a small-size logo to `BrandMark`, then `dart run flutter_launcher_icons` and `dart run flutter_native_splash:create`.
-- [x] **Legal pages** — content filled in and confirmed by the owner (2026-09-12). ⚠️ The copies in `web/legal/` are still the drafts (highlighted placeholders, Draft banners): commit the final versions there before the next deploy to `main`, which publishes them.
+- [x] **Legal pages** — finalized by the owner and committed to `web/legal/` (2026-09-12): Privacy Policy, Terms of Use and account deletion, effective 12 September 2026. Published on the next deploy to `main`.
 - [ ] **Store privacy disclosures** — App Store privacy labels and Play Data safety form. The data inventory in `web/legal/privacy.html` covers them: email, user ID, pet data and photos, purchases; no tracking, ads or analytics.
 - [ ] **Google Play account-deletion web link** — the page is drafted at `legal/delete-account.html` (see Legal pages); enter its URL in Play Console → Data safety once published.
 - [ ] **Medical-app review notes** — App Store guideline 1.4.1: keep the disclaimer visible and be ready to explain where the triage content comes from.

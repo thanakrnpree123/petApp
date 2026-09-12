@@ -12,6 +12,7 @@ import 'providers/subscription_provider.dart';
 import 'screens/auth/auth_wrapper.dart';
 import 'theme/app_theme.dart';
 import 'widgets/settings/language_dialog.dart';
+import 'services/app_check_setup.dart';
 import 'services/notification_service.dart';
 
 Future<void> main() async {
@@ -19,18 +20,9 @@ Future<void> main() async {
   AppTheme.useBundledFonts();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final prefs = await SharedPreferences.getInstance();
-  // TODO(app-check): App Check activation temporarily disabled — attestation
-  // was failing during development. Before production release, restore the
-  // imports (firebase_app_check, flutter/foundation) and this block:
-  //
-  // await FirebaseAppCheck.instance.activate(
-  //   providerAndroid: kDebugMode
-  //       ? const AndroidDebugProvider()
-  //       : const AndroidPlayIntegrityProvider(),
-  //   providerApple: kDebugMode
-  //       ? const AppleDebugProvider()
-  //       : const AppleDeviceCheckProvider(),
-  // );
+  // Before any Firestore/Storage/Auth call, so requests carry a token.
+  // Never throws; enforcement is off in the console (see AppCheckSetup).
+  await AppCheckSetup.activate();
   runApp(PawHealthApp(prefs: prefs));
   // Deferred until after the first frame: init parses the timezone database
   // on the main thread, which shouldn't block app startup. It never asks

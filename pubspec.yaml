@@ -94,6 +94,8 @@ flutter:
     - assets/animations/paw_loader.json
     - assets/fonts/NotoSansThai-Regular.ttf
     - assets/fonts/NotoSansThai-Bold.ttf
+    # Bundled app fonts (see AppTheme.useBundledFonts).
+    - assets/google_fonts/
   # - images/a_dot_burr.jpeg
   # - images/a_dot_ham.jpeg
 

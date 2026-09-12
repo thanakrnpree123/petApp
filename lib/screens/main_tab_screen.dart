@@ -40,9 +40,10 @@ class _MainTabScreenState extends State<MainTabScreen> {
   @override
   void initState() {
     super.initState();
-    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final user = FirebaseAuth.instance.currentUser!;
+    final userId = user.uid;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SubscriptionProvider>().init(userId);
+      context.read<SubscriptionProvider>().init(userId, email: user.email);
     });
     // Reminders are device-local and cleared on sign-out; rebuild them from
     // the account. Fire-and-forget — a failure just keeps the old set.

@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
+import '../../config/legal_links.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers/subscription_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/l10n_helpers.dart';
+import '../../widgets/common/legal_link.dart';
 import '../../widgets/common/paw_loader.dart';
 
 class PaywallScreen extends StatelessWidget {
-  const PaywallScreen({super.key});
+  /// Override for tests; opens links in the browser by default.
+  final UrlOpener? openUrl;
+
+  const PaywallScreen({super.key, this.openUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +101,16 @@ class PaywallScreen extends StatelessWidget {
                           _PurchaseActions(
                             subscription: subscription,
                             package: package,
+                          ),
+                          _LegalFooter(
+                            // Subscription terms belong wherever a
+                            // subscription can actually be bought.
+                            price:
+                                subscription.availability ==
+                                    PurchaseAvailability.available
+                                ? package?.storeProduct.priceString
+                                : null,
+                            openUrl: openUrl,
                           ),
                         ],
                       ),
@@ -263,6 +278,66 @@ class _BenefitRow extends StatelessWidget {
                 color: muted ? colorScheme.onSurfaceVariant : null,
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// What the stores require under a subscription offer: the renewal terms
+/// (price, auto-renewal, how to cancel) and working links to the Terms of
+/// Use and Privacy Policy (App Store guideline 3.1.2, Google Play's
+/// subscriptions policy).
+class _LegalFooter extends StatelessWidget {
+  /// The price being offered, or null when nothing can be bought here.
+  final String? price;
+  final UrlOpener? openUrl;
+
+  const _LegalFooter({required this.price, this.openUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+    final price = this.price;
+    final disclosure = price == null
+        ? null
+        : switch (theme.platform) {
+            TargetPlatform.iOS ||
+            TargetPlatform.macOS => l10n.autoRenewDisclosureApple(price),
+            TargetPlatform.android => l10n.autoRenewDisclosureGoogle(price),
+            _ => null,
+          };
+
+    Widget link(String label, Uri url) => TextButton(
+      style: TextButton.styleFrom(
+        visualDensity: VisualDensity.compact,
+        textStyle: theme.textTheme.bodySmall?.copyWith(
+          decoration: TextDecoration.underline,
+        ),
+      ),
+      onPressed: () => openLegalLink(context, url, opener: openUrl),
+      child: Text(label),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: Column(
+        children: [
+          if (disclosure != null)
+            Text(disclosure, textAlign: TextAlign.center, style: muted),
+          Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              link(l10n.termsOfUse, LegalLinks.termsOfUse),
+              Text('·', style: muted),
+              link(l10n.privacyPolicy, LegalLinks.privacyPolicy),
+            ],
           ),
         ],
       ),

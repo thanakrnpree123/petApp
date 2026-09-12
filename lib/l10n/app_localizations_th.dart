@@ -1049,4 +1049,23 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get articleDisclaimer =>
       'ข้อมูลทั่วไปเท่านั้น ไม่สามารถใช้แทนคำแนะนำจากสัตวแพทย์ได้ หากสัตว์เลี้ยงของคุณดูไม่สบาย โปรดติดต่อสัตวแพทย์';
+
+  @override
+  String get termsOfUse => 'ข้อกำหนดการใช้งาน';
+
+  @override
+  String get privacyPolicy => 'นโยบายความเป็นส่วนตัว';
+
+  @override
+  String get linkOpenFailed => 'ไม่สามารถเปิดลิงก์ได้ โปรดลองอีกครั้ง';
+
+  @override
+  String autoRenewDisclosureApple(String price) {
+    return 'PawHealth Plus ต่ออายุอัตโนมัติในราคา $price/เดือน จนกว่าจะยกเลิก ระบบจะเรียกเก็บเงินจาก Apple ID ของคุณเมื่อยืนยันการซื้อ ยกเลิกได้ทุกเมื่อในการตั้งค่าบัญชี App Store อย่างน้อย 24 ชั่วโมงก่อนสิ้นสุดรอบปัจจุบัน';
+  }
+
+  @override
+  String autoRenewDisclosureGoogle(String price) {
+    return 'PawHealth Plus ต่ออายุอัตโนมัติในราคา $price/เดือน จนกว่าจะยกเลิก ยกเลิกได้ทุกเมื่อใน Google Play › การสมัครใช้บริการ';
+  }
 }

@@ -1053,4 +1053,23 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get articleDisclaimer =>
       'General information, not a substitute for advice from your vet. If your pet seems unwell, contact a vet.';
+
+  @override
+  String get termsOfUse => 'Terms of Use';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get linkOpenFailed => 'Couldn\'t open the link. Please try again.';
+
+  @override
+  String autoRenewDisclosureApple(String price) {
+    return 'PawHealth Plus renews automatically at $price/month until cancelled. Payment is charged to your Apple ID when you confirm the purchase. Cancel anytime in your App Store account settings, at least 24 hours before the current period ends.';
+  }
+
+  @override
+  String autoRenewDisclosureGoogle(String price) {
+    return 'PawHealth Plus renews automatically at $price/month until cancelled. Cancel anytime in Google Play › Subscriptions.';
+  }
 }

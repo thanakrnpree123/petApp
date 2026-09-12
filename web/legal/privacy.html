@@ -111,10 +111,12 @@
     history.</li>
     <li><strong>Apple and Google</strong> process payments for subscriptions
     under their own privacy policies.</li>
-    <li><strong>Google Fonts:</strong> the app downloads its fonts from
-    Google, which sees your device's IP address when it does.</li>
     <li><strong>GitHub Pages</strong> hosts the web app, and sees your IP
     address when you load it.</li>
+    <li><strong>Google, for the web app only:</strong> the web app loads
+    parts of its framework (Flutter), the Firebase libraries and some
+    standard fonts from Google's servers, which see your IP address. The iOS
+    and Android apps include these and don't make those requests.</li>
   </ul>
   <p>Some providers are outside Thailand, including in the United States.
   Where the PDPA requires it, we make sure these transfers are protected, for

@@ -47,9 +47,8 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 ## Pre-release checklist
 
 ### Must do before submitting to the stores
-- [ ] **Deploy security rules** — `firebase deploy --only firestore:rules,storage:rules`. Account deletion fails at the profile step without the new `delete` rule.
-- [ ] **Veterinary review** of all symptom-checker content: 9 trees in `lib/data/decision_trees/`, English canonical text plus the AI-translated TH/ZH strings.
-- [ ] **Veterinary review of the 6 starter articles** — `node tool/seed_articles/seed.js --review > review.md`. Then set `vet_reviewed`/`reviewed_by` and seed: `node seed.js --apply --project pawhealth-app-2026`. Until then, the Articles tab shows "No articles available".
+- [x] **Deploy security rules** — deployed to `pawhealth-app-2026` on 2026-09-11 (Firestore rules incl. the account-deletion `delete` rule; Storage rules).
+- [ ] **Veterinary review** of the symptom checker (9 flows) and the 6 starter articles, in one packet: `flutter test tool/vet_review/generate_test.dart` writes `tool/vet_review/out/pawhealth-vet-review-<date>.html` (print to PDF). After approval: apply corrections, set `vet_reviewed`/`reviewed_by` in `tool/seed_articles/articles.json`, and seed with `node tool/seed_articles/seed.js --apply --project pawhealth-app-2026`. Until then, the Articles tab shows "No articles available".
 - [ ] **RevenueCat** — follow `docs/revenuecat-setup.md`: stores, dashboard, public SDK keys in `.env`, and publish the Terms/Privacy pages at the URLs in `lib/config/legal_links.dart`. The app side (crash-proof service, debug mock, admin override, paywall renewal terms and legal links) is done.
 - [ ] **Re-enable App Check** (`TODO(app-check)` in `main.dart`): register debug tokens, configure providers, start with enforcement off, then turn it on.
 - [ ] **Final app icon and splash** — replace the placeholders, add a small-size logo to `BrandMark`, then `dart run flutter_launcher_icons` and `dart run flutter_native_splash:create`.

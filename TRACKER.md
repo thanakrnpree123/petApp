@@ -52,8 +52,9 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 - [ ] **RevenueCat** — follow `docs/revenuecat-setup.md`: stores, dashboard, public SDK keys in `.env`, and publish the Terms/Privacy pages at the URLs in `lib/config/legal_links.dart`. The app side (crash-proof service, debug mock, admin override, paywall renewal terms and legal links) is done.
 - [ ] **Re-enable App Check** (`TODO(app-check)` in `main.dart`): register debug tokens, configure providers, start with enforcement off, then turn it on.
 - [ ] **Final app icon and splash** — replace the placeholders, add a small-size logo to `BrandMark`, then `dart run flutter_launcher_icons` and `dart run flutter_native_splash:create`.
-- [ ] **Store privacy disclosures** — privacy policy URL; App Store privacy labels and Play Data safety form (email, pet health data, photos).
-- [ ] **Google Play account-deletion web link** — Play requires a web page or form for deletion requests in addition to the in-app option.
+- [ ] **Legal pages** — drafts of the Privacy Policy, Terms of Use and account-deletion page are in `web/legal/`. Fill in the highlighted placeholders (legal name, address, contact email, date, data region, minimum age), get a lawyer's review, remove the Draft banners, and deploy. A Thai version is advisable for PDPA notices.
+- [ ] **Store privacy disclosures** — App Store privacy labels and Play Data safety form. The data inventory in `web/legal/privacy.html` covers them: email, user ID, pet data and photos, purchases; no tracking, ads or analytics.
+- [ ] **Google Play account-deletion web link** — the page is drafted at `legal/delete-account.html` (see Legal pages); enter its URL in Play Console → Data safety once published.
 - [ ] **Medical-app review notes** — App Store guideline 1.4.1: keep the disclaimer visible and be ready to explain where the triage content comes from.
 - [ ] **Device QA pass** on iOS and Android 13+: reminder explainer, 9 AM delivery, camera picker, logout/login reminder rebuild, account deletion.
 

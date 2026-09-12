@@ -100,14 +100,15 @@ already uses them:
   - [ ] a **Restore Purchases** button (already there)
   - [x] the auto-renewal terms for each store, and links to the **Terms of
         Use** and **Privacy Policy** (also in Settings)
-- [ ] **Publish the legal pages** at the URLs in `lib/config/legal_links.dart`
-      (currently placeholders that 404), e.g. as `web/legal/terms.html` and
-      `web/legal/privacy.html`. The links in shipped builds start working as
-      soon as the pages exist. For iOS you may instead link Apple's standard
-      EULA as the Terms of Use.
+- [ ] **Finish and publish the legal pages.** Drafts are in `web/legal/`
+      (`terms.html`, `privacy.html`, `delete-account.html`). Fill in the
+      highlighted placeholders, have a lawyer review them, remove the
+      "Draft" banners, then deploy (merge to `main`). The app already links
+      to these URLs.
 - [ ] Enter the same two URLs in the store listings: App Store Connect (the
       Privacy Policy URL, plus the EULA in the app description or the
-      custom EULA field) and Play Console (App content → Privacy policy).
+      custom EULA field) and Play Console (App content → Privacy policy, and
+      Data safety → the account deletion URL, `legal/delete-account.html`).
 - [ ] **iOS test:** use a real device signed in with the sandbox tester.
       Simulators need a StoreKit configuration file instead.
 - [ ] **Android test:** use a device with a license-tester account, with the

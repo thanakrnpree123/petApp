@@ -62,5 +62,5 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 - [ ] Enforce the free symptom-check limit on the server (Cloud Function). The client check can be bypassed and deliberately fails open when offline.
 - [ ] Sync Plus across platforms — a RevenueCat webhook that sets `users/{uid}.isPremium`. Today a mobile subscriber doesn't get Plus on web.
 - [ ] Add the Firebase "Delete User Data" extension as a server-side backstop for account deletion, and delete the RevenueCat subscriber record.
-- [ ] Localize the remaining English-only text: notification messages, PDF report, and some health-dashboard dialogs.
+- [x] Localize the remaining English-only text — vaccine reminders (rebuilt when the language changes) and the vet PDF report (labels, Buddhist-era dates in Thai, saved symptom answers; Chinese via a bundled Noto Sans SC subset) now follow the app language. The health-dashboard dialogs were already localized.
 - [x] Bundle fonts as assets so the first launch works offline — Nunito and IBM Plex Sans Thai Looped ship in `assets/google_fonts/` with runtime fetching off; Chinese uses the system font; the paw loader animation is bundled too (no more lottie.host).

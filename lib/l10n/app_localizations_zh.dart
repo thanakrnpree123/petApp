@@ -975,4 +975,23 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get articleDisclaimer => '仅为一般信息，不能替代兽医的建议。如果您的宠物看起来不舒服，请联系兽医。';
+
+  @override
+  String get termsOfUse => '使用条款';
+
+  @override
+  String get privacyPolicy => '隐私政策';
+
+  @override
+  String get linkOpenFailed => '无法打开链接，请重试。';
+
+  @override
+  String autoRenewDisclosureApple(String price) {
+    return 'PawHealth Plus 将以每月 $price 的价格自动续订，直至取消。确认购买时将从您的 Apple ID 扣款。请在当前周期结束前至少 24 小时，在 App Store 账户设置中取消。';
+  }
+
+  @override
+  String autoRenewDisclosureGoogle(String price) {
+    return 'PawHealth Plus 将以每月 $price 的价格自动续订，直至取消。可随时在 Google Play › 订阅中取消。';
+  }
 }

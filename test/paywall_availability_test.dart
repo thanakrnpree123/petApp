@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pawhealth/config/legal_links.dart';
 import 'package:pawhealth/l10n/app_localizations.dart';
 import 'package:pawhealth/providers/subscription_provider.dart';
 import 'package:pawhealth/screens/subscription/paywall_screen.dart';
 import 'package:pawhealth/services/revenuecat_service.dart';
 import 'package:pawhealth/theme/app_theme.dart';
+import 'package:pawhealth/widgets/common/legal_link.dart';
 import 'package:provider/provider.dart';
 
 class _FakeFirestore implements FirebaseFirestore {
@@ -101,7 +103,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(subscription.isMockOffering, isTrue);
-    expect(find.textContaining(r'$2.99 (mock)'), findsOneWidget);
+    expect(find.text(r'$2.99 (mock)/month'), findsOneWidget);
 
     await tester.tap(find.text('Subscribe'));
     await tester.pumpAndSettle();
@@ -113,24 +115,128 @@ void main() {
       reason: 'closes on success',
     );
   });
+
+  group('store compliance', () {
+    testWidgets('iOS: renewal terms name the price and Apple ID', (
+      tester,
+    ) async {
+      final subscription = _mockSubscription();
+      await _pumpPaywall(tester, subscription, platform: TargetPlatform.iOS);
+      await subscription.init('u1');
+      await tester.pumpAndSettle();
+
+      final terms = find.textContaining('renews automatically at');
+      expect(terms, findsOneWidget);
+      final text = tester.widget<Text>(terms).data!;
+      expect(text, contains(r'$2.99 (mock)'));
+      expect(text, contains('Apple ID'));
+      expect(text, contains('24 hours'));
+    });
+
+    testWidgets('Android: renewal terms say how to cancel in Google Play', (
+      tester,
+    ) async {
+      final subscription = _mockSubscription();
+      await _pumpPaywall(tester, subscription);
+      await subscription.init('u1');
+      await tester.pumpAndSettle();
+
+      expect(
+        find.textContaining('Google Play › Subscriptions'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Apple ID'), findsNothing);
+    });
+
+    testWidgets('Terms of Use and Privacy Policy open the right pages', (
+      tester,
+    ) async {
+      final opened = <Uri>[];
+      final subscription = _mockSubscription();
+      await _pumpPaywall(
+        tester,
+        subscription,
+        openUrl: (url) async {
+          opened.add(url);
+          return true;
+        },
+      );
+      await subscription.init('u1');
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Terms of Use'));
+      await tester.tap(find.text('Privacy Policy'));
+      await tester.pump();
+
+      expect(opened, [LegalLinks.termsOfUse, LegalLinks.privacyPolicy]);
+    });
+
+    testWidgets('a link that fails to open says so', (tester) async {
+      final subscription = _mockSubscription();
+      await _pumpPaywall(tester, subscription, openUrl: (_) async => false);
+      await tester.tap(find.text('Privacy Policy'));
+      await tester.pump();
+
+      expect(
+        find.text("Couldn't open the link. Please try again."),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('with nothing to buy, no renewal terms but links stay', (
+      tester,
+    ) async {
+      final subscription = SubscriptionProvider(
+        service: RevenueCatService(
+          appleApiKey: '',
+          googleApiKey: '',
+          useMockOfferings: false,
+        ),
+        firestore: _FakeFirestore(),
+      );
+      await _pumpPaywall(tester, subscription, platform: TargetPlatform.iOS);
+      await subscription.init('u1');
+      await tester.pump();
+
+      expect(find.textContaining('renews automatically'), findsNothing);
+      expect(find.text('Terms of Use'), findsOneWidget);
+      expect(find.text('Privacy Policy'), findsOneWidget);
+    });
+  });
 }
+
+SubscriptionProvider _mockSubscription() => SubscriptionProvider(
+  service: RevenueCatService(
+    appleApiKey: '',
+    googleApiKey: '',
+    useMockOfferings: true,
+  ),
+  firestore: _FakeFirestore(),
+);
 
 /// The paywall pushed over a home screen, as in the app.
 Future<void> _pumpPaywall(
   WidgetTester tester,
-  SubscriptionProvider subscription,
-) async {
+  SubscriptionProvider subscription, {
+  TargetPlatform platform = TargetPlatform.android,
+  UrlOpener? openUrl,
+}) async {
   await tester.pumpWidget(
     ChangeNotifierProvider.value(
       value: subscription,
       child: MaterialApp(
-        theme: ThemeData(extensions: const [StatusColors.light]),
+        theme: ThemeData(
+          platform: platform,
+          extensions: const [StatusColors.light],
+        ),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Builder(
           builder: (context) => TextButton(
             onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const PaywallScreen()),
+              MaterialPageRoute<void>(
+                builder: (_) => PaywallScreen(openUrl: openUrl),
+              ),
             ),
             child: const Text('open'),
           ),

@@ -1905,6 +1905,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'General information, not a substitute for advice from your vet. If your pet seems unwell, contact a vet.'**
   String get articleDisclaimer;
+
+  /// Link to the Terms of Use (EULA)
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get termsOfUse;
+
+  /// Link to the privacy policy
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// Snackbar when a web link can't be opened
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the link. Please try again.'**
+  String get linkOpenFailed;
+
+  /// Subscription terms shown above the Subscribe button on iOS (App Store guideline 3.1.2)
+  ///
+  /// In en, this message translates to:
+  /// **'PawHealth Plus renews automatically at {price}/month until cancelled. Payment is charged to your Apple ID when you confirm the purchase. Cancel anytime in your App Store account settings, at least 24 hours before the current period ends.'**
+  String autoRenewDisclosureApple(String price);
+
+  /// Subscription terms shown above the Subscribe button on Android (Google Play subscriptions policy)
+  ///
+  /// In en, this message translates to:
+  /// **'PawHealth Plus renews automatically at {price}/month until cancelled. Cancel anytime in Google Play › Subscriptions.'**
+  String autoRenewDisclosureGoogle(String price);
 }
 
 class _AppLocalizationsDelegate

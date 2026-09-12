@@ -416,5 +416,15 @@
   "articleCatSymptoms": "Symptoms",
   "@articleCatSymptoms": {"description": "Health article category: signs of illness"},
   "articleDisclaimer": "General information, not a substitute for advice from your vet. If your pet seems unwell, contact a vet.",
-  "@articleDisclaimer": {"description": "Footer under every health article"}
+  "@articleDisclaimer": {"description": "Footer under every health article"},
+  "termsOfUse": "Terms of Use",
+  "@termsOfUse": {"description": "Link to the Terms of Use (EULA)"},
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {"description": "Link to the privacy policy"},
+  "linkOpenFailed": "Couldn't open the link. Please try again.",
+  "@linkOpenFailed": {"description": "Snackbar when a web link can't be opened"},
+  "autoRenewDisclosureApple": "PawHealth Plus renews automatically at {price}/month until cancelled. Payment is charged to your Apple ID when you confirm the purchase. Cancel anytime in your App Store account settings, at least 24 hours before the current period ends.",
+  "@autoRenewDisclosureApple": {"description": "Subscription terms shown above the Subscribe button on iOS (App Store guideline 3.1.2)", "placeholders": {"price": {"type": "String", "example": "฿99.00"}}},
+  "autoRenewDisclosureGoogle": "PawHealth Plus renews automatically at {price}/month until cancelled. Cancel anytime in Google Play › Subscriptions.",
+  "@autoRenewDisclosureGoogle": {"description": "Subscription terms shown above the Subscribe button on Android (Google Play subscriptions policy)", "placeholders": {"price": {"type": "String", "example": "฿99.00"}}}
 }

@@ -48,3 +48,6 @@ app.*.map.json
 .env
 .env.*
 !.env.example
+
+# Generated vet review packets (tool/vet_review/generate_test.dart)
+/tool/vet_review/out/

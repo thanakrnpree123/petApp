@@ -1,0 +1,74 @@
+:root {
+  --bg: #f7f5f1;
+  --surface: #ffffff;
+  --ink: #1f2623;
+  --muted: #5c6661;
+  --brand: #3f7a6b;
+  --line: #e6e2db;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.65 -apple-system, "Segoe UI", "Noto Sans", "Noto Sans Thai",
+    "Sukhumvit Set", "PingFang SC", "Noto Sans SC", sans-serif;
+}
+main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding-block: 32px 64px;
+  padding-inline: 20px;
+}
+header .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--brand);
+  font-weight: 800;
+  text-decoration: none;
+}
+header .brand img { width: 32px; height: 32px; border-radius: 8px; }
+h1 { font-size: 2rem; line-height: 1.2; margin: 20px 0 4px; }
+h2 { font-size: 1.25rem; margin: 32px 0 8px; }
+h3 { font-size: 1.05rem; margin: 20px 0 6px; }
+p, li { max-width: 68ch; }
+.updated { color: var(--muted); margin-top: 0; }
+a { color: var(--brand); }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 4px 20px;
+  margin: 16px 0;
+}
+table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; }
+.table-wrap { overflow-x: auto; }
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+}
+th { font-weight: 600; }
+.steps li { margin-bottom: 6px; }
+nav.legal {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+nav.legal a { margin-right: 16px; }
+
+/* Draft markers: remove the banner and replace every <mark> before
+   publishing. */
+.draft {
+  background: #fff4d6;
+  border: 1px solid #e8c874;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+mark { background: #ffe58a; padding: 0 3px; border-radius: 3px; }

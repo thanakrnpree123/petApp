@@ -15,6 +15,11 @@ abstract final class LegalLinks {
 
   /// Not linked in the app (deletion is in Settings), but Google Play's
   /// Data safety form requires this web page.
+  /// Not linked in the app either; the App Store requires a support URL.
+  static final support = Uri.parse(
+    'https://thanakrnpree123.github.io/petApp/legal/support.html',
+  );
+
   static final accountDeletion = Uri.parse(
     'https://thanakrnpree123.github.io/petApp/legal/delete-account.html',
   );

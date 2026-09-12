@@ -27,4 +27,15 @@ void main() {
       }
     });
   }
+
+  test('the support page exists and links to every legal page', () {
+    final url = LegalLinks.support;
+    final file = File('web/${url.path.substring('/petApp/'.length)}');
+    expect(file.existsSync(), isTrue);
+    final html = file.readAsStringSync();
+    for (final other in links.values) {
+      expect(html, contains('href="${other.pathSegments.last}"'));
+    }
+    expect(html, contains('mailto:'));
+  });
 }

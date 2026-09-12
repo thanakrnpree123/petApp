@@ -49,13 +49,18 @@ RICE reach is estimated users affected per month per 1,000 MAU (no analytics yet
 ### Must do before submitting to the stores
 - [x] **Deploy security rules** — deployed to `pawhealth-app-2026` on 2026-09-11 (Firestore rules incl. the account-deletion `delete` rule; Storage rules).
 - [ ] **Veterinary review** of the symptom checker (9 flows) and the 6 starter articles, in one packet: `flutter test tool/vet_review/generate_test.dart` writes `tool/vet_review/out/pawhealth-vet-review-<date>.html` (print to PDF). After approval: apply corrections, set `vet_reviewed`/`reviewed_by` in `tool/seed_articles/articles.json`, and seed with `node tool/seed_articles/seed.js --apply --project pawhealth-app-2026`. Until then, the Articles tab shows "No articles available".
-- [ ] **RevenueCat** — follow `docs/revenuecat-setup.md`: stores, dashboard, public SDK keys in `.env`, and publish the Terms/Privacy pages at the URLs in `lib/config/legal_links.dart`. The app side (crash-proof service, debug mock, admin override, paywall renewal terms and legal links) is done.
+- [ ] **RevenueCat** — follow `docs/revenuecat-setup.md`: stores, dashboard, public SDK keys in `.env`. The app side (crash-proof service, debug mock, admin override, paywall renewal terms and legal links) is done, and the legal pages are live.
 - [ ] **App Check** — code done (`AppCheckSetup`: debug providers in debug builds; Play Integrity / App Attest + DeviceCheck / reCAPTCHA Enterprise in release; never blocks startup). Remaining console steps in `docs/app-check-setup.md`: register the apps, App Attest capability in Xcode, debug tokens; enforce only after the metrics show verified traffic.
 - [ ] **Final app icon and splash** — replace the placeholders, add a small-size logo to `BrandMark`, then `dart run flutter_launcher_icons` and `dart run flutter_native_splash:create`.
 - [x] **Legal pages** — finalized by the owner and committed to `web/legal/` (2026-09-12): Privacy Policy, Terms of Use and account deletion, effective 12 September 2026. Published on the next deploy to `main`.
-- [ ] **Store privacy disclosures** — App Store privacy labels and Play Data safety form. The data inventory in `web/legal/privacy.html` covers them: email, user ID, pet data and photos, purchases; no tracking, ads or analytics.
-- [ ] **Google Play account-deletion web link** — the page is drafted at `legal/delete-account.html` (see Legal pages); enter its URL in Play Console → Data safety once published.
-- [ ] **Medical-app review notes** — App Store guideline 1.4.1: keep the disclaimer visible and be ready to explain where the triage content comes from.
+- [ ] **Store privacy disclosures and ratings** — answer sheet in `docs/store-forms.md`: App Store privacy labels and age rating; Play Data safety, content rating, target audience, health apps declaration. Confirm the ⚠ SDK items against Firebase's and RevenueCat's disclosure guides.
+- [ ] **Google Play account-deletion web link** — live at https://thanakrnpree123.github.io/petApp/legal/delete-account.html; enter it in Play Console → Data safety.
+- [ ] **Medical-app review notes and demo account** — draft notes in `docs/store-forms.md` §6 (finish after the vet review); create a reviewer account with a sample pet for both stores.
+- [ ] **Android release signing** — code done (`android/key.properties`, see `key.properties.example`; verified with a test key). Create the real upload keystore, back it up, and enrol in Play App Signing on first upload.
+- [x] **iOS export compliance and privacy manifest** — `ITSAppUsesNonExemptEncryption` = NO in Info.plist; `ios/Runner/PrivacyInfo.xcprivacy` (no tracking; email, user ID, photos, pet records, purchases).
+- [ ] **App Store support URL** — `web/legal/support.html`; live after the next deploy to `main`.
+- [ ] **Google Play testing requirement** — personal developer accounts created after Nov 2023 must run a closed test with ≥12 testers for 14 days before production access. Start early.
+- [ ] **Store listings** — name, subtitle, description and keywords in EN/TH/ZH; screenshots for iPhone **and iPad** (iPad support stays on) and Android phones; Play feature graphic (1024×500).
 - [ ] **Device QA pass** on iOS and Android 13+: reminder explainer, 9 AM delivery, camera picker, logout/login reminder rebuild, account deletion.
 
 ### Should do soon after launch

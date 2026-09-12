@@ -1,0 +1,13 @@
+# Release signing for Google Play. Copy to android/key.properties (git-ignored)
+# and fill in. Create the upload keystore once, outside the repo:
+#
+#   keytool -genkeypair -v -keystore ~/keys/pawhealth-upload.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+#
+# Back up the keystore and passwords somewhere safe (a password manager):
+# with Play App Signing, Google holds the real app signing key, and a lost
+# upload key can be reset through Play Console support, but it takes days.
+storeFile=/Users/you/keys/pawhealth-upload.jks
+storePassword=
+keyAlias=upload
+keyPassword=

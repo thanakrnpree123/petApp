@@ -400,6 +400,48 @@ class AppLocalizationsTh extends AppLocalizations {
   String get careParasiteControl => 'การป้องกันปรสิต';
 
   @override
+  String get careDeworming => 'ถ่ายพยาธิ';
+
+  @override
+  String get careEctoparasite => 'ป้องกันเห็บหมัด';
+
+  @override
+  String get careCategoryLabel => 'ประเภท';
+
+  @override
+  String get careSelectNextDue => 'ตั้งนัดครั้งต่อไป';
+
+  @override
+  String get careClearNextDue => 'ล้างนัดครั้งต่อไป';
+
+  @override
+  String get careRemindMe => 'เตือนฉันล่วงหน้า 1 วัน';
+
+  @override
+  String get clinicalDetails => 'ข้อมูลทางคลินิก (ไม่บังคับ)';
+
+  @override
+  String get veterinarianName => 'สัตวแพทย์';
+
+  @override
+  String get vetLicenseNo => 'เลขที่ใบอนุญาต';
+
+  @override
+  String get vaccineLotNo => 'หมายเลขชุดผลิตวัคซีน';
+
+  @override
+  String get medicineLabel => 'ชนิดยาและขนาดยา';
+
+  @override
+  String get pdfVeterinarian => 'สัตวแพทย์';
+
+  @override
+  String get pdfLotNo => 'เลขชุดผลิต';
+
+  @override
+  String get pdfMedicine => 'ชนิดยา';
+
+  @override
   String get careHeatCycle => 'วงรอบการเป็นสัด';
 
   @override

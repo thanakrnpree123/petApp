@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pawhealth/services/notification_service.dart';
 
 void main() {
-  final schedule = NotificationService.vaccineReminderSchedule;
+  final schedule = NotificationService.dueReminderSchedule;
 
-  group('vaccineReminderSchedule', () {
+  group('dueReminderSchedule', () {
     test('reminds at 9:00 AM the day before — not at midnight', () {
       // Date pickers return local midnight.
       final result = schedule(

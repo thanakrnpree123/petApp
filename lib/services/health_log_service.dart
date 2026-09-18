@@ -90,8 +90,20 @@ class HealthLogService {
         );
   }
 
-  Future<void> addCareLog(String userId, String petId, CareLog log) {
-    return _careLogsRef(userId, petId).add(log.toFirestore());
+  /// Returns the new document's id, which keys its reminder.
+  Future<String> addCareLog(String userId, String petId, CareLog log) async {
+    final doc = await _careLogsRef(userId, petId).add(log.toFirestore());
+    return doc.id;
+  }
+
+  /// Care records with a next due date, for rebuilding this device's
+  /// reminders (see ReminderSyncService).
+  Future<List<CareLog>> fetchCareLogs(String userId, String petId) async {
+    final snapshot = await _careLogsRef(userId, petId).get();
+    return [
+      for (final doc in snapshot.docs)
+        CareLog.fromFirestore(doc.id, doc.data()),
+    ];
   }
 
   Future<void> updateCareLog(String userId, String petId, CareLog log) {

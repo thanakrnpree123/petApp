@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pawhealth/models/care_log.dart';
 import 'package:pawhealth/models/pet.dart';
 import 'package:pawhealth/models/vaccination.dart';
 import 'package:pawhealth/providers/pet_provider.dart';
@@ -64,6 +65,33 @@ class _FakeHealthLogService implements HealthLogService {
   ];
 
   @override
+  Future<List<CareLog>> fetchCareLogs(String userId, String petId) async => [
+    CareLog(
+      id: 'care-$petId',
+      category: CareCategory.deworming,
+      title: 'Drontal',
+      loggedAt: DateTime(2026, 1, 1),
+      nextDueDate: DateTime(2027, 1, 1),
+    ),
+    // No next appointment: nothing to remind about.
+    CareLog(
+      id: 'groom-$petId',
+      category: CareCategory.grooming,
+      title: 'Nail trim',
+      loggedAt: DateTime(2026, 1, 1),
+    ),
+    // A next appointment the user switched the reminder off for.
+    CareLog(
+      id: 'muted-$petId',
+      category: CareCategory.ectoparasite,
+      title: 'Revolution',
+      loggedAt: DateTime(2026, 1, 1),
+      nextDueDate: DateTime(2027, 1, 1),
+      reminderEnabled: false,
+    ),
+  ];
+
+  @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
@@ -74,11 +102,11 @@ class _FakeNotifications implements NotificationService {
   Future<void> cancelAll() async => calls.add('cancelAll');
 
   @override
-  Future<void> scheduleVaccineReminder({
+  Future<void> scheduleDueReminder({
     required int id,
     required String petName,
-    required String vaccineName,
-    required DateTime nextDueDate,
+    required String itemName,
+    required DateTime dueDate,
     required AppLocalizations l10n,
   }) async => calls.add('schedule:$petName:$id:${l10n.localeName}');
 
@@ -172,11 +200,15 @@ void main() {
         notificationService: notifications,
       ).resync('alice', l10n: AppLocalizationsTh());
 
-      // Written in the app language (here Thai).
+      // Written in the app language (here Thai). Care records with a next
+      // appointment are rebuilt alongside vaccinations; ones without a
+      // date, or with their reminder switched off, are left out.
       expect(notifications.calls, [
         'cancelAll',
         'schedule:Mochi:${NotificationService.vaccineReminderId('vax-p1')}:th',
+        'schedule:Mochi:${NotificationService.careReminderId('care-p1')}:th',
         'schedule:Taro:${NotificationService.vaccineReminderId('vax-p2')}:th',
+        'schedule:Taro:${NotificationService.careReminderId('care-p2')}:th',
       ]);
     });
 

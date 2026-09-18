@@ -76,6 +76,13 @@ class PetService {
     return [for (final doc in snapshot.docs) doc.id];
   }
 
+  Future<List<String>> careLogIds(String userId, String petId) async {
+    final snapshot = await _petsRef(
+      userId,
+    ).doc(petId).collection('care_logs').get();
+    return [for (final doc in snapshot.docs) doc.id];
+  }
+
   Future<List<String>> petIds(String userId) async {
     final snapshot = await _petsRef(userId).get();
     return [for (final doc in snapshot.docs) doc.id];

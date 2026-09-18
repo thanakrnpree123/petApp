@@ -16,6 +16,7 @@ import '../models/symptom_check.dart';
 import '../models/vaccination.dart';
 import '../utils/app_dates.dart';
 import '../utils/l10n_helpers.dart';
+import 'report_tables.dart';
 import 'health_log_service.dart';
 import 'symptom_check_service.dart';
 
@@ -342,17 +343,14 @@ class _ReportWriter {
     if (vaccinations.isEmpty) {
       return _emptyNote(l10n.pdfNoVaccinations);
     }
+    return _table(ReportTables.vaccinations(l10n, _date, vaccinations));
+  }
 
+  /// Renders a [ReportTable] in the report's house style.
+  pw.Widget _table(ReportTable table) {
     return pw.TableHelper.fromTextArray(
-      headers: [l10n.pdfVaccine, l10n.pdfAdministered, l10n.pdfNextDue],
-      data: [
-        for (final v in vaccinations)
-          [
-            v.name,
-            _date.format(v.dateAdministered),
-            _date.format(v.nextDueDate),
-          ],
-      ],
+      headers: table.headers,
+      data: table.rows,
       headerStyle: pw.TextStyle(
         fontWeight: pw.FontWeight.bold,
         fontSize: 9.5,
@@ -364,9 +362,8 @@ class _ReportWriter {
       oddRowDecoration: const pw.BoxDecoration(color: PdfColors.grey100),
       border: null,
       columnWidths: {
-        0: const pw.FlexColumnWidth(2),
-        1: const pw.FlexColumnWidth(1.2),
-        2: const pw.FlexColumnWidth(1.2),
+        for (final entry in table.flexWidths.entries)
+          entry.key: pw.FlexColumnWidth(entry.value),
       },
     );
   }
@@ -375,35 +372,7 @@ class _ReportWriter {
     if (careLogs.isEmpty) {
       return _emptyNote(l10n.pdfNoCareLogs);
     }
-
-    return pw.TableHelper.fromTextArray(
-      headers: [l10n.pdfDate, l10n.pdfCategory, l10n.pdfEntry, l10n.pdfDetails],
-      data: [
-        for (final log in careLogs)
-          [
-            _date.format(log.loggedAt),
-            L10nHelpers.careCategory(l10n, log.category),
-            log.title,
-            log.note == log.title ? '' : log.note,
-          ],
-      ],
-      headerStyle: pw.TextStyle(
-        fontWeight: pw.FontWeight.bold,
-        fontSize: 9.5,
-        color: PdfColors.white,
-      ),
-      headerDecoration: const pw.BoxDecoration(color: _accent),
-      cellStyle: const pw.TextStyle(fontSize: 9.5),
-      cellPadding: const pw.EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-      oddRowDecoration: const pw.BoxDecoration(color: PdfColors.grey100),
-      border: null,
-      columnWidths: {
-        0: const pw.FlexColumnWidth(1.1),
-        1: const pw.FlexColumnWidth(1.2),
-        2: const pw.FlexColumnWidth(1.6),
-        3: const pw.FlexColumnWidth(2.4),
-      },
-    );
+    return _table(ReportTables.careLogs(l10n, _date, careLogs));
   }
 
   pw.Widget weightChart(List<HealthLog> sortedWeightLogs) {

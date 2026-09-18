@@ -115,21 +115,60 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
   }
 
   Future<void> _addRecord() async {
+    final l10n = AppLocalizations.of(context)!;
     final result = await AddHealthRecordDialog.show(context);
     if (result is! HealthRecordSaved) return;
-    await _service.addCareLog(_userId, widget.pet.id!, result.log);
+
+    final logId = await _service.addCareLog(
+      _userId,
+      widget.pet.id!,
+      result.log,
+    );
+
+    // The moment a reminder becomes useful is the moment to ask for it.
+    final dueDate = result.log.nextDueDate;
+    if (result.log.hasReminder && dueDate!.isAfter(DateTime.now()) && mounted) {
+      await ReminderPermissionPrompt.maybeAsk(
+        context,
+        petName: widget.pet.name,
+      );
+    }
+
+    await _syncCareReminder(result.log.copyWith(id: logId), l10n);
   }
 
   Future<void> _editRecord(CareLog log) async {
+    final l10n = AppLocalizations.of(context)!;
     final result = await AddHealthRecordDialog.show(context, existing: log);
     switch (result) {
       case HealthRecordSaved(:final log):
         await _service.updateCareLog(_userId, widget.pet.id!, log);
+        await _syncCareReminder(log, l10n);
       case HealthRecordDeleted():
         await _service.deleteCareLog(_userId, widget.pet.id!, log.id!);
+        await NotificationService().cancelReminder(
+          NotificationService.careReminderId(log.id!),
+        );
       case null:
         break;
     }
+  }
+
+  /// Makes this device's reminder match the record: cancel first so a
+  /// cleared date, a switched-off toggle, or a moved date can't leave the
+  /// old alert scheduled.
+  Future<void> _syncCareReminder(CareLog log, AppLocalizations l10n) async {
+    final notifications = NotificationService();
+    final reminderId = NotificationService.careReminderId(log.id!);
+    await notifications.cancelReminder(reminderId);
+    if (!log.hasReminder) return;
+    await notifications.scheduleDueReminder(
+      id: reminderId,
+      petName: widget.pet.name,
+      itemName: log.title,
+      dueDate: log.nextDueDate!,
+      l10n: l10n,
+    );
   }
 
   Future<void> _editVaccination(Vaccination vaccination) async {
@@ -142,11 +181,11 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
         // Reschedule so the reminder follows the (possibly changed) due
         // date; cancel first in case the new date is already within a day.
         await NotificationService().cancelReminder(reminderId);
-        await NotificationService().scheduleVaccineReminder(
+        await NotificationService().scheduleDueReminder(
           id: reminderId,
           petName: widget.pet.name,
-          vaccineName: vaccination.name,
-          nextDueDate: vaccination.nextDueDate,
+          itemName: vaccination.name,
+          dueDate: vaccination.nextDueDate,
           l10n: l10n,
         );
       case VaccineDeleted():
@@ -180,11 +219,11 @@ class _PetHealthDashboardState extends State<PetHealthDashboard> {
       );
     }
 
-    await NotificationService().scheduleVaccineReminder(
+    await NotificationService().scheduleDueReminder(
       id: NotificationService.vaccineReminderId(vaccinationId),
       petName: widget.pet.name,
-      vaccineName: result.vaccination.name,
-      nextDueDate: result.vaccination.nextDueDate,
+      itemName: result.vaccination.name,
+      dueDate: result.vaccination.nextDueDate,
       l10n: l10n,
     );
   }
@@ -399,6 +438,8 @@ class _FilterChipsRow extends StatelessWidget {
       TimelineFilter.vaccination => l10n.filterVaccination,
       TimelineFilter.symptomCheck => l10n.filterSymptomChecks,
       TimelineFilter.medical => l10n.filterMedical,
+      TimelineFilter.deworming => l10n.careDeworming,
+      TimelineFilter.ectoparasite => l10n.careEctoparasite,
       TimelineFilter.grooming => l10n.filterGrooming,
       TimelineFilter.heatCycle => l10n.careHeatCycle,
       TimelineFilter.other => l10n.filterOther,
@@ -476,6 +517,8 @@ class _UnifiedTimeline extends StatelessWidget {
   });
 
   IconData _careIcon(CareCategory category) => switch (category) {
+    CareCategory.deworming => Icons.medication_outlined,
+    CareCategory.ectoparasite => Icons.pest_control_outlined,
     CareCategory.parasiteControl => Icons.bug_report_outlined,
     CareCategory.heatCycle => Icons.favorite_outline,
     CareCategory.medicalSurgery => Icons.medical_information_outlined,
@@ -496,6 +539,22 @@ class _UnifiedTimeline extends StatelessWidget {
         TriageLevel.emergency => context.statusColors.danger,
       };
 
+  /// `details · date`, plus the next appointment when the record has one —
+  /// the notebook's "นัดครั้งต่อไป / Next appointment" line.
+  static String _careSubtitle(
+    AppLocalizations l10n,
+    AppDateFormat dateFormat,
+    CareLog log,
+  ) {
+    final parts = [
+      if (log.note.isNotEmpty && log.note != log.title) log.note,
+      dateFormat.format(log.loggedAt),
+      if (log.nextDueDate != null)
+        l10n.nextDueOn(dateFormat.format(log.nextDueDate!)),
+    ];
+    return parts.join(' · ');
+  }
+
   List<_TimelineEntry> _buildEntries(
     BuildContext context,
     AppLocalizations l10n,
@@ -508,9 +567,7 @@ class _UnifiedTimeline extends StatelessWidget {
       for (final log in careLogs)
         _TimelineEntry(
           title: log.title,
-          subtitle: log.note.isNotEmpty && log.note != log.title
-              ? '${log.note} · ${dateFormat.format(log.loggedAt)}'
-              : dateFormat.format(log.loggedAt),
+          subtitle: _careSubtitle(l10n, dateFormat, log),
           date: log.loggedAt,
           kind: filterForCareCategory(log.category),
           icon: _careIcon(log.category),

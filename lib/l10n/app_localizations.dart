@@ -796,6 +796,42 @@ abstract class AppLocalizations {
   /// **'Parasite Control'**
   String get careParasiteControl;
 
+  /// No description provided for @careDeworming.
+  ///
+  /// In en, this message translates to:
+  /// **'Deworming'**
+  String get careDeworming;
+
+  /// No description provided for @careEctoparasite.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick & Flea Control'**
+  String get careEctoparasite;
+
+  /// No description provided for @careCategoryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get careCategoryLabel;
+
+  /// No description provided for @careSelectNextDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Set next appointment'**
+  String get careSelectNextDue;
+
+  /// No description provided for @careClearNextDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear next appointment'**
+  String get careClearNextDue;
+
+  /// No description provided for @careRemindMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me the day before'**
+  String get careRemindMe;
+
   /// No description provided for @careHeatCycle.
   ///
   /// In en, this message translates to:

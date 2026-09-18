@@ -290,6 +290,9 @@ abstract final class L10nHelpers {
 
   static String careCategory(AppLocalizations l10n, CareCategory category) {
     return switch (category) {
+      CareCategory.deworming => l10n.careDeworming,
+      CareCategory.ectoparasite => l10n.careEctoparasite,
+      // Legacy documents keep the label they were written with.
       CareCategory.parasiteControl => l10n.careParasiteControl,
       CareCategory.heatCycle => l10n.careHeatCycle,
       CareCategory.medicalSurgery => l10n.careMedicalSurgery,

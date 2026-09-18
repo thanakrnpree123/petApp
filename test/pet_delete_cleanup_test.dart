@@ -16,6 +16,11 @@ class _FakePetService implements PetService {
   ];
 
   @override
+  Future<List<String>> careLogIds(String userId, String petId) async => [
+    'careA',
+  ];
+
+  @override
   Future<void> deletePet(String userId, String petId) async {
     if (failDelete) {
       throw FirebaseException(plugin: 'cloud_firestore', code: 'unavailable');
@@ -71,13 +76,15 @@ void main() {
   });
 
   group('PetProvider.deletePet', () {
-    test('cancels every vaccine reminder and deletes the photo', () async {
+    test('cancels every reminder and deletes the photo', () async {
       expect(await provider.deletePet('u1', 'p1'), isTrue);
 
       expect(pets.deleted, ['p1']);
       expect(notifications.cancelled, [
         NotificationService.vaccineReminderId('vaxA'),
         NotificationService.vaccineReminderId('vaxB'),
+        // A care record's next appointment must stop alerting too.
+        NotificationService.careReminderId('careA'),
       ]);
       expect(storage.deletedFolders, ['users/u1/pets/p1']);
     });
@@ -94,7 +101,7 @@ void main() {
       storage.failDelete = true;
 
       expect(await provider.deletePet('u1', 'p1'), isTrue);
-      expect(notifications.cancelled, hasLength(2));
+      expect(notifications.cancelled, hasLength(3));
       expect(provider.errorCode, isNull);
     });
   });

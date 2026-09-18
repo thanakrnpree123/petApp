@@ -20,19 +20,28 @@ class NotificationService {
   /// service no-ops on web rather than throwing at startup.
   static bool get isSupported => !kIsWeb;
 
-  /// The notification id for a vaccination's reminder, derived from its
-  /// Firestore id. Must be stable across launches and SDK upgrades so a
-  /// reminder scheduled today can still be cancelled later — which
-  /// String.hashCode doesn't promise. A 31-bit polynomial hash fits the
-  /// 32-bit ids Android requires and stays exact under web int math.
-  static int vaccineReminderId(String vaccinationId) {
+  /// Must be stable across launches and SDK upgrades so a reminder
+  /// scheduled today can still be cancelled later — which String.hashCode
+  /// doesn't promise. A 31-bit polynomial hash fits the 32-bit ids Android
+  /// requires and stays exact under web int math.
+  static int _stableId(String key) {
     const modulus = 2147483647; // 2^31 - 1
     var hash = 0;
-    for (final unit in vaccinationId.codeUnits) {
+    for (final unit in key.codeUnits) {
       hash = (hash * 31 + unit) % modulus;
     }
     return hash;
   }
+
+  /// The notification id for a vaccination's reminder, derived from its
+  /// Firestore id. Hashes the raw id: reminders scheduled by earlier
+  /// versions must keep the same id or they can never be cancelled.
+  static int vaccineReminderId(String vaccinationId) =>
+      _stableId(vaccinationId);
+
+  /// The notification id for a care record's reminder. Namespaced so a
+  /// care log and a vaccination can never collide on one notification id.
+  static int careReminderId(String careLogId) => _stableId('care:$careLogId');
 
   /// Sets up the plugin WITHOUT asking for permission. Permission is
   /// requested in context — when the user first adds a vaccine — by
@@ -102,14 +111,14 @@ class NotificationService {
   /// Local hour reminders are delivered at.
   static const reminderHour = 9;
 
-  /// When to remind about a vaccine due on [dueDate]: [reminderHour] on the
-  /// day before. If that moment has passed but [reminderHour] on the due
-  /// day hasn't (a vaccine added late the day before), remind that morning
-  /// instead. Null when both are past.
+  /// When to remind about something due on [dueDate]: [reminderHour] on
+  /// the day before. If that moment has passed but [reminderHour] on the
+  /// due day hasn't (an item added late the day before), remind that
+  /// morning instead. Null when both are past.
   ///
   /// Due dates come from a date picker, i.e. local midnight — subtracting a
   /// day from that fired reminders at 00:00.
-  static ({DateTime at, bool dueToday})? vaccineReminderSchedule(
+  static ({DateTime at, bool dueToday})? dueReminderSchedule(
     DateTime dueDate, {
     required DateTime now,
   }) {
@@ -122,20 +131,24 @@ class NotificationService {
     return null;
   }
 
+  /// Schedules a reminder for anything with a due date — a vaccination's
+  /// next dose, or a care record's next appointment. [itemName] is what
+  /// the notification names, e.g. "Rabies" or "Deworming".
+  ///
   /// The notification's text is fixed when it's scheduled, so it's
   /// written in [l10n]'s language; ReminderSyncService reschedules
   /// everything when the app language changes.
-  Future<void> scheduleVaccineReminder({
+  Future<void> scheduleDueReminder({
     required int id,
     required String petName,
-    required String vaccineName,
-    required DateTime nextDueDate,
+    required String itemName,
+    required DateTime dueDate,
     required AppLocalizations l10n,
   }) async {
     if (!isSupported) return;
     await init();
 
-    final schedule = vaccineReminderSchedule(nextDueDate, now: DateTime.now());
+    final schedule = dueReminderSchedule(dueDate, now: DateTime.now());
     if (schedule == null) return;
 
     // tz.local defaults to UTC when setLocalLocation() hasn't been called,
@@ -144,7 +157,7 @@ class NotificationService {
     // the device's clock without detecting the zone name.
     final scheduledDate = tz.TZDateTime.from(schedule.at, tz.local);
 
-    final text = reminderText(l10n, petName, vaccineName, schedule.dueToday);
+    final text = reminderText(l10n, petName, itemName, schedule.dueToday);
     await _plugin.zonedSchedule(
       id: id,
       title: text.title,
@@ -152,6 +165,9 @@ class NotificationService {
       scheduledDate: scheduledDate,
       notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
+          // Care reminders share the vaccination channel: they're the same
+          // kind of alert to a user, and a new channel id would orphan the
+          // preferences people already set on this one.
           'vaccine_reminders',
           // Android shows these in the app's notification settings; the
           // latest schedule call renames the category to the app language.
@@ -168,13 +184,13 @@ class NotificationService {
   static ({String title, String body}) reminderText(
     AppLocalizations l10n,
     String petName,
-    String vaccineName,
+    String itemName,
     bool dueToday,
   ) => (
     title: l10n.reminderTitle(petName),
     body: dueToday
-        ? l10n.reminderDueToday(vaccineName)
-        : l10n.reminderDueTomorrow(vaccineName),
+        ? l10n.reminderDueToday(itemName)
+        : l10n.reminderDueTomorrow(itemName),
   );
 
   Future<void> cancelReminder(int id) async {

@@ -400,6 +400,24 @@ class AppLocalizationsTh extends AppLocalizations {
   String get careParasiteControl => 'การป้องกันปรสิต';
 
   @override
+  String get careDeworming => 'ถ่ายพยาธิ';
+
+  @override
+  String get careEctoparasite => 'ป้องกันเห็บหมัด';
+
+  @override
+  String get careCategoryLabel => 'ประเภท';
+
+  @override
+  String get careSelectNextDue => 'ตั้งนัดครั้งต่อไป';
+
+  @override
+  String get careClearNextDue => 'ล้างนัดครั้งต่อไป';
+
+  @override
+  String get careRemindMe => 'เตือนฉันล่วงหน้า 1 วัน';
+
+  @override
   String get careHeatCycle => 'วงรอบการเป็นสัด';
 
   @override

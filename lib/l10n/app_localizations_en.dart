@@ -400,6 +400,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get careParasiteControl => 'Parasite Control';
 
   @override
+  String get careDeworming => 'Deworming';
+
+  @override
+  String get careEctoparasite => 'Tick & Flea Control';
+
+  @override
+  String get careCategoryLabel => 'Category';
+
+  @override
+  String get careSelectNextDue => 'Set next appointment';
+
+  @override
+  String get careClearNextDue => 'Clear next appointment';
+
+  @override
+  String get careRemindMe => 'Remind me the day before';
+
+  @override
   String get careHeatCycle => 'Heat Cycle';
 
   @override

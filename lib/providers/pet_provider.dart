@@ -177,9 +177,14 @@ class PetProvider extends ChangeNotifier {
 
     try {
       // Read before deleting — afterwards there's nothing left to list.
-      final vaccinationIds = await _petService.vaccinationIds(userId, petId);
+      final reminderIds = [
+        for (final id in await _petService.vaccinationIds(userId, petId))
+          NotificationService.vaccineReminderId(id),
+        for (final id in await _petService.careLogIds(userId, petId))
+          NotificationService.careReminderId(id),
+      ];
       await _petService.deletePet(userId, petId);
-      await _cleanUpAfterDelete(userId, petId, vaccinationIds);
+      await _cleanUpAfterDelete(userId, petId, reminderIds);
       return true;
     } on TimeoutException {
       errorCode = 'timeout';
@@ -206,15 +211,13 @@ class PetProvider extends ChangeNotifier {
   Future<void> _cleanUpAfterDelete(
     String userId,
     String petId,
-    List<String> vaccinationIds,
+    List<int> reminderIds,
   ) async {
-    for (final id in vaccinationIds) {
+    for (final id in reminderIds) {
       try {
-        await _notificationService.cancelReminder(
-          NotificationService.vaccineReminderId(id),
-        );
+        await _notificationService.cancelReminder(id);
       } catch (e) {
-        debugPrint('Could not cancel reminder for vaccination $id: $e');
+        debugPrint('Could not cancel reminder $id: $e');
       }
     }
     try {

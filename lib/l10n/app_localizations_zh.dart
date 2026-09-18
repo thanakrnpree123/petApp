@@ -378,6 +378,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get careParasiteControl => '驱虫防护';
 
   @override
+  String get careDeworming => '驱虫（体内）';
+
+  @override
+  String get careEctoparasite => '体外驱虫（蜱虱）';
+
+  @override
+  String get careCategoryLabel => '类别';
+
+  @override
+  String get careSelectNextDue => '设置下次预约';
+
+  @override
+  String get careClearNextDue => '清除下次预约';
+
+  @override
+  String get careRemindMe => '提前一天提醒我';
+
+  @override
   String get careHeatCycle => '发情周期';
 
   @override

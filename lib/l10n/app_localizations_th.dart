@@ -418,6 +418,30 @@ class AppLocalizationsTh extends AppLocalizations {
   String get careRemindMe => 'เตือนฉันล่วงหน้า 1 วัน';
 
   @override
+  String get clinicalDetails => 'ข้อมูลทางคลินิก (ไม่บังคับ)';
+
+  @override
+  String get veterinarianName => 'สัตวแพทย์';
+
+  @override
+  String get vetLicenseNo => 'เลขที่ใบอนุญาต';
+
+  @override
+  String get vaccineLotNo => 'หมายเลขชุดผลิตวัคซีน';
+
+  @override
+  String get medicineLabel => 'ชนิดยาและขนาดยา';
+
+  @override
+  String get pdfVeterinarian => 'สัตวแพทย์';
+
+  @override
+  String get pdfLotNo => 'เลขชุดผลิต';
+
+  @override
+  String get pdfMedicine => 'ชนิดยา';
+
+  @override
   String get careHeatCycle => 'วงรอบการเป็นสัด';
 
   @override

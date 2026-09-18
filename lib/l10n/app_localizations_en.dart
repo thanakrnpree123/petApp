@@ -418,6 +418,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get careRemindMe => 'Remind me the day before';
 
   @override
+  String get clinicalDetails => 'Clinical details (optional)';
+
+  @override
+  String get veterinarianName => 'Veterinarian';
+
+  @override
+  String get vetLicenseNo => 'License no.';
+
+  @override
+  String get vaccineLotNo => 'Vaccine lot no.';
+
+  @override
+  String get medicineLabel => 'Medicine & dose';
+
+  @override
+  String get pdfVeterinarian => 'Veterinarian';
+
+  @override
+  String get pdfLotNo => 'Lot no.';
+
+  @override
+  String get pdfMedicine => 'Medicine';
+
+  @override
   String get careHeatCycle => 'Heat Cycle';
 
   @override

@@ -4,6 +4,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/vaccination.dart';
 import '../../utils/app_dates.dart';
 import '../common/confirm_delete_dialog.dart';
+import 'clinical_details_section.dart';
 
 sealed class VaccineDialogResult {
   const VaccineDialogResult();
@@ -70,6 +71,9 @@ class AddVaccineDialog extends StatefulWidget {
 class _AddVaccineDialogState extends State<AddVaccineDialog> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
+  late final TextEditingController _vetController;
+  late final TextEditingController _licenseController;
+  late final TextEditingController _lotController;
   late DateTime _administeredAt;
   DateTime? _nextDueAt;
   String? _dueDateError;
@@ -79,14 +83,25 @@ class _AddVaccineDialogState extends State<AddVaccineDialog> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.existing?.name ?? '');
-    _administeredAt = widget.existing?.dateAdministered ?? DateTime.now();
-    _nextDueAt = widget.existing?.nextDueDate;
+    final existing = widget.existing;
+    _nameController = TextEditingController(text: existing?.name ?? '');
+    _vetController = TextEditingController(
+      text: existing?.veterinarianName ?? '',
+    );
+    _licenseController = TextEditingController(
+      text: existing?.vetLicenseNo ?? '',
+    );
+    _lotController = TextEditingController(text: existing?.lotNo ?? '');
+    _administeredAt = existing?.dateAdministered ?? DateTime.now();
+    _nextDueAt = existing?.nextDueDate;
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _vetController.dispose();
+    _licenseController.dispose();
+    _lotController.dispose();
     super.dispose();
   }
 
@@ -146,6 +161,10 @@ class _AddVaccineDialogState extends State<AddVaccineDialog> {
           name: _nameController.text.trim(),
           dateAdministered: _administeredAt,
           nextDueDate: _nextDueAt!,
+          // Blank fields become null in the model.
+          veterinarianName: _vetController.text,
+          vetLicenseNo: _licenseController.text,
+          lotNo: _lotController.text,
         ),
       ),
     );
@@ -221,6 +240,14 @@ class _AddVaccineDialogState extends State<AddVaccineDialog> {
                     ),
                   ),
                 ),
+              const Divider(height: 24),
+              ClinicalDetailsSection(
+                veterinarianController: _vetController,
+                licenseController: _licenseController,
+                productController: _lotController,
+                productLabel: l10n.vaccineLotNo,
+                initiallyExpanded: widget.existing?.hasClinicalDetails ?? false,
+              ),
             ],
           ),
         ),

@@ -5,6 +5,7 @@ import '../../models/care_log.dart';
 import '../../utils/l10n_helpers.dart';
 import '../common/confirm_delete_dialog.dart';
 import '../../utils/app_dates.dart';
+import 'clinical_details_section.dart';
 
 sealed class HealthRecordDialogResult {
   const HealthRecordDialogResult();
@@ -48,6 +49,9 @@ class _AddHealthRecordDialogState extends State<AddHealthRecordDialog> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _titleController;
   late final TextEditingController _detailsController;
+  late final TextEditingController _medicineController;
+  late final TextEditingController _vetController;
+  late final TextEditingController _licenseController;
   late CareCategory _category;
   late DateTime _date;
   DateTime? _nextDueDate;
@@ -69,6 +73,13 @@ class _AddHealthRecordDialogState extends State<AddHealthRecordDialog> {
     final existing = widget.existing;
     _titleController = TextEditingController(text: existing?.title ?? '');
     _detailsController = TextEditingController(text: existing?.note ?? '');
+    _medicineController = TextEditingController(text: existing?.medicine ?? '');
+    _vetController = TextEditingController(
+      text: existing?.veterinarianName ?? '',
+    );
+    _licenseController = TextEditingController(
+      text: existing?.vetLicenseNo ?? '',
+    );
     _category = existing?.category ?? CareCategory.other;
     _date = existing?.loggedAt ?? DateTime.now();
     _nextDueDate = existing?.nextDueDate;
@@ -79,6 +90,9 @@ class _AddHealthRecordDialogState extends State<AddHealthRecordDialog> {
   void dispose() {
     _titleController.dispose();
     _detailsController.dispose();
+    _medicineController.dispose();
+    _vetController.dispose();
+    _licenseController.dispose();
     super.dispose();
   }
 
@@ -127,6 +141,10 @@ class _AddHealthRecordDialogState extends State<AddHealthRecordDialog> {
           loggedAt: _date,
           nextDueDate: _nextDueDate,
           reminderEnabled: _reminderEnabled,
+          // Blank fields become null in the model.
+          medicine: _medicineController.text,
+          veterinarianName: _vetController.text,
+          vetLicenseNo: _licenseController.text,
         ),
       ),
     );
@@ -238,6 +256,14 @@ class _AddHealthRecordDialogState extends State<AddHealthRecordDialog> {
                   title: Text(l10n.careRemindMe),
                   contentPadding: EdgeInsets.zero,
                 ),
+              const Divider(height: 24),
+              ClinicalDetailsSection(
+                veterinarianController: _vetController,
+                licenseController: _licenseController,
+                productController: _medicineController,
+                productLabel: l10n.medicineLabel,
+                initiallyExpanded: widget.existing?.hasClinicalDetails ?? false,
+              ),
             ],
           ),
         ),

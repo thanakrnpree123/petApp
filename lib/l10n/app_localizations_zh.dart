@@ -396,6 +396,30 @@ class AppLocalizationsZh extends AppLocalizations {
   String get careRemindMe => '提前一天提醒我';
 
   @override
+  String get clinicalDetails => '临床信息（选填）';
+
+  @override
+  String get veterinarianName => '兽医';
+
+  @override
+  String get vetLicenseNo => '执业证号';
+
+  @override
+  String get vaccineLotNo => '疫苗批号';
+
+  @override
+  String get medicineLabel => '药物与剂量';
+
+  @override
+  String get pdfVeterinarian => '兽医';
+
+  @override
+  String get pdfLotNo => '批号';
+
+  @override
+  String get pdfMedicine => '药物';
+
+  @override
   String get careHeatCycle => '发情周期';
 
   @override

@@ -832,6 +832,54 @@ abstract class AppLocalizations {
   /// **'Remind me the day before'**
   String get careRemindMe;
 
+  /// No description provided for @clinicalDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Clinical details (optional)'**
+  String get clinicalDetails;
+
+  /// No description provided for @veterinarianName.
+  ///
+  /// In en, this message translates to:
+  /// **'Veterinarian'**
+  String get veterinarianName;
+
+  /// No description provided for @vetLicenseNo.
+  ///
+  /// In en, this message translates to:
+  /// **'License no.'**
+  String get vetLicenseNo;
+
+  /// No description provided for @vaccineLotNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccine lot no.'**
+  String get vaccineLotNo;
+
+  /// No description provided for @medicineLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine & dose'**
+  String get medicineLabel;
+
+  /// No description provided for @pdfVeterinarian.
+  ///
+  /// In en, this message translates to:
+  /// **'Veterinarian'**
+  String get pdfVeterinarian;
+
+  /// No description provided for @pdfLotNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Lot no.'**
+  String get pdfLotNo;
+
+  /// No description provided for @pdfMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine'**
+  String get pdfMedicine;
+
   /// No description provided for @careHeatCycle.
   ///
   /// In en, this message translates to:

@@ -49,6 +49,13 @@ enum CareCategory {
   }
 }
 
+/// Blank text fields must not be stored as empty strings — "present but
+/// empty" and "never filled in" should read back the same.
+String? _trimToNull(String? value) {
+  final trimmed = value?.trim();
+  return (trimmed == null || trimmed.isEmpty) ? null : trimmed;
+}
+
 class CareLog {
   final String? id;
   final CareCategory category;
@@ -69,6 +76,15 @@ class CareLog {
   /// when there's no next due date to remind about.
   final bool reminderEnabled;
 
+  /// The product given and its dose, as one line — the notebook's
+  /// "ชนิดยา / Type of Medicine" field, e.g. "Drontal cat 370g".
+  final String? medicine;
+
+  /// Clinical provenance, all optional: who administered this and under
+  /// what licence.
+  final String? veterinarianName;
+  final String? vetLicenseNo;
+
   CareLog({
     this.id,
     required this.category,
@@ -77,7 +93,16 @@ class CareLog {
     required this.loggedAt,
     this.nextDueDate,
     this.reminderEnabled = true,
-  });
+    String? medicine,
+    String? veterinarianName,
+    String? vetLicenseNo,
+  }) : medicine = _trimToNull(medicine),
+       veterinarianName = _trimToNull(veterinarianName),
+       vetLicenseNo = _trimToNull(vetLicenseNo);
+
+  /// Whether any clinical provenance was recorded.
+  bool get hasClinicalDetails =>
+      medicine != null || veterinarianName != null || vetLicenseNo != null;
 
   /// Whether a reminder should exist for this record at all.
   bool get hasReminder => nextDueDate != null && reminderEnabled;
@@ -90,6 +115,9 @@ class CareLog {
     loggedAt: loggedAt,
     nextDueDate: nextDueDate,
     reminderEnabled: reminderEnabled,
+    medicine: medicine,
+    veterinarianName: veterinarianName,
+    vetLicenseNo: vetLicenseNo,
   );
 
   factory CareLog.fromFirestore(String id, Map<String, dynamic> data) {
@@ -103,6 +131,10 @@ class CareLog {
       // Absent on every document written before next due dates existed.
       nextDueDate: (data['next_due_at'] as Timestamp?)?.toDate(),
       reminderEnabled: data['reminder_enabled'] as bool? ?? true,
+      // Absent on every document written before clinical details existed.
+      medicine: data['medicine'] as String?,
+      veterinarianName: data['vet_name'] as String?,
+      vetLicenseNo: data['vet_license_no'] as String?,
     );
   }
 
@@ -118,6 +150,11 @@ class CareLog {
           ? null
           : Timestamp.fromDate(nextDueDate!),
       'reminder_enabled': reminderEnabled,
+      // Written even when null so clearing a field on an update actually
+      // removes it from the document.
+      'medicine': medicine,
+      'vet_name': veterinarianName,
+      'vet_license_no': vetLicenseNo,
     };
   }
 }

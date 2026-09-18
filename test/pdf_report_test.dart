@@ -104,6 +104,51 @@ void main() {
     expect(String.fromCharCodes(bytes.take(4)), '%PDF');
   });
 
+  test('buildReport renders the widened clinical tables', () async {
+    // Every optional column switched on at once, in Thai (the widest
+    // script the report renders): the tables must still lay out.
+    final bytes = await PdfReportService().buildReport(
+      pet: Pet(
+        id: 'p4',
+        name: 'แคทนิป',
+        species: PetSpecies.cat,
+        breed: 'American Shorthair',
+        breedDisorders: const [],
+        birthdate: DateTime(2025, 9, 16),
+        weightKg: 2.1,
+      ),
+      l10n: AppLocalizationsTh(),
+      compress: false,
+      vaccinations: [
+        Vaccination(
+          id: 'v1',
+          name: 'Felocell CVR',
+          dateAdministered: DateTime(2026, 9, 16),
+          nextDueDate: DateTime(2026, 10, 14),
+          veterinarianName: 'ชัชชาลี นิวาสนิรัตน์',
+          vetLicenseNo: '01-12444/2561',
+          lotNo: '8553JOC',
+        ),
+      ],
+      careLogs: [
+        CareLog(
+          id: 'c1',
+          category: CareCategory.deworming,
+          title: 'ถ่ายพยาธิ',
+          note: 'ให้พร้อมอาหาร',
+          loggedAt: DateTime(2026, 9, 16),
+          nextDueDate: DateTime(2026, 10, 14),
+          medicine: 'Drontal cat 370g',
+          veterinarianName: 'ชัชชาลี นิวาสนิรัตน์',
+          vetLicenseNo: '01-12444/2561',
+        ),
+      ],
+    );
+
+    expect(String.fromCharCodes(bytes.take(4)), '%PDF');
+    expect(_embeddedFonts(bytes), contains('NotoSansThai-Regular'));
+  });
+
   test('buildReport handles a pet with no records at all', () async {
     final bytes = await PdfReportService().buildReport(
       l10n: AppLocalizationsZh(),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,8 +20,12 @@ import 'services/notification_service.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AppTheme.useBundledFonts();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  final prefs = await SharedPreferences.getInstance();
+  // Independent of each other, so they load concurrently rather than one
+  // after the other. App Check below needs Firebase, so it waits for both.
+  final (_, prefs) = await (
+    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
+    SharedPreferences.getInstance(),
+  ).wait;
   // Before any Firestore/Storage/Auth call, so requests carry a token.
   // Never throws; enforcement is off in the console (see AppCheckSetup).
   await AppCheckSetup.activate();
@@ -49,6 +55,7 @@ class PawHealthApp extends StatelessWidget {
       ],
       child: Builder(
         builder: (context) => MaterialApp(
+          debugShowCheckedModeBanner: false,
           onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
